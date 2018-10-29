@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">YAMA</string>
+    <string name="user_id">User id</string>
+    <string name="organization_id">Organization id</string>
+    <string name="personal_token">Personal token</string>
+    <string name="login_btn">Login</string>
+
+    <string name="user_profile_name">Name :</string>
+    <string name="user_profile_email">e-mail :</string>
+    <string name="user_profile_followers">followers :</string>
+    <string name="error_network">Couldn\'t access data</string>
+</resources>
