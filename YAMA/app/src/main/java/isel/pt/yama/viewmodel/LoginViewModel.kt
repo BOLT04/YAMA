@@ -11,7 +11,7 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetRequest
 
-class YAMAViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     // TODO: if this live data doesnt exist then we cant observe changes in activity and the startActivity with intent goes to makeRequest()
     val userLiveData: MutableLiveData<UserDto> = MutableLiveData()// TODO: what gets stored here
 

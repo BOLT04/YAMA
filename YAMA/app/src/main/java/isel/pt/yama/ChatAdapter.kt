@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.viewmodel.YAMAViewModel
+import isel.pt.yama.viewmodel.LoginViewModel
 
 class ChatViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
 
@@ -20,7 +20,7 @@ class ChatViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
     }
 }
 
-class ChatAdapter(val viewModel: YAMAViewModel) : RecyclerView.Adapter<ChatViewHolder>() {
+class ChatAdapter(val viewModel: LoginViewModel) : RecyclerView.Adapter<ChatViewHolder>() {
 
     override fun getItemCount(): Int = 0//viewModel.messages.value?.size ?: 0
 

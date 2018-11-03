@@ -9,9 +9,10 @@ import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.viewmodel.YAMAViewModel
+import isel.pt.yama.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
+// TODO: where to define these global constants used in intent.get... and other places
 const val VIEW_MODEL_KEY = "Login view model key"
 const val USER_EXTRA = "UserDto"
 
@@ -24,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
         val viewModel = getViewModel(VIEW_MODEL_KEY){
-            YAMAViewModel(app)
+            LoginViewModel(app)
         }
 
         login_btn.setOnClickListener{

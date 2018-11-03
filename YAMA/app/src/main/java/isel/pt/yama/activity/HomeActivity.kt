@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
 import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.network.GetRequest
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -25,11 +26,16 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Check how this activity was created (through Login or Main activity).
-        val userDto = intent.getParcelableExtra<UserDto>(USER_EXTRA)
+        var userDto = intent.getParcelableExtra<UserDto>(USER_EXTRA)
+
         if (userDto != null) {
             // Then make the request to get the user object
             val userToken = intent.getStringExtra(getString(R.string.userToken))
             //TODO: MAKE request how? how to put in userDto the object from succesListener
+            //TODO: for now using test json files
+            val json = resources.openRawResource(R.raw.david_user)
+                    .bufferedReader().use { it.readText() }
+            userDto = GetRequest.mapStringToDto(json)
         }
 
         navView.setNavigationItemSelectedListener {

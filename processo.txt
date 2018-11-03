@@ -17,3 +17,5 @@ perfil, por exemplo o avatar no browser, e qnd iniciar a nossa app vai direto ao
 qnd for ao seu perfil está o avatar antigo pk foi o que guardámos na altura de login... 
 
 7) Adicionei as classes dto da barbara ao projeto
+8) Estou a testar o Home a navegar pro Profile com um json file de teste
+9) Adicionei o trabalho da bárbara sobre o ecrã que mostra as teams usando RecyclerView

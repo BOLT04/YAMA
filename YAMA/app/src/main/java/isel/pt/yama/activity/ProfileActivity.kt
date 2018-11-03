@@ -18,10 +18,10 @@ class ProfileActivity : AppCompatActivity() {
 
         /*
         val model = this.getViewModel("somerandomkey"){ // TODO necessary?
-            YAMAViewModel(this.application as YAMAApplication)
+            LoginViewModel(this.application as YAMAApplication)
         }*/
 
-        val user = intent.getParcelableExtra("user") as UserDto
+        val user = intent.getParcelableExtra(USER_EXTRA) as UserDto
 
         user_profile_login.text = user.login
         user_profile_name.text = user.name
