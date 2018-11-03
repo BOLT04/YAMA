@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
+import isel.pt.yama.Repository
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetRequest
@@ -16,10 +17,8 @@ class YAMAViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     fun makeRequest(sharedPref: SharedPreferences, userID: String, orgID: String, userToken: String) {
         val queue = getApplication<YAMAApplication>().queue
-        val url = "https://api.github.com/user"
 
-        //TODO: this goes into Repository object and then we dont need to pass the user through intetns
-        val request = GetRequest(url, userToken,
+        Repository.makeUserRequest(userToken, queue,
                 Response.Listener {
                     with (sharedPref.edit()) {
                         //TODO: do we need to save more stuff in shared prefs?
@@ -33,7 +32,5 @@ class YAMAViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
                 Response.ErrorListener {
                     Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
                 })
-
-        queue.add(request)
     }
 }

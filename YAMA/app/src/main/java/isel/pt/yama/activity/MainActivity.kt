@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         // Prepare to launch HomeActivity.
         val intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra(userIdStr, userId)
+        intent.putExtra(userIdStr, userId) //TODO: what are these used for?????
         intent.putExtra(orgIdStr, orgId)
         intent.putExtra(userTokenStr, userToken)
 

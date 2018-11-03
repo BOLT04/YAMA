@@ -23,8 +23,7 @@ class UserDto(
             parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
-            parcel.readString()) {
-    }
+            parcel.readString())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(login)
@@ -38,17 +37,11 @@ class UserDto(
         parcel.writeString(public_repos)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<UserDto> {
-        override fun createFromParcel(parcel: Parcel): UserDto {
-            return UserDto(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel) = UserDto(parcel)
 
-        override fun newArray(size: Int): Array<UserDto?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<UserDto?> = arrayOfNulls(size)
     }
 }

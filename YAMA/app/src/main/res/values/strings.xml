@@ -14,4 +14,9 @@
     <string name="organizationId">OrganizationId</string>
     <string name="userId">UserId</string>
     <string name="userToken">UserToken</string>
+
+    <!-- Navigation Drawer -->
+    <string name="profile">Profile</string>
+    <string name="teams">Teams</string>
+    <string name="options">Options</string>
 </resources>
