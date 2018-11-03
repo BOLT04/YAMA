@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import isel.pt.yama.dto.UserDto
 
-
 class GetRequest(
         url: String,
         private val userToken: String,
@@ -16,7 +15,7 @@ class GetRequest(
         error: Response.ErrorListener)
     : JsonRequest<UserDto>(Request.Method.GET, url, "", success, error) {
 
-
+    // Uses Jackson to parse the response from the Github API into an UserDto object.
     override fun parseNetworkResponse(response: NetworkResponse): Response<UserDto> {
         val mapper = jacksonObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

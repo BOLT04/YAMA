@@ -9,4 +9,9 @@
     <string name="user_profile_email">e-mail :</string>
     <string name="user_profile_followers">followers :</string>
     <string name="error_network">Couldn\'t access data</string>
+
+    <string name="preference_file_key">preferences</string>
+    <string name="organizationId">OrganizationId</string>
+    <string name="userId">UserId</string>
+    <string name="userToken">UserToken</string>
 </resources>

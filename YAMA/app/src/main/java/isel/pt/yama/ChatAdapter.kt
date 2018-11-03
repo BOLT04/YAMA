@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.viewmodel.YAMAViewModel
 
 class ChatViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
 
@@ -15,13 +16,13 @@ class ChatViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(user: UserDto?) {// TODO: does this have to be nullable?
         avatarImgView.setImageURI(Uri.parse(user?.avatar_url))
-        sentMsgView.text = //TODO: this
+        //sentMsgView.text = //TODO: this
     }
 }
 
 class ChatAdapter(val viewModel: YAMAViewModel) : RecyclerView.Adapter<ChatViewHolder>() {
 
-    override fun getItemCount(): Int = viewModel.messages.value?.size ?: 0
+    override fun getItemCount(): Int = 0//viewModel.messages.value?.size ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder =
             ChatViewHolder(
@@ -30,7 +31,7 @@ class ChatAdapter(val viewModel: YAMAViewModel) : RecyclerView.Adapter<ChatViewH
                             .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup
             )
 
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        holder.bindTo(viewModel.currencies.value?.quotes?.get(position))
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {//TODO: this
+        //holder.bindTo(viewModel.currencies.value?.quotes?.get(position))
     }
 }

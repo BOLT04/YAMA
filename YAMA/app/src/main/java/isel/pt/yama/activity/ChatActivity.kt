@@ -23,7 +23,7 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            messagesList.add
+            //messagesList.add
 
             // Reset edit text view
             //userMessageTxt.text = ""

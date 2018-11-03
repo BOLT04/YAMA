@@ -1,0 +1,5 @@
+1) Corrigir os erros de build
+2) Adicionei strings em falta no file strings.xml
+3) Acabei a lambda Response.Listener no file YAMAViewModel.kt: coloca em shared preferences os 
+valores introduzidos pelo user; guarda em liveData o objeto userDto da resposta.
+4) Acabei MainActivity que é a 1ª lançada e escolhe qual lançar dependento se já existe os valores necessários em shared preferences.
