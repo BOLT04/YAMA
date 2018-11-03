@@ -21,7 +21,7 @@ class ProfileActivity : AppCompatActivity() {
             YAMAViewModel(this.application as YAMAApplication)
         }*/
 
-        val user = app.userLiveData.value as UserDto
+        val user = intent.getParcelableExtra("user") as UserDto
 
         user_profile_login.text = user.login
         user_profile_name.text = user.name
