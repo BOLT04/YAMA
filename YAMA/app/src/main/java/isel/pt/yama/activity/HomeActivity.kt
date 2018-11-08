@@ -4,11 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
 import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.network.GetRequest
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -16,27 +14,17 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        setSupportActionBar(toolbar)
+        /*setSupportActionBar(toolbar)
 
         // Setup menu icon on action bar.
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
-        }
+        }*/
 
         // Check how this activity was created (through Login or Main activity).
         var userDto = intent.getParcelableExtra<UserDto>(USER_EXTRA)
-
-        if (userDto != null) {
-            // Then make the request to get the user object
-            val userToken = intent.getStringExtra(getString(R.string.userToken))
-            //TODO: MAKE request how? how to put in userDto the object from succesListener
-            //TODO: for now using test json files
-            val json = resources.openRawResource(R.raw.david_user)
-                    .bufferedReader().use { it.readText() }
-            userDto = GetRequest.mapStringToDto(json)
-        }
 
         navView.setNavigationItemSelectedListener {
             it.isChecked = true // highlight item selected

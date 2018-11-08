@@ -2,7 +2,10 @@ package isel.pt.yama.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
@@ -14,7 +17,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 // TODO: where to define these global constants used in intent.get... and other places
 const val VIEW_MODEL_KEY = "Login view model key"
-const val USER_EXTRA = "UserDto"
+const val USER_EXTRA = "LoginActivity.userExtra"
+const val ORGANIZATION_EXTRA = "LoginActivity.organizationExtra"
+const val TOKEN_EXTRA_KEY = "LoginActivity.tokenExtra"
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,22 +33,56 @@ class LoginActivity : AppCompatActivity() {
             LoginViewModel(app)
         }
 
-        login_btn.setOnClickListener{
-            viewModel.makeRequest(
-                    //TODO: good idea to pass shared prefs to view model?
-                    getSharedPreferences(SP_NAME, Context.MODE_PRIVATE),
-                    userID = login_userID.text.toString(),
-                    orgID = login_orgID.text.toString(),
-                    userToken = login_personalToken.text.toString()
-            )
+        val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
 
-            viewModel.userLiveData.observe(this, Observer<UserDto> {
-                // If the request made above is successful, then launch HomeActivity
+        restoreUserInputTexts(viewModel, sharedPref)
+
+        val loginObserver = Observer<Boolean> { loginIsOk ->
+            if (loginIsOk) {
+                saveSharedPreferences(sharedPref)
                 val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra(USER_EXTRA, it)
-
+                intent.putExtra(USER_EXTRA, viewModel.userInfo.value)
                 startActivity(intent)
-            })
+            } else {
+                Toast.makeText(application, R.string.error_login, Toast.LENGTH_LONG).show()
+            }
         }
+
+        viewModel.loginIsOk.observe(this, loginObserver)
+
+        login_btn.setOnClickListener {
+            saveUserInputsToModel(viewModel)
+            viewModel.submitLogin()
+        }
+    }
+
+    private fun saveUserInputsToModel(model: LoginViewModel) {
+        model.textUser = login_userID.text.toString()
+        model.textOrganization = login_orgID.text.toString()
+        model.textToken = login_personalToken.text.toString()
+    }
+
+    private fun saveSharedPreferences(sharedPref : SharedPreferences) {
+        with (sharedPref.edit()) {
+            putString(getString(R.string.userId), login_userID.text.toString())
+            putString(getString(R.string.organizationId), login_orgID.text.toString())
+            putString(getString(R.string.userToken), login_personalToken.text.toString())
+            apply()
+        }
+    }
+
+    private fun restoreUserInputTexts(model: LoginViewModel, sharedPref: SharedPreferences) {
+        if (model.textUser == null)
+            model.textUser = sharedPref.getString(getString(R.string.userId), "")
+
+        if (model.textOrganization == null)
+            model.textOrganization = sharedPref.getString(getString(R.string.organizationId), "")
+
+        if (model.textToken == null)
+            model.textToken = sharedPref.getString(getString(R.string.userToken), "")
+
+        login_userID.text = Editable.Factory().newEditable(model.textUser)
+        login_orgID.text = Editable.Factory().newEditable(model.textOrganization)
+        login_personalToken.text = Editable.Factory().newEditable(model.textToken)
     }
 }

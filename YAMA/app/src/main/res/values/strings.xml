@@ -15,6 +15,10 @@
     <string name="userId">UserId</string>
     <string name="userToken">UserToken</string>
 
+    <!-- Strings related to login -->
+    <string name="error_login">Incorrect login for given access token</string>
+    <string name="error_organization">Incorrect organization for given access token</string>
+
     <!-- Navigation Drawer -->
     <string name="profile">Profile</string>
     <string name="teams">Teams</string>
