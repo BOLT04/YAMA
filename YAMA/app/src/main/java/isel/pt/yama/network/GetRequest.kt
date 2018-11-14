@@ -55,7 +55,7 @@ class GetRequestImage(url: String, success: Response.Listener<Bitmap>, error: Re
     : ImageRequest(url, success,0,0,ImageView.ScaleType.CENTER_CROP, Bitmap.Config.RGB_565, error)
 
 /*
-class GetRequestTeams(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
+class GetTeamsRequest(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
                       private val headers: MutableMap<String, String>?)
     : JsonRequest<List<Team>>(Request.Method.GET, url, "", success, error) {
 

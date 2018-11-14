@@ -71,11 +71,9 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     }
 
     private fun getUserDetails() {
-        val queue = getApplication<YAMAApplication>().queue
-        val url = "https://api.github.com/user"
-
+        //val queue = getApplication<YAMAApplication>().queue
         val request = GetRequestUser(
-                url,
+                "https://api.github.com/user",
                 Response.Listener { userInfo.value = it },
                 Response.ErrorListener {
                     Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
@@ -83,7 +81,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
                 mutableMapOf(Pair("Authorization", "token $textToken"))
         )
 
-        queue.add(request)
+        app.queue.add(request)
     }
 
     private fun getUserOrganizations() {

@@ -1,4 +1,4 @@
-package pt.isel.pdm.yama
+package isel.pt.yama.viewmodel
 
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -6,24 +6,24 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.network.GetRequestTeams
+import isel.pt.yama.network.GetTeamsRequest
 import pt.isel.pdm.yama.model.Team
 
-class TeamsViewModel (app: YAMAApplication) : AndroidViewModel(app) {
+class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<Team>> = MutableLiveData()
 
-    fun updateTeams(token : String, teamID : String) {
-        val queue = getApplication<YAMAApplication>().queue
-        val url = "https://api.github.com/orgs/$teamID/teams"
+    //TODO: Refactor code to use
+    fun updateTeams(token: String, orgID: String) {
+        //val queue = getApplication<YAMAApplication>().queue
+        val request = GetTeamsRequest(
+                "https://api.github.com/orgs/$orgID/teams",
+                Response.Listener { teams.value = it },
+                Response.ErrorListener {
+                    Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
+                },
+                mutableMapOf("Authorization" to "token $token"))
 
-        val request = GetRequestTeams(url,
-            Response.Listener { teams.value = it },
-            Response.ErrorListener {
-                Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
-            },
-            mutableMapOf(Pair("Authorization", "token $token")))
-
-        queue.add(request)
+        app.queue.add(request)
     }
 }
