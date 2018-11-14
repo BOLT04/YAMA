@@ -1,6 +1,5 @@
 package isel.pt.yama.viewmodel
 
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
