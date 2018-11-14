@@ -1,12 +1,15 @@
 package isel.pt.yama.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.TeamsAdapter
+import isel.pt.yama.adapter.TeamsAdapter.OnTeamClickListener
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import kotlinx.android.synthetic.main.activity_teams.*
@@ -27,10 +30,19 @@ class TeamsActivity : AppCompatActivity() {
             TeamsViewModel(app)
         }
 
-        teamsView.adapter = TeamsAdapter(viewModel)
+        val intent = Intent(this, MembersActivity::class.java)
+
+        val listener = object : OnTeamClickListener {
+            override fun onItemClick(team: Team?) {
+                intent.putExtra("teamId", team?.id)
+                startActivity(intent)
+            }
+        }
+
+        teamsView.adapter = TeamsAdapter(viewModel, listener)
 
         viewModel.teams.observe(this, Observer<List<Team>> {
-            teamsView.adapter = TeamsAdapter(viewModel)
+            teamsView.adapter = TeamsAdapter(viewModel, listener)
         })
 
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
