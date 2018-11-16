@@ -26,7 +26,7 @@ class ReceivedChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
         avatarImgView.setImageURI(Uri.parse(message?.user?.avatar_url))
         sentMsgView.text = message?.text
         userNameView.text=message?.user?.name
-        dateTimeView.text= Date(message?.createdAt!!).toString() //TODO doubleBANG
+        dateTimeView.text= message?.createdAt ? Date(message.createdAt.toString()) ?: "No date" //TODO doubleBANG
     }
 }
 
@@ -45,12 +45,12 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
 const val MESSAGE_RECEIVED_CODE = 1
 const val MESSAGE_SENT_CODE =2
 
-class ChatAdapter(val viewModel: ChatViewModel, val teamId: Int) : RecyclerView.Adapter<ChatViewHolder>() {
+class ChatAdapter(public val viewModel: ChatViewModel) : RecyclerView.Adapter<ChatViewHolder>() {
 
-    override fun getItemCount(): Int = 0//viewModel.messages.value?.size ?: 0
+    override fun getItemCount(): Int = 10//viewModel.messages.value?.size ?: 0
 
     override fun getItemViewType(position: Int) =
-            if(viewModel.wasSent(teamId, position)!!) //TODO !! not good?
+            if(viewModel.wasSent(position)!!) //TODO !! not good?
                 MESSAGE_SENT_CODE
             else
                 MESSAGE_RECEIVED_CODE
@@ -61,7 +61,7 @@ class ChatAdapter(val viewModel: ChatViewModel, val teamId: Int) : RecyclerView.
                         .from(parent.context)
                         .inflate(R.layout.list_item_msg_receive, parent, false) as ViewGroup)
             else
-                ReceivedChatViewHolder(LayoutInflater
+                SentChatViewHolder(LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup)
 

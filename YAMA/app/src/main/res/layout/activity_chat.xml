@@ -48,8 +48,7 @@
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamName" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/teamName"

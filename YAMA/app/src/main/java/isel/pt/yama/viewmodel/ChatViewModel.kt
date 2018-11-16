@@ -15,28 +15,27 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
 
 
-    val chatsMap: MutableLiveData<HashMap<Int,MutableList<Message>>> = MutableLiveData()
+    val chatLog: MutableLiveData<List<Message>> = MutableLiveData()
 
     var lastUserId = -1
-    var lastTeamId = -1
 
-    fun init(userId: Int, teamId: Int){
+    fun init(userId: Int){
         lastUserId=userId
-        lastTeamId=teamId
     }
 
-    fun getChatLog(teamId: Int) = chatsMap.value?.get(teamId)
-    fun sendMessage(teamId: Int, message: Message){getChatLog(teamId)?.add(message)}
-    fun receiveChatMessage(teamId: Int, message: Message)= getChatLog(teamId)?.add(message)
+    fun sendMessage(message: Message){
+        //getChatLog()?.add(message)
+        chatLog.value= listOf(message)
+    }
+   // fun receiveChatMessage(teamId: Int, message: Message)= getChatLog()?.add(message)
 
 
 
 
-    fun getCurrentChatLog() = chatsMap.value?.get(lastTeamId)
-    fun sendMessage(message: Message){ getCurrentChatLog()?.add(message)}
+    fun getChatLog() = chatLog.value
 
-    fun getSpecificMessage(position: Int) = getCurrentChatLog()?.get(position)
-    fun wasSent(teamId: Int, position: Int)= getChatLog(teamId)?.get(position)?.user?.id?.equals(lastUserId)
+    fun getSpecificMessage(position: Int) = getChatLog()?.get(position)
+    fun wasSent(position: Int)= getChatLog()?.get(position)?.user?.id?.equals(lastUserId)
 
 
 
