@@ -1,11 +1,12 @@
 package isel.pt.yama.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import isel.pt.yama.dto.Team
 import isel.pt.yama.viewmodel.TeamsViewModel
-import pt.isel.pdm.yama.model.Team
 
 class TeamsAdapter(private val viewModel: TeamsViewModel,
                    private val listener: OnTeamClickListener) : RecyclerView.Adapter<TeamsViewHolder>() {
@@ -15,7 +16,7 @@ class TeamsAdapter(private val viewModel: TeamsViewModel,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamsViewHolder {
         val view = LayoutInflater
                 .from(parent.context)
-                .inflate(android.R.layout.simple_list_item_1, parent, false) as ViewGroup
+                .inflate(android.R.layout.simple_list_item_1, parent, false) as View
 
         return TeamsViewHolder(view)
     }
@@ -25,18 +26,15 @@ class TeamsAdapter(private val viewModel: TeamsViewModel,
     }
 
     interface OnTeamClickListener {
-        fun onItemClick(team: Team?)
+        fun onTeamClick(team: Team?)
     }
 }
-    class TeamsViewHolder(view: ViewGroup) : RecyclerView.ViewHolder(view) {
-        private val teamNameView: TextView = view.findViewById(android.R.id.text1) // TODO: refactor these names: text1 e text2
-        //private val teamIDView: TextView = view.findViewById(android.R.id.text2)
 
-        fun bindTo(team: Team?, listener: TeamsAdapter.OnTeamClickListener) {
-            teamNameView.text = team?.name
-            //teamIDView.text = team?.id.toString()
-            itemView.setOnClickListener { listener.onItemClick(team) }
-        }
+class TeamsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private val teamNameView: TextView = view.findViewById(android.R.id.text1) // TODO: refactor name text1
+
+    fun bindTo(team: Team?, listener: TeamsAdapter.OnTeamClickListener) {
+        teamNameView.text = team?.name
+        itemView.setOnClickListener { listener.onTeamClick(team) }
     }
-
-
+}

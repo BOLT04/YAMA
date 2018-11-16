@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
 import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto

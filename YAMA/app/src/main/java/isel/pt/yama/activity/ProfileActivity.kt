@@ -1,7 +1,6 @@
 package isel.pt.yama.activity
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -9,7 +8,6 @@ import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.viewmodel.LoginViewModel
 import isel.pt.yama.viewmodel.ProfileViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 

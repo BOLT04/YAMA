@@ -2,7 +2,6 @@ package isel.pt.yama.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.widget.Toast
 import isel.pt.yama.R
 import kotlinx.android.synthetic.main.activity_chat.*

@@ -5,14 +5,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.LoginViewModel
-import kotlinx.android.synthetic.main.activity_login.*
 
 // name of preferences file
 val SP_NAME = MainActivity::class.java.`package`.name + "_Preferences"

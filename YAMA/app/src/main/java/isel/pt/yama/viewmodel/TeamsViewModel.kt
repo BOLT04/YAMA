@@ -2,12 +2,13 @@ package isel.pt.yama.viewmodel
 
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dto.Team
 import isel.pt.yama.network.GetTeamsRequest
-import pt.isel.pdm.yama.model.Team
 
 class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 

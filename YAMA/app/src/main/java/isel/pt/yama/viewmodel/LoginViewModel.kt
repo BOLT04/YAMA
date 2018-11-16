@@ -8,10 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetRequestOrganizations
 import isel.pt.yama.network.GetRequestUser
-import pt.isel.pdm.yama.model.Organization
 
 class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
