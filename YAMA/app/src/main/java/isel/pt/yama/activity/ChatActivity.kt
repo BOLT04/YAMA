@@ -3,12 +3,16 @@ package isel.pt.yama.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
+import isel.pt.yama.Repository
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dto.Message
+import isel.pt.yama.dto.ReceivedMessage
+import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
@@ -26,24 +30,22 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
 
+
+
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
-        val user : UserDto? = UserDto("Login", 1, "https://avatars2.githubusercontent.com/u/18630253?v=4", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+        val user : UserDto? = UserDto("Login", 1, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Bear Boyo", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
             ChatViewModel(app)
         }
 
         messagesList.layoutManager = LinearLayoutManager(this)
-        messagesList.adapter = ChatAdapter(viewModel)
+        messagesList.adapter = ChatAdapter(app, this, viewModel.chatLog)
 
-        viewModel.init(user!!.id)
 
         //messagesList.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
 
-        viewModel.chatLog.observe(this, Observer<List<Message>> {
-            (messagesList.adapter as ChatAdapter).viewModel.chatLog.value.
 
-        })
 
         sendBtn.setOnClickListener {
             val msg = userMessageTxt.text
@@ -53,7 +55,7 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.sendMessage(Message(user, msg.toString(), Date().time))
+            viewModel.receiveChatMessage(ReceivedMessage(user!!, msg.toString(), Date().time))
             userMessageTxt.text.clear()
 
         }

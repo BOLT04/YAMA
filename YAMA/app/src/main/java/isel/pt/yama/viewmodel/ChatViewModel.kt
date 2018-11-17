@@ -1,41 +1,87 @@
 package isel.pt.yama.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import isel.pt.yama.Repository
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.activity.SP_NAME
 import isel.pt.yama.dto.Message
+import isel.pt.yama.dto.ReceivedMessage
+import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.UserDto
-import java.text.FieldPosition
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+    val user : UserDto? = UserDto("Login", 1, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+    val anotheruser : UserDto? = UserDto("Login", 123, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+
+    val initchat = mutableListOf(
+        ReceivedMessage(user!!, "some text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        SentMessage(user, "another text", 0),
+        ReceivedMessage(anotheruser!!, "dj kalled text", 0)
+    )
 
 
 
-    val chatLog: MutableLiveData<List<Message>> = MutableLiveData()
 
-    var lastUserId = -1
+     private var  chatLogInternal: MutableLiveData<List<Message>>
 
-    fun init(userId: Int){
-        lastUserId=userId
+    val chatLog: LiveData<List<Message>>
+        get() = chatLogInternal
+
+
+
+
+
+    init{
+
+        var mutableLiveData = MutableLiveData<List<Message>>()
+
+        chatLogInternal = mutableLiveData
+
+        mutableLiveData.value= initchat
     }
 
-    fun sendMessage(message: Message){
-        //getChatLog()?.add(message)
-        chatLog.value= listOf(message)
+    fun sendMessage(message: SentMessage){
+        initchat.add(message)
+        chatLogInternal.value=initchat
+
     }
-   // fun receiveChatMessage(teamId: Int, message: Message)= getChatLog()?.add(message)
+   fun receiveChatMessage(message: ReceivedMessage){
+       initchat.add(message)
+       getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatar_url){message.userAvatar=it}
+       chatLogInternal.value=initchat
+   }
 
 
 
 
-    fun getChatLog() = chatLog.value
+    fun getChatLog() = chatLogInternal.value
 
     fun getSpecificMessage(position: Int) = getChatLog()?.get(position)
-    fun wasSent(position: Int)= getChatLog()?.get(position)?.user?.id?.equals(lastUserId)
 
 
 

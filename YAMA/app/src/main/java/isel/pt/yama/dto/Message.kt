@@ -1,29 +1,24 @@
 package isel.pt.yama.dto
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 
-class Message(val user: UserDto,
-              val text : String,
-              val createdAt: Long):Parcelable {
-    constructor(parcel: Parcel) : this(
-            parcel.readParcelable(UserDto::class.java.classLoader)!!,
-            parcel.readString()!!,
-            parcel.readLong()
-    )
+abstract class Message( val user: UserDto,
+                        val text : String,
+                        val createdAt: Long)
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(user, flags)
-        parcel.writeString(text)
-        parcel.writeLong(createdAt)
+class ReceivedMessage(user: UserDto, text: String, createdAt: Long):
+        Message(user = user, text = text, createdAt = createdAt){
+
+    var userAvatar: Bitmap? = null
+    constructor(user: UserDto, text: String, createdAt: Long, userAvatar: Bitmap):
+           this(user, text, createdAt){
+        this.userAvatar=userAvatar
     }
 
-    override fun describeContents() = 0
-
-    companion object CREATOR : Parcelable.Creator<Message> {
-        override fun createFromParcel(parcel: Parcel) = Message(parcel)
-
-        override fun newArray(size: Int): Array<Message?> = arrayOfNulls(size)
-
-    }
 }
+
+class SentMessage(user: UserDto, text: String, createdAt: Long):
+        Message(user = user, text = text, createdAt = createdAt )

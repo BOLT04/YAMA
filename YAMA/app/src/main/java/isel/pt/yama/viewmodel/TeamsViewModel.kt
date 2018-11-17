@@ -1,4 +1,4 @@
-package pt.isel.pdm.yama
+package isel.pt.yama.viewmodel
 
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
