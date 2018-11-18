@@ -18,7 +18,7 @@ class GetMembersRequest(url: String, success: Response.Listener<List<UserDto>>, 
         Log.v("YAMA DEBUG: rspnse.data",response.data.toString())
         val mapper = jacksonObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val usersDto = mapper.readValue<List<UserDto>>(String(response.data)) // TODO:???
+        val usersDto = mapper.readValue<List<UserDto>>(String(response.data))
         Log.v("YAMA DEBUG", "usersDto.size: " + usersDto.size)
         return Response.success(usersDto, null)
     }

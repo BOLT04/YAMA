@@ -33,7 +33,7 @@ class TeamsAdapter(private val viewModel: TeamsViewModel,
 }
 
 class TeamsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private val teamNameView: TextView = view.findViewById(android.R.id.text1) // TODO: refactor name text1
+    private val teamNameView: TextView = view.findViewById(android.R.id.text1)
 
     fun bindTo(team: Team?, listener: TeamsAdapter.OnTeamClickListener) {
         teamNameView.text = team?.name

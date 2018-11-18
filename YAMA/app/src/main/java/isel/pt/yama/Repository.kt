@@ -9,18 +9,11 @@ import isel.pt.yama.network.GetRequestImage
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class Repository(val app: YAMAApplication) {
-    fun makeUserRequest(
-            userToken: String,
-            queue: RequestQueue,
-            successListener: Response.Listener<UserDto>,
-            errorListener: Response.ErrorListener) {
 
-        val url = "https://api.github.com/user"
-       // val request = GetRequest(url, userToken, successListener, errorListener)
+    var user: UserDto? = null
 
-       // queue.add(request)
-    }
     val avatarCache : HashMap<String, Bitmap> = HashMap()
+
 
     fun getAvatarImage(url: String, cb: (Bitmap) -> Unit ) {
 

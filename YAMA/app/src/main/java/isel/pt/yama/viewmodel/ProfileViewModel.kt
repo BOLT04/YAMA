@@ -14,9 +14,4 @@ class ProfileViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     val userAvatarImage: MutableLiveData<Bitmap> = MutableLiveData()
 
-    fun getAvatarImage(url: String) {
-    //    app.repository.getAvatarImage(url)
-
-    }
-
 }

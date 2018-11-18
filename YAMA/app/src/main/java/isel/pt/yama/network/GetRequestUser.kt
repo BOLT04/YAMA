@@ -54,21 +54,4 @@ class GetRequestOrganizations(url: String, success: Response.Listener<List<Organ
 class GetRequestImage(url: String, success: Response.Listener<Bitmap>, error: Response.ErrorListener)
     : ImageRequest(url, success,0,0,ImageView.ScaleType.CENTER_CROP, Bitmap.Config.RGB_565, error)
 
-/*
-class GetTeamsRequest(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
-                      private val headers: MutableMap<String, String>?)
-    : JsonRequest<List<Team>>(Request.Method.GET, url, "", success, error) {
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Team>> {
-        Log.v("YAMA DEBUG: rspnse.data",response.data.toString())
-        val mapper = jacksonObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val teamsDto = mapper
-                .readValue<List<Team>>(String(response.data))
-        return Response.success(teamsDto, null)
-    }
-
-    override fun getHeaders(): MutableMap<String, String> {
-        return headers ?: super.getHeaders()
-    }
-}*/

@@ -9,16 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
+import isel.pt.yama.common.SP_NAME
+import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
-// TODO: where to define these global constants used in intent.get... and other places
-const val VIEW_MODEL_KEY = "Login view model key"
-const val USER_EXTRA = "LoginActivity.userExtra"
-const val ORGANIZATION_EXTRA = "LoginActivity.organizationExtra"
-const val TOKEN_EXTRA_KEY = "LoginActivity.tokenExtra"
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
+        val app = getYAMAApplication()
 
         val viewModel = getViewModel(VIEW_MODEL_KEY){
             LoginViewModel(app)
@@ -40,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginIsOk) {
                 saveSharedPreferences(sharedPref)
                 val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra(USER_EXTRA, viewModel.userInfo.value)
+                app.repository.user=viewModel.userInfo.value
                 startActivity(intent)
             } else {
                 Toast.makeText(application, R.string.error_login, Toast.LENGTH_LONG).show()

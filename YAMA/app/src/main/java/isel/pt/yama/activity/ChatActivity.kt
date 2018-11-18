@@ -1,11 +1,14 @@
 package isel.pt.yama.activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
+import isel.pt.yama.Repository
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
@@ -27,9 +30,8 @@ class ChatActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
-        val user : UserDto? = UserDto("Login", 1,
-                "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg",
-                "Bear Boyo", null, null, 1) //TODO get user id selected, probably from intent?
+        val user : UserDto = app.repository.user!!
+
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
             ChatViewModel(app)
         }
@@ -49,7 +51,7 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.sendMessage(SentMessage(user!!, msg.toString(), Date().time))
+            viewModel.sendMessage(SentMessage(user, msg.toString(), Date().time))
             userMessageTxt.text.clear()
         }
 

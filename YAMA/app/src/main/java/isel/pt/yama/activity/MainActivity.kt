@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
+import isel.pt.yama.common.SP_NAME
+import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.LoginViewModel
 
-// name of preferences file
-val SP_NAME = MainActivity::class.java.`package`.name + "_Preferences"
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
                     val intent = Intent(this, HomeActivity::class.java)
-                    intent.putExtra(USER_EXTRA, viewModel.userInfo.value)
+                    app.repository.user=viewModel.userInfo.value
                     startActivity(intent)
                 } else {
                     val intent = Intent(this, LoginActivity::class.java)

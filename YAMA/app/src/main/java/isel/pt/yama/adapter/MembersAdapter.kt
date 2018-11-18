@@ -33,7 +33,7 @@ class MembersAdapter(private val viewModel: MembersViewModel,
 }
 
 class MembersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private val textViewMembers: TextView = view.findViewById(android.R.id.text1) // TODO: refactor name text1
+    private val textViewMembers: TextView = view.findViewById(android.R.id.text1)
 
     fun bindTo(user: UserDto?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)

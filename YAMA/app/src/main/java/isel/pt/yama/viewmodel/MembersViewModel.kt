@@ -13,7 +13,7 @@ class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
     val members: MutableLiveData<List<UserDto>> = MutableLiveData()
 
-    //TODO: Refactor code to use
+
     fun updateMembers(token: String, teamID: Int) {
         //val queue = getApplication<YAMAApplication>().queue
         val request = GetMembersRequest(

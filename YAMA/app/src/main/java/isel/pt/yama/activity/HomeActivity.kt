@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.kotlinx.getYAMAApplication
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -24,8 +25,6 @@ class HomeActivity : AppCompatActivity() {
         }*/
 
         // Check how this activity was created (through Login or Main activity).
-        var userDto = intent.getParcelableExtra<UserDto>(USER_EXTRA)
-
 
         teamsBtn.setOnClickListener {
             val intent = Intent(this, TeamsActivity::class.java)
@@ -40,7 +39,6 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_profile -> {
                     // TODO: refactor this code: either put it in Repository or a simple util function that removes redundancy
                     val intent = Intent(this, ProfileActivity::class.java)
-                    intent.putExtra(USER_EXTRA, userDto)
                     startActivity(intent)
                 }
                 //R.id.nav_team -> //TODO: this
@@ -48,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
                 //R.id.nav_options -> //TODO: this
             }
 
-            true //TODO: why dont we need return statement??
+            true
         }
     }
 

@@ -18,7 +18,7 @@ class GetTeamsRequest(url: String, success: Response.Listener<List<Team>>, error
         Log.v("YAMA DEBUG: rspnse.data",response.data.toString())
         val mapper = jacksonObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val teamsDto = mapper.readValue<List<Team>>(String(response.data)) // TODO:???
+        val teamsDto = mapper.readValue<List<Team>>(String(response.data))
         return Response.success(teamsDto, null)
     }
 

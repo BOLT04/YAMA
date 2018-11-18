@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.MembersAdapter
 import isel.pt.yama.adapter.TeamsAdapter
+import isel.pt.yama.common.SP_NAME
+import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel

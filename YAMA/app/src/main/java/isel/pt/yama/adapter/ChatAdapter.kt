@@ -35,12 +35,12 @@ class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatVi
     private val userNameView: TextView = view.findViewById(R.id.userName)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
-    override fun bindTo(message: Message?) {// TODO: does this have to be nullable?
+    override fun bindTo(message: Message?) {
         avatarImgView.setImageBitmap((message as ReceivedMessage).userAvatar)//make request Uri.parse(message?.user?.avatar_url))
         sentMsgView.text = message.text
         userNameView.text= message.user.name
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(Date(message.createdAt))//message?.createdAt ? Date(message.createdAt.toString()) ?: "No date" //TODO doubleBANG
+        dateTimeView.text= sdf.format(Date(message.createdAt))
     }
 }
 
@@ -49,10 +49,10 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
     private val sentMsgView: TextView = view.findViewById(R.id.message)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
-    override fun bindTo(message: Message?) {// TODO: does this have to be nullable?
+    override fun bindTo(message: Message?) {
         sentMsgView.text = message?.text
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(Date(message?.createdAt!!)) //TODO doubleBANG
+        dateTimeView.text= sdf.format(Date(message?.createdAt!!))
     }
 }
 
@@ -79,7 +79,7 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog
 
     override fun getItemCount(): Int = chatLog.value?.size ?: 0
     override fun getItemViewType(position: Int) =
-            if(chatLog.value?.get(position) is SentMessage) //TODO !! not good?
+            if(chatLog.value?.get(position) is SentMessage)
                 MESSAGE_SENT_CODE
             else
                 MESSAGE_RECEIVED_CODE
@@ -95,7 +95,7 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog
                         .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup)
 
 
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {//TODO: this
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         holder.bindTo(chatLog.value?.get(position))
     }
 }

@@ -14,9 +14,7 @@ class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<Team>> = MutableLiveData()
 
-    //TODO: Refactor code to use
     fun updateTeams(token: String, orgID: String) {
-        //val queue = getApplication<YAMAApplication>().queue
         val request = GetTeamsRequest(
                 "https://api.github.com/orgs/$orgID/teams",
                 Response.Listener { teams.value = it },

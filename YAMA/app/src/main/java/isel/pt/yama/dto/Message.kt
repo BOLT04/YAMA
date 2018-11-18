@@ -1,9 +1,6 @@
 package isel.pt.yama.dto
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Parcel
-import android.os.Parcelable
 
 abstract class Message( val user: UserDto,
                         val text : String,

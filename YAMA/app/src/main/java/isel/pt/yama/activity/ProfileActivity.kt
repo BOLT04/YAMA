@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
-import isel.pt.yama.dto.UserDto
+import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.ProfileViewModel
@@ -23,7 +23,7 @@ class ProfileActivity : AppCompatActivity() {
             ProfileViewModel(app)
         }
 
-        val user = intent.getParcelableExtra(USER_EXTRA) as UserDto
+        val user = app.repository.user!!
 
         user_profile_login.text = user.login
         user_profile_name.text = user.name
