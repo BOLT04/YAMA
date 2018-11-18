@@ -14,7 +14,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        /*setSupportActionBar(toolbar)
+       /* setSupportActionBar(toolbar)
 
         // Setup menu icon on action bar.
         val actionbar: ActionBar? = supportActionBar
@@ -26,6 +26,12 @@ class HomeActivity : AppCompatActivity() {
         // Check how this activity was created (through Login or Main activity).
         var userDto = intent.getParcelableExtra<UserDto>(USER_EXTRA)
 
+
+        teamsBtn.setOnClickListener {
+            val intent = Intent(this, TeamsActivity::class.java)
+            startActivity(intent)
+        }
+
         navView.setNavigationItemSelectedListener {
             it.isChecked = true // highlight item selected
             drawerLayout.closeDrawers()
@@ -35,7 +41,6 @@ class HomeActivity : AppCompatActivity() {
                     // TODO: refactor this code: either put it in Repository or a simple util function that removes redundancy
                     val intent = Intent(this, ProfileActivity::class.java)
                     intent.putExtra(USER_EXTRA, userDto)
-
                     startActivity(intent)
                 }
                 //R.id.nav_team -> //TODO: this

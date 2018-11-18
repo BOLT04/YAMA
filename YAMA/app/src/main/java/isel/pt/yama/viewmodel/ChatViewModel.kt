@@ -12,8 +12,11 @@ import isel.pt.yama.dto.UserDto
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
-    val user : UserDto? = UserDto("Login", 1, "https://avatars2.githubusercontent.com/u/18630253?v=4", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
-    val anotheruser : UserDto? = UserDto("Login", 123, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+    //TODO get user id selected, probably from intent?
+
+    val user : UserDto? = UserDto("Login", 1, "https://avatars2.githubusercontent.com/u/18630253?v=4", "Name", null, null, 1)
+
+    val anotheruser : UserDto? = UserDto("Login", 123, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1) //TODO get user id selected, probably from intent?
 
     val initchat:MutableList<Message> = mutableListOf()
 

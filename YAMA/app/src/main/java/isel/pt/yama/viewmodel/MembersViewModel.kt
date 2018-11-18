@@ -2,24 +2,23 @@ package isel.pt.yama.viewmodel
 
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.dto.Team
-import isel.pt.yama.network.GetTeamsRequest
+import isel.pt.yama.dto.UserDto
+import isel.pt.yama.network.GetMembersRequest
 
-class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
+class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
-    val teams: MutableLiveData<List<Team>> = MutableLiveData()
+    val members: MutableLiveData<List<UserDto>> = MutableLiveData()
 
     //TODO: Refactor code to use
-    fun updateTeams(token: String, orgID: String) {
+    fun updateMembers(token: String, teamID: Int) {
         //val queue = getApplication<YAMAApplication>().queue
-        val request = GetTeamsRequest(
-                "https://api.github.com/orgs/$orgID/teams",
-                Response.Listener { teams.value = it },
+        val request = GetMembersRequest(
+                "https://api.github.com/teams/$teamID/members",
+                Response.Listener { members.value = it },
                 Response.ErrorListener {
                     Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
                 },
@@ -27,4 +26,5 @@ class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
         app.queue.add(request)
     }
+
 }

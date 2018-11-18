@@ -1,6 +1,5 @@
 package isel.pt.yama
 
-import android.app.Application
 import android.graphics.Bitmap
 import android.widget.Toast
 import com.android.volley.RequestQueue
@@ -9,7 +8,6 @@ import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetRequestImage
 
 // Holds all the data needed and interfaces with volley or any other data source.
-
 class Repository(val app: YAMAApplication) {
     fun makeUserRequest(
             userToken: String,
@@ -38,10 +36,5 @@ class Repository(val app: YAMAApplication) {
                 Response.ErrorListener {
                     Toast.makeText(app, R.string.error_network, Toast.LENGTH_LONG).show()})
         queue.add(request)
-    }
-
-
-    fun getAvatar(avatar_url: String?): Bitmap? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

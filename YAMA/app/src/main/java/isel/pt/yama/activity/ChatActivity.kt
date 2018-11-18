@@ -1,25 +1,18 @@
 package isel.pt.yama.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
-import isel.pt.yama.Repository
 import isel.pt.yama.adapter.ChatAdapter
-import isel.pt.yama.dto.Message
 import isel.pt.yama.dto.ReceivedMessage
-import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
-
 
 class ChatActivity : AppCompatActivity() {
 
@@ -29,12 +22,11 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-
-
-
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
-        val user : UserDto? = UserDto("Login", 1, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Bear Boyo", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+        val user : UserDto? = UserDto("Login", 1,
+                "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg",
+                "Bear Boyo", null, null, 1) //TODO get user id selected, probably from intent?
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
             ChatViewModel(app)
         }
@@ -44,8 +36,6 @@ class ChatActivity : AppCompatActivity() {
 
 
         //messagesList.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
-
-
 
         sendBtn.setOnClickListener {
             val msg = userMessageTxt.text

@@ -12,8 +12,8 @@ import com.android.volley.toolbox.JsonRequest
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.UserDto
-import pt.isel.pdm.yama.model.Organization
 
 class GetRequestUser(url: String, success: Response.Listener<UserDto>, error: Response.ErrorListener,
                      private val headers: MutableMap<String, String>?)
@@ -55,7 +55,7 @@ class GetRequestImage(url: String, success: Response.Listener<Bitmap>, error: Re
     : ImageRequest(url, success,0,0,ImageView.ScaleType.CENTER_CROP, Bitmap.Config.RGB_565, error)
 
 /*
-class GetRequestTeams(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
+class GetTeamsRequest(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
                       private val headers: MutableMap<String, String>?)
     : JsonRequest<List<Team>>(Request.Method.GET, url, "", success, error) {
 

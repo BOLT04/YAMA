@@ -8,9 +8,9 @@ import com.android.volley.toolbox.JsonRequest
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import pt.isel.pdm.yama.model.Team
+import isel.pt.yama.dto.Team
 
-class GetRequestTeams(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
+class GetTeamsRequest(url: String, success: Response.Listener<List<Team>>, error: Response.ErrorListener,
                       private val headers: MutableMap<String, String>?)
     : JsonRequest<List<Team>>(Request.Method.GET, url, "", success, error) {
 

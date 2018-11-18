@@ -1,6 +1,5 @@
 package isel.pt.yama.viewmodel
 
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -9,10 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetRequestOrganizations
 import isel.pt.yama.network.GetRequestUser
-import pt.isel.pdm.yama.model.Organization
 
 class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
@@ -71,11 +70,9 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     }
 
     private fun getUserDetails() {
-        val queue = getApplication<YAMAApplication>().queue
-        val url = "https://api.github.com/user"
-
+        //val queue = getApplication<YAMAApplication>().queue
         val request = GetRequestUser(
-                url,
+                "https://api.github.com/user",
                 Response.Listener { userInfo.value = it },
                 Response.ErrorListener {
                     Toast.makeText(getApplication(), R.string.error_network, Toast.LENGTH_LONG).show()
@@ -83,7 +80,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
                 mutableMapOf(Pair("Authorization", "token $textToken"))
         )
 
-        queue.add(request)
+        app.queue.add(request)
     }
 
     private fun getUserOrganizations() {
