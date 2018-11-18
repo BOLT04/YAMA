@@ -7,10 +7,13 @@ import com.android.volley.toolbox.Volley
 class YAMAApplication : Application() {
 
     lateinit var queue: RequestQueue
+    lateinit var repository: Repository
+
 
     override fun onCreate() {
         super.onCreate()
         queue = Volley.newRequestQueue(this)
+        repository=Repository(this)
     }
 
 }

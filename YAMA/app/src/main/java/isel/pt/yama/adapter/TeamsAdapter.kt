@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import pt.isel.pdm.yama.TeamsViewModel
+import isel.pt.yama.viewmodel.TeamsViewModel
 import pt.isel.pdm.yama.model.Team
 
 class TeamsViewHolder (view: ViewGroup) : RecyclerView.ViewHolder(view) {

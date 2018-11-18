@@ -9,7 +9,7 @@ import isel.pt.yama.adapter.TeamsAdapter
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import kotlinx.android.synthetic.main.activity_teams.*
-import pt.isel.pdm.yama.TeamsViewModel
+import isel.pt.yama.viewmodel.TeamsViewModel
 import pt.isel.pdm.yama.model.Team
 
 class TeamsActivity : AppCompatActivity() {
