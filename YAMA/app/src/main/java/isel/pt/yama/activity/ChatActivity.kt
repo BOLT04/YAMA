@@ -1,5 +1,6 @@
 package isel.pt.yama.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dto.ReceivedMessage
+import isel.pt.yama.dto.SentMessage
+import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
@@ -31,23 +34,30 @@ class ChatActivity : AppCompatActivity() {
             ChatViewModel(app)
         }
 
+        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+
+        teamName.text=team.name
+
         messagesList.layoutManager = LinearLayoutManager(this)
         messagesList.adapter = ChatAdapter(app, this, viewModel.chatLog)
 
 
-        //messagesList.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
 
         sendBtn.setOnClickListener {
             val msg = userMessageTxt.text
             if (msg.isEmpty()) {
-                Toast.makeText(this, "Please provide a message", Toast.LENGTH_SHORT)
-                        .show()
                 return@setOnClickListener
             }
 
-            viewModel.receiveChatMessage(ReceivedMessage(user!!, msg.toString(), Date().time))
+            viewModel.sendMessage(SentMessage(user!!, msg.toString(), Date().time))
             userMessageTxt.text.clear()
-
         }
+
+        teamName.setOnClickListener{
+            val intent = Intent(this, MembersActivity::class.java)
+            intent.putExtra("team", team)
+            startActivity(intent)
+        }
+
     }
 }

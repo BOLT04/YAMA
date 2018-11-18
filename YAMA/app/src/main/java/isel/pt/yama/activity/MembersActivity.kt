@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
@@ -39,12 +40,14 @@ class MembersActivity : AppCompatActivity() {
             MembersViewModel(app)
         }
 
-        val intent = Intent(this, ChatActivity::class.java)
+       // val intent = Intent(this, ChatActivity::class.java)
 
         val listener = object : MembersAdapter.OnMemberClickListener {
             override fun onMemberClick(user: UserDto?) {
-                intent.putExtra("user", user)
-                startActivity(intent)
+               //TODO: implement DM
+                Toast.makeText(app, "Direct messaging comming soon", Toast.LENGTH_SHORT).show()
+                // intent.putExtra("user", user)
+                //startActivity(intent)
             }
         }
 

@@ -17,7 +17,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
+        val app = getYAMAApplication()
 
         val viewModel = getViewModel(VIEW_MODEL_KEY){
             ProfileViewModel(app)
@@ -30,12 +30,10 @@ class ProfileActivity : AppCompatActivity() {
         user_profile_email.text = user.email
         user_profile_followers.text = user.followers.toString()
 
-        val imageObserver = Observer<Bitmap> {
+        viewModel.userAvatarImage.observe(this, Observer<Bitmap> {
             user_profile_userAvatar.setImageBitmap(it)
-        }
+        })
 
-        viewModel.userAvatarImage.observe(this, imageObserver )
-
-        viewModel.getAvatarImage(user.avatar_url)
+        app.repository.getAvatarImage(user.avatar_url){viewModel.userAvatarImage.value=it}
     }
 }

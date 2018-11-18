@@ -6,7 +6,7 @@
     <string name="login_btn">Login</string>
 
     <string name="user_profile_name">Name :</string>
-    <string name="user_profile_email">e-mail :</string>
+    <string name="user_profile_email" translatable="false">e-mail :</string>
     <string name="user_profile_followers">followers :</string>
     <string name="error_network">Couldn\'t access data</string>
 
@@ -27,7 +27,7 @@
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
-
+    <string name="userMessage_hint">Write your message</string>
 
 
 </resources>
