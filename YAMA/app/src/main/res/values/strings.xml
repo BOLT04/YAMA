@@ -23,4 +23,11 @@
     <string name="profile">Profile</string>
     <string name="teams">Teams</string>
     <string name="options">Options</string>
+
+    <!-- Messaging -->
+    <string name="sender_avatar">Avatar of the sender</string>
+    <string name="receiver_avatar">Avatar of the receiver</string>
+
+
+
 </resources>

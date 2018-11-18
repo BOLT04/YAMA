@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.dto.Team
+
 import isel.pt.yama.viewmodel.TeamsViewModel
+
 
 class TeamsAdapter(private val viewModel: TeamsViewModel,
                    private val listener: OnTeamClickListener) : RecyclerView.Adapter<TeamsViewHolder>() {

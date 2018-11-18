@@ -10,5 +10,5 @@ class UserDto(
         val avatar_url : String,
         val name : String?,
         val email : String?,
-        val followers : Int,
+        val followers : Int?,
         val following : Int) : Parcelable
