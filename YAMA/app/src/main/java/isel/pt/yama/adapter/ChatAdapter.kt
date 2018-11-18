@@ -66,9 +66,12 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog
         chatLog.observe(context, Observer<List<Message>> { list ->
             this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             val currentPostition =  chatLog.value?.size
-            app.repository.getAvatarImage(list[currentPostition!!.minus(1)].user.avatar_url) {
-                this.notifyItemChanged(currentPostition, it)
-            }
+            val currentMessage = list[currentPostition!!.minus(1)]
+            if(currentMessage is ReceivedMessage)
+                app.repository.getAvatarImage(currentMessage.user.avatar_url) {
+                    currentMessage.userAvatar=it
+                    this.notifyItemChanged(currentPostition)
+                }
         })
 
     }
@@ -93,6 +96,6 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog
 
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {//TODO: this
-        holder.bindTo(chatLog.value?.get(position))//viewModel.chatsMap.value?.get(teamId)?.get(position))
+        holder.bindTo(chatLog.value?.get(position))
     }
 }

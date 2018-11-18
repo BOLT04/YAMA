@@ -12,48 +12,17 @@ import isel.pt.yama.dto.UserDto
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
-    val user : UserDto? = UserDto("Login", 1, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
+    val user : UserDto? = UserDto("Login", 1, "https://avatars2.githubusercontent.com/u/18630253?v=4", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
     val anotheruser : UserDto? = UserDto("Login", 123, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1, 1,"s") //TODO get user id selected, probably from intent?
 
-    val initchat = mutableListOf(
-        ReceivedMessage(user!!, "some text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        SentMessage(user, "another text", 0),
-        ReceivedMessage(anotheruser!!, "dj kalled text", 0)
-    )
+    val initchat:MutableList<Message> = mutableListOf()
 
 
 
-
-     private var  chatLogInternal: MutableLiveData<List<Message>>
+    private var  chatLogInternal: MutableLiveData<List<Message>>
 
     val chatLog: LiveData<List<Message>>
         get() = chatLogInternal
-
-
-
 
 
     init{
@@ -63,6 +32,27 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
         chatLogInternal = mutableLiveData
 
         mutableLiveData.value= initchat
+
+        receiveChatMessage(ReceivedMessage(user!!, "some text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        sendMessage(SentMessage(user, "another text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser!!, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(user, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(user, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveChatMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+
+
     }
 
     fun sendMessage(message: SentMessage){
