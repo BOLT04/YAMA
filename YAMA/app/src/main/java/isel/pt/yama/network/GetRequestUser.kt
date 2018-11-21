@@ -1,6 +1,5 @@
 package isel.pt.yama.network
 
-
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.ImageView
@@ -32,6 +31,12 @@ class GetRequestUser(url: String, success: Response.Listener<UserDto>, error: Re
         return headers ?: super.getHeaders()
     }
 }
+
+//TESTTT
+/*class GetRequestUser(url: String, success: Response.Listener<UserDto>, error: Response.ErrorListener,
+                     private val headers: MutableMap<String, String>?)
+    : GetRequest<UserDto>(url, success, error, headers)
+*/
 
 class GetRequestOrganizations(url: String, success: Response.Listener<List<Organization>>, error: Response.ErrorListener,
                               private val headers: MutableMap<String, String>?)

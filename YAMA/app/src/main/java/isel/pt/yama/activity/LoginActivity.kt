@@ -16,8 +16,6 @@ import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
-
-
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
         restoreUserInputTexts(viewModel, sharedPref)
 
-        val loginObserver = Observer<Boolean> { loginIsOk ->
+        viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
                 saveSharedPreferences(sharedPref)
                 val intent = Intent(this, HomeActivity::class.java)
@@ -43,9 +41,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(application, R.string.error_login, Toast.LENGTH_LONG).show()
             }
-        }
-
-        viewModel.loginIsOk.observe(this, loginObserver)
+        })
 
         login_btn.setOnClickListener {
             saveUserInputsToModel(viewModel)

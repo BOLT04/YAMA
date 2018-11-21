@@ -27,3 +27,9 @@ class GetMembersRequest(url: String, success: Response.Listener<List<UserDto>>, 
         return headers ?: super.getHeaders()
     }
 }
+
+//TESTTTTT
+/*class GetMembersRequest(url: String, success: Response.Listener<List<UserDto>>, error: Response.ErrorListener,
+                        private val headers: MutableMap<String, String>?)
+    : GetRequest<List<UserDto>>(url, success, error, headers, () -> Log.v("YAMA DEBUG", "usersDto.size: " + usersDto.size))
+*/
