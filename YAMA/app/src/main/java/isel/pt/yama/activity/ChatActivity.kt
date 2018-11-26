@@ -1,16 +1,11 @@
 package isel.pt.yama.activity
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
-import isel.pt.yama.Repository
 import isel.pt.yama.adapter.ChatAdapter
-import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto

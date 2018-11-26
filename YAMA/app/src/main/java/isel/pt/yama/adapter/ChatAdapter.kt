@@ -1,25 +1,18 @@
 package isel.pt.yama.adapter
 
-import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
-import isel.pt.yama.R.id.messagesList
-import isel.pt.yama.Repository
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.Message
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.viewmodel.ChatViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 

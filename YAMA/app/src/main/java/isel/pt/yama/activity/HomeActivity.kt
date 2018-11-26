@@ -37,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.nav_profile -> {
-                    // TODO: refactor this code: either put it in Repository or a simple util function that removes redundancy
+                    // TODO: refactor this code: either put it in YAMARepository or a simple util function that removes redundancy
                     val intent = Intent(this, ProfileActivity::class.java)
                     startActivity(intent)
                 }
