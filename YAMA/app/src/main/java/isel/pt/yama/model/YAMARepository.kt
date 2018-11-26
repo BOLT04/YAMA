@@ -9,11 +9,13 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.model.dataAccess.database.TeamDAO
 import isel.pt.yama.network.*
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,
-                     private val api: GithubApi) {
+                     private val api: GithubApi,
+                     private val teamDao: TeamDAO) {
     /*
     private val db = Room
             .databaseBuilder(app, CurrenciesDatabase::class.java, "quotes-db")
