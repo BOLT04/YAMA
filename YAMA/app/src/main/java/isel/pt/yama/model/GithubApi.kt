@@ -1,5 +1,6 @@
 package isel.pt.yama.model
 
+import android.content.Context
 import android.util.JsonToken
 import android.util.Log
 import android.widget.Toast
@@ -9,6 +10,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonRequest
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto
@@ -23,16 +25,22 @@ const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
 
 class GithubApi(private val app: YAMAApplication) {
-    lateinit var accessToken: String
-    val authHeaderMap =
-            mutableMapOf(Pair("Authorization", "token $accessToken"))// TODO: does this work
-
-    // The responsibility to initiate the token is delegated to LoginViewModel
-    //TODO: is this a good idea??? Delegate the initializing of access token, should we protect to multiple inits?
-
-    fun init(token: String) {
-        accessToken = token
-    }
+    // The responsibility to initiate the token is delegated to LoginActivity that
+    // saves the token in shared preferences.
+    var authHeaderMap: MutableMap<String, String>? = null
+        get() {
+            if (field == null) {
+                // Then initialize the value with token in shared preference.
+                val sharedPref = app.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+                // TODO: can i get sharedPreferences like this...its a method that needs a context and it should be Activity or Aplication context?
+                val userTokenStr = app.getString(R.string.userToken)
+                if (sharedPref.contains(userTokenStr)) {
+                    val accessToken = sharedPref.getString(userTokenStr, null)
+                    field = mutableMapOf(Pair("Authorization", "token $accessToken"))// todo: Can this be initialized here?
+                }
+            }
+            return field
+        }
 
     fun <T> getAndLog(msg: String, getReq: () -> Request<T>) {
         Log.v(app.TAG, msg)

@@ -5,9 +5,11 @@ import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonRequest
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlin.math.log
 
 /**
  * logger parameter is called after the jackson mapper as finished reading the value.
@@ -19,13 +21,13 @@ abstract class GetRequest<T>(url: String, success: Response.Listener<T>, error: 
 
     val TAG = "GetRequest"
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<T> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response< T> {
         Log.v(TAG, "parsing network response ${response.data}")
 
         //TODO: help with using generic type T here!
         val mapper = jacksonObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val resDto = mapper.readValue(String(response.data))
+        val resDto = mapper.readValue(String(response.data), object : TypeReference<T>(){} ) as T
 
         logger?.invoke()
 
