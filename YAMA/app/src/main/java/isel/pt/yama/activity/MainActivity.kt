@@ -17,6 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(false){
+            getSharedPreferences(SP_NAME, 0).edit().clear().commit()
+            return
+        }
         setContentView(R.layout.activity_main)
 
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)

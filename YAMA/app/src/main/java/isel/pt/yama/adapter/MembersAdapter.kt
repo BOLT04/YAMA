@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.viewmodel.MembersViewModel
+import kotlinx.android.synthetic.main.abc_activity_chooser_view_list_item.view.*
 
 class MembersAdapter(private val viewModel: MembersViewModel,
                      private val listener: OnMemberClickListener) : RecyclerView.Adapter<MembersViewHolder>() {
@@ -17,7 +19,7 @@ class MembersAdapter(private val viewModel: MembersViewModel,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MembersViewHolder {
         val view = LayoutInflater
                 .from(parent.context)
-                .inflate(android.R.layout.simple_list_item_1, parent, false) as View
+                .inflate(R.layout.list_item_member, parent, false) as View
 
         return MembersViewHolder(view)
     }
@@ -33,11 +35,14 @@ class MembersAdapter(private val viewModel: MembersViewModel,
 }
 
 class MembersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private val textViewMembers: TextView = view.findViewById(android.R.id.text1)
+    private val memberAvatar: TextView = view.findViewById(R.id.memberAvatar)
+    private val memberName: TextView = view.findViewById(R.id.memberName)
 
     fun bindTo(user: UserDto?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
-        textViewMembers.text = user?.login
+
+        memberAvatar.
+        memberName.text = user?.login
         itemView.setOnClickListener { listener.onMemberClick(user) }
     }
 }

@@ -20,19 +20,19 @@ class YAMARepository(private val app: YAMAApplication,
             .build()
     */
 //TODO: implement DB with room
-    fun getUserDetails(success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
         // if (existsInCache()...) fetchFromCache(...)
         // else if (existsInDb...)fetchFromDb(...)
-        api.getUserDetails( {
+        api.getUserDetails(accessToken, {
             //saveToDb(it)
             success(it)
         }, fail)
     }
 
-    fun getUserOrganizations(success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserOrganizations(accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         // if (existsInCache()...) fetchFromCache(...)
         // else if (existsInDb...)fetchFromDb(...)
-        api.getUserOrganizations( {
+        api.getUserOrganizations(accessToken, {
             //saveToDb(it)
             success(it)
         }, fail)
