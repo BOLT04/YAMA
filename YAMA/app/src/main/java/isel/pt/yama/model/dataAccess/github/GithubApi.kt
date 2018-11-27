@@ -1,13 +1,10 @@
-package isel.pt.yama.model
+package isel.pt.yama.model.dataAccess.github
 
 import android.content.Context
-import android.util.JsonToken
 import android.util.Log
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonRequest
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.SP_NAME
@@ -21,6 +18,7 @@ import isel.pt.yama.network.GetTeamsRequest
 
 const val GITHUB_API_HOST = "https://api.github.com"
 const val GITHUB_API_USER = "$GITHUB_API_HOST/user"
+const val GITHUB_API_USER_ORGS = "$GITHUB_API_HOST/user/orgs"
 const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
 
@@ -53,25 +51,25 @@ class GithubApi(private val app: YAMAApplication) {
 	//!!!!!!
 	//TODO: Perhaps also hide the Response.Listener and ErrorListener inside GetRequest -> the arguments in ctor are simplified to success, fail!!!!!!!!!!!!
 	//!
-	
-    fun getUserDetails(success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
+
+    fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
         getAndLog("Fetching user from Github API") {
             GetRequestUser(
-                GITHUB_API_USER,
+                    GITHUB_API_USER,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
-                authHeaderMap
+                buildRequestHeaders(accessToken)
             )
         }
     }
 
-    fun getUserOrganizations(success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserOrganizations(accessToken: String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("Fetching user organizations from Github API") {
             GetRequestOrganizations(
-                GITHUB_API_ORGS,
+                    GITHUB_API_USER_ORGS,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
-                authHeaderMap
+                buildRequestHeaders(accessToken)
             )
         }
     }
@@ -97,4 +95,8 @@ class GithubApi(private val app: YAMAApplication) {
             )
         }
     }
+
+    // Auxiliary funcions
+    fun buildRequestHeaders(accessToken: String) =
+            mutableMapOf(Pair("Authorization", "token $accessToken"))
 }

@@ -12,7 +12,7 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.Organization
 import isel.pt.yama.dto.Team
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.model.GithubApi
+import isel.pt.yama.model.dataAccess.github.GithubApi
 import isel.pt.yama.model.dataAccess.database.TeamDAO
 import isel.pt.yama.network.*
 
@@ -41,20 +41,19 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
-
-    fun getUserDetails(success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
         // if (existsInCache()...) fetchFromCache(...)
         // else if (existsInDb...)fetchFromDb(...)
-        api.getUserDetails( {
+        api.getUserDetails(accessToken, {
             //saveToDb(it)
             success(it)
         }, fail)
     }
 
-    fun getUserOrganizations(success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserOrganizations(accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         // if (existsInCache()...) fetchFromCache(...)
         // else if (existsInDb...)fetchFromDb(...)
-        api.getUserOrganizations( {
+        api.getUserOrganizations(accessToken, {
             //saveToDb(it)
             success(it)
         }, fail)
