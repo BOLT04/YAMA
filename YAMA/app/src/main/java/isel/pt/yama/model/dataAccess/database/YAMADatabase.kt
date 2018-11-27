@@ -14,8 +14,8 @@ interface TeamDAO {
     fun getAllByDate(date: Calendar): List<Team>
     */
 
-    @Query("SELECT * FROM teams WHERE name = :name")
-    fun findById(name: String): Team
+    @Query("SELECT * FROM teams WHERE orgId = :orgId")
+    fun getTeamsWith(orgId: String): List<Team>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg quotes: Team)
@@ -24,9 +24,18 @@ interface TeamDAO {
     fun delete(quote: Team)
 }
 
-@Database(entities = arrayOf(Team::class), version = 1)
+@Dao
+interface MessageDAO {
+    @Insert
+    fun insert(message: Message)
+
+    @Query("SELECT * from messages ORDER BY date ASC")
+    fun getAllMessages(): List<Message>
+}
+
+@Database(entities = [Team::class, Member::class, Message::class], version = 1)
 abstract class YAMADatabase : RoomDatabase() {
     abstract fun teamDAO(): TeamDAO
     //abstract fun teamMembersDAO(): ?DAO
-    //abstract fun messagesDAO(): ?DAO
+    abstract fun messagesDAO(): MessageDAO
 }

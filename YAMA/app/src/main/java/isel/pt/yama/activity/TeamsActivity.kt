@@ -19,6 +19,15 @@ import isel.pt.yama.viewmodel.TeamsViewModel
 
 class TeamsActivity : AppCompatActivity() {
 
+    companion object {
+        val INITIAL_STATE_EXTRA_KEY = "SHOULD_DISPLAY"
+
+        fun createIntent(origin: Context, shouldDisplay: Boolean) =
+            Intent(origin, MainActivity::class.java).apply {
+                if (shouldDisplay) putExtra(INITIAL_STATE_EXTRA_KEY, shouldDisplay)
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teams)

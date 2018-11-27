@@ -6,7 +6,7 @@ import androidx.room.Room
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import isel.pt.yama.model.GithubApi
-import isel.pt.yama.model.YAMARepository
+import isel.pt.yama.model.dataAccess.YAMARepository
 import isel.pt.yama.model.dataAccess.database.YAMADatabase
 
 class YAMAApplication : Application() {
