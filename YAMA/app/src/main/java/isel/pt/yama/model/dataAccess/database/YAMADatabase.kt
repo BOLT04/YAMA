@@ -6,16 +6,13 @@ import java.util.*
 
 @Dao
 interface TeamDAO {
-    @Query("SELECT * FROM teams")
-    fun getAll(): List<Team>
-
     /*
     @Query("SELECT * FROM teams WHERE date LIKE :date")
     fun getAllByDate(date: Calendar): List<Team>
     */
 
     @Query("SELECT * FROM teams WHERE orgId = :orgId")
-    fun getTeamsWith(orgId: String): List<Team>
+    fun getOrganizationTeams(orgId: String): List<Team>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg quotes: Team)

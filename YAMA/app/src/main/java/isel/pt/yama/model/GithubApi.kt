@@ -24,6 +24,7 @@ const val GITHUB_API_USER = "$GITHUB_API_HOST/user"
 const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
 
+//TODO: move to package with better name -> dataAccess.cloud
 class GithubApi(private val app: YAMAApplication) {
     // The responsibility to initiate the token is delegated to LoginActivity that
     // saves the token in shared preferences.

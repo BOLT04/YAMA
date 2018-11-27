@@ -16,34 +16,30 @@ import isel.pt.yama.model.GithubApi
 import isel.pt.yama.model.dataAccess.database.TeamDAO
 import isel.pt.yama.network.*
 
-/* //TODO: THIS
-fun syncSaveTeamsFromDTO(app: YAMAApplication, teamDao: TeamDAO, dto: Team): List<Team> {
+ //TODO: THIS plus refactor name of method
+fun syncSaveTeamsFromDTO(app: YAMAApplication, teamDao: TeamDAO, teams: List<Team>): List<Team> {
     Log.v(app.TAG, "Saving teams to DB")
 
-    val result = dto.quotes.map { Quote(it.currency, it.quote, date) }
-    teamDao.insertAll(*result.toTypedArray())
-    return result
+    //val result = dto.quotes.map { Quote(it.currency, it.quote, date) }
+    teamDao.insertAll(*teams.toTypedArray())//result.toTypedArray())
+    return teams
 }
-*/
+
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,
                      private val api: GithubApi,
                      private val teamDao: TeamDAO) {
-    /*
-    private val db = Room
-            .databaseBuilder(app, CurrenciesDatabase::class.java, "quotes-db")
-            .build()
-    */
 
     //TODO: implement this
-    /*private fun saveToDB(teams: List<Team>): AsyncWork<List<Quote>> {
+    private fun saveToDB(teams: List<Team>): AsyncWork<List<Team>> {
         return runAsync {
             //TODO: what is success property???
-            if (dto.success) syncSaveTodayQuotesFromDTO(app, db, dto)
-            else listOf()
+            //if (dto.success) syncSaveTeamsFromDTO(app, teamDao, teams)
+            //else listOf()
+            syncSaveTeamsFromDTO(app, teamDao, teams)
         }
-    }*/
+    }
 
 
     fun getUserDetails(success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
@@ -66,15 +62,15 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeams(orgId: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            teamDao.getTeamsWith(orgId)
+            Log.v(app.TAG, "Getting teams from DB")
+            teamDao.getOrganizationTeams(orgId)
         }.andThen { teams ->
             if (teams.isEmpty())// Then data isn't stored in db so fetch from API
                 api.getTeams(orgId, {
                     //TODO: finish saving to db
-                    //saveToDb(it) andThen success
+                    saveToDB(it) andThen success
                     //success(it)
                 }, fail)
-
             else {
                 Log.v(app.TAG, "Got teams from DB")
                 success(teams)
