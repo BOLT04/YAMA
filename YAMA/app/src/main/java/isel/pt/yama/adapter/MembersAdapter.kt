@@ -41,7 +41,7 @@ class MembersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(user: UserDto?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
-        memberAvatar.
+        //memberAvatar.
         memberName.text = user?.login
         itemView.setOnClickListener { listener.onMemberClick(user) }
     }
