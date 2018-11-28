@@ -1,8 +1,6 @@
 package isel.pt.yama.model.dataAccess.database
 
 import androidx.room.*
-import isel.pt.yama.dto.Team
-import java.util.*
 
 @Dao
 interface TeamDAO {

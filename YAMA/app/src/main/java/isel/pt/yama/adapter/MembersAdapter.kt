@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
@@ -35,13 +36,13 @@ class MembersAdapter(private val viewModel: MembersViewModel,
 }
 
 class MembersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    private val memberAvatar: TextView = view.findViewById(R.id.memberAvatar)
+    private val memberAvatar: ImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
 
     fun bindTo(user: UserDto?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
-        //memberAvatar.
+        memberAvatar.setImageBitmap(null)
         memberName.text = user?.login
         itemView.setOnClickListener { listener.onMemberClick(user) }
     }
