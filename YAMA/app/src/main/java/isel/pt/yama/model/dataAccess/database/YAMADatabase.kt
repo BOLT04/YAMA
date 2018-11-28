@@ -24,7 +24,7 @@ interface MessageDAO {
     @Insert
     fun insert(message: Message)
 
-    @Query("SELECT * from messages ORDER BY date ASC")
+    @Query("SELECT * from messages ORDER BY createdAt ASC")
     fun getAllMessages(): List<Message>
 }
 
