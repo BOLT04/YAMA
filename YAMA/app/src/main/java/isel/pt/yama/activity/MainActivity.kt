@@ -41,16 +41,7 @@ class MainActivity : AppCompatActivity() {
                 LoginViewModel(app)
             }
 
-/*            val orgIdStr = getString(R.string.organizationId)
-            val userTokenStr = getString(R.string.userToken)
-
             // Get values in shared preferences.
-            val userId = sharedPref.getString(userIdStr, null)
-            val orgId = sharedPref.getString(orgIdStr, null)
-            val userToken = sharedPref.getString(userTokenStr, null)*/
-
-            // Prepare to launch HomeActivity.
-
             restoreUserInputTexts(viewModel, sharedPref)
             viewModel.submitLogin()
 

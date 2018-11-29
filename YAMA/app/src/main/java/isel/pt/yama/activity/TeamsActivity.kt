@@ -11,9 +11,10 @@ import isel.pt.yama.adapter.TeamsAdapter
 import isel.pt.yama.adapter.TeamsAdapter.OnTeamClickListener
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
-import isel.pt.yama.dto.Team
+import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.dataAccess.database.Team
 import kotlinx.android.synthetic.main.activity_teams.*
 import isel.pt.yama.viewmodel.TeamsViewModel
 
@@ -61,8 +62,8 @@ class TeamsActivity : AppCompatActivity() {
         val orgIdStr = getString(R.string.organizationId)
         val userTokenStr = getString(R.string.userToken)
 
-        val orgId = sharedPref.getString(orgIdStr, null)
-        val userToken = sharedPref.getString(userTokenStr, null)
+        val orgId = sharedPref.getString(orgIdStr, "")
+        val userToken = sharedPref.getString(userTokenStr, "")
 
         viewModel.updateTeams(userToken, orgId)
     }

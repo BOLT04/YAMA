@@ -11,7 +11,7 @@ import com.android.volley.toolbox.JsonRequest
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import isel.pt.yama.dto.Organization
+import isel.pt.yama.dto.OrganizationDto
 import isel.pt.yama.dto.UserDto
 
 class GetRequestUser(url: String, success: Response.Listener<UserDto>, error: Response.ErrorListener,
@@ -38,15 +38,15 @@ class GetRequestUser(url: String, success: Response.Listener<UserDto>, error: Re
     : GetRequest<UserDto>(url, success, error, headers)
 */
 
-class GetRequestOrganizations(url: String, success: Response.Listener<List<Organization>>, error: Response.ErrorListener,
+class GetRequestOrganizations(url: String, success: Response.Listener<List<OrganizationDto>>, error: Response.ErrorListener,
                               private val headers: MutableMap<String, String>?)
-    : JsonRequest<List<Organization>>(Request.Method.GET, url, "", success, error) {
+    : JsonRequest<List<OrganizationDto>>(Request.Method.GET, url, "", success, error) {
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Organization>> {
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<OrganizationDto>> {
         val mapper = jacksonObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         val organizationsDto = mapper
-                .readValue<List<Organization>>(String(response.data))
+                .readValue<List<OrganizationDto>>(String(response.data))
 
         return Response.success(organizationsDto, null)
     }

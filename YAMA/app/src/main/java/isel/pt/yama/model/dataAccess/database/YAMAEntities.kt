@@ -1,54 +1,83 @@
 package isel.pt.yama.model.dataAccess.database
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
+import androidx.room.TypeConverter
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-@Entity(tableName = "teams", primaryKeys = ["orgId", "id"])
+@Parcelize
+@Entity(tableName = "teams", primaryKeys = ["organization", "id"])
 data class Team(
         val name : String,
         val id : Int,
-        val orgId : Int,
-        val description : String?)
+        @ForeignKey(entity = Organization::class, parentColumns = ["login"],
+                childColumns = ["organization"])
+        val organization : String,
+        val description : String?) : Parcelable
 
 @Entity(tableName = "users")
 data class User (
         @PrimaryKey
-        val id : Int,
         val login : String,
-        val orgId : Int,
-        val bio : String,
+        val id : Int,
+        val name : String?,
+        val email : String?,
         val avatarUrl : String,
-        val name : String,
-        val email : String,
-        val followers : Int,
+        val followers : Int?,
         val following : Int)
 
-@Entity(tableName = "messages", primaryKeys = ["orgId", "teamId", "id"])
+@Entity(tableName = "messages")
 data class Message (
-
-        @ForeignKey(entity = Team::class, parentColumns = ["orgId", "id"],
-                childColumns = ["orgId", "teamId"])
-        val orgId : Int,
-        val teamId : Int,
-
-        @PrimaryKey(autoGenerate = true) val id : Int,
-
+        @PrimaryKey(autoGenerate = true)
+        val id : Int,
+        @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],
+                childColumns = ["organization", "team"])
+        val organization : String,
+        val team : Int,
         val content : String,
-        val createdAt : Timestamp
+        val createdAt : Date
 )
 
 
-@Entity(tableName = "members", primaryKeys = ["orgId", "teamId", "userId"])
-data class Member (
+@Entity(tableName = "team_members", primaryKeys = ["organization", "team", "user"])
+data class TeamMember (
+        @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],
+                    childColumns = ["organization", "team"])
+        val organization : String,
+        val team : Int,
 
-        @ForeignKey(entity = Team::class, parentColumns = ["orgId", "id"],
-                    childColumns = ["orgId", "teamId"])
-        val orgId : Int,
-        val teamId : Int,
+        @ForeignKey(entity = User::class, parentColumns = ["login"],
+                    childColumns = ["user"])
+        val user : String)
 
-        @ForeignKey(entity = User::class, parentColumns = ["id"],
-                    childColumns = ["userId"])
-        val userId : Int)
+@Entity(tableName = "organization_members", primaryKeys = ["organization", "user"])
+data class OrganizationMember (
+        @ForeignKey(entity = Organization::class, parentColumns = ["login"],
+                childColumns = ["organization"])
+        val organization : String,
+
+        @ForeignKey(entity = User::class, parentColumns = ["login"],
+                childColumns = ["user"])
+        val user : String)
+
+@Entity(tableName = "organizations")
+data class Organization (
+        @PrimaryKey
+        val login : String,
+        val id : Int)
+
+
+class Converters {
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time?.toLong()
+    }
+}

@@ -8,8 +8,8 @@ import com.android.volley.VolleyError
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.SP_NAME
-import isel.pt.yama.dto.Organization
-import isel.pt.yama.dto.Team
+import isel.pt.yama.dto.OrganizationDto
+import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.network.GetMembersRequest
 import isel.pt.yama.network.GetRequestOrganizations
@@ -63,7 +63,7 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    fun getUserOrganizations(accessToken: String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("Fetching user organizations from Github API") {
             GetRequestOrganizations(
                     GITHUB_API_USER_ORGS,
@@ -74,7 +74,7 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    fun getTeams(orgId: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("Fetching teams  from Github API") {
             GetTeamsRequest(
                 "$GITHUB_API_ORGS/$orgId/teams",

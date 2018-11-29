@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dto.Team
+import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.dataAccess.database.User
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
@@ -25,13 +26,13 @@ class ChatActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
-        val user : UserDto = app.repository.user!!
+        val user : User = app.repository.user!!
 
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
             ChatViewModel(app)
         }
 
-        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+        val team: TeamDto = intent.getParcelableExtra("team")//TODO: what to put on default value
 
         teamName.text=team.name
 

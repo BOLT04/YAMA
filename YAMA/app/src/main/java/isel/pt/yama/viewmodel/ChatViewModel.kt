@@ -4,32 +4,33 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.dto.Message
+import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.model.dataAccess.database.User
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     //TODO get user id selected, probably from intent?
 
-    val user : UserDto? = app.repository.user
+    val user : User? = app.repository.user
 
     //here for proof of concept
-    val anotheruser : UserDto? = UserDto("Login", 123, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", "Name", null, null, 1) //TODO get user id selected, probably from intent?
-    val initchat:MutableList<Message> = mutableListOf()
+    val anotheruser : User? = User("Login", 123, "Name", null, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", 1, 3) //TODO get user id selected, probably from intent?
+    val initchat:MutableList<MessageDto> = mutableListOf()
 
 
 
-    private var  chatLogInternal: MutableLiveData<List<Message>>
+    private var  chatLogInternal: MutableLiveData<List<MessageDto>>
 
-    val chatLog: LiveData<List<Message>>
+    val chatLog: LiveData<List<MessageDto>>
         get() = chatLogInternal
 
 
     init{
 
-        var mutableLiveData = MutableLiveData<List<Message>>()
+        var mutableLiveData = MutableLiveData<List<MessageDto>>()
 
         chatLogInternal = mutableLiveData
 
@@ -65,7 +66,7 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     }
    fun receiveMessage(message: ReceivedMessage){
        initchat.add(message)
-       getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatar_url){message.userAvatar=it}
+       getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatarUrl){message.userAvatar=it}
        chatLogInternal.value=initchat
    }
 

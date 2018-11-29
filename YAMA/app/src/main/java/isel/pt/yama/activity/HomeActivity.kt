@@ -15,16 +15,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       /* setSupportActionBar(toolbar)
-
-        // Setup menu icon on action bar.
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
-        }*/
-
-        // Check how this activity was created (through Login or Main activity).
 
         teamsBtn.setOnClickListener {
             val intent = Intent(this, TeamsActivity::class.java)

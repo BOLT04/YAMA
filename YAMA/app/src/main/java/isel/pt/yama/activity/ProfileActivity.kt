@@ -34,6 +34,6 @@ class ProfileActivity : AppCompatActivity() {
             user_profile_userAvatar.setImageBitmap(it)
         })
 
-        app.repository.getAvatarImage(user.avatar_url){viewModel.userAvatarImage.value=it}
+        app.repository.getAvatarImage(user.avatarUrl){viewModel.userAvatarImage.value=it}
     }
 }

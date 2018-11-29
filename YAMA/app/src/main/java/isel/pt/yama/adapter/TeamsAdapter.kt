@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import isel.pt.yama.dto.Team
+import isel.pt.yama.dto.TeamDto
+import isel.pt.yama.model.dataAccess.database.Team
 
 import isel.pt.yama.viewmodel.TeamsViewModel
 

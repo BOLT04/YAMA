@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.dto.Message
+import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
 import java.text.SimpleDateFormat
@@ -18,7 +18,7 @@ import java.util.Date
 
 
 abstract class ChatViewHolder( view: ViewGroup) : RecyclerView.ViewHolder(view){
-    abstract fun bindTo(message: Message?)
+    abstract fun bindTo(message: MessageDto?)
 }
 
 class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatViewHolder(view) {
@@ -28,7 +28,7 @@ class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatVi
     private val userNameView: TextView = view.findViewById(R.id.userName)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
-    override fun bindTo(message: Message?) {
+    override fun bindTo(message: MessageDto?) {
         avatarImgView.setImageBitmap((message as ReceivedMessage).userAvatar)//make request Uri.parse(message?.user?.avatar_url))
         sentMsgView.text = message.text
         userNameView.text= message.user.name
@@ -42,7 +42,7 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
     private val sentMsgView: TextView = view.findViewById(R.id.message)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
-    override fun bindTo(message: Message?) {
+    override fun bindTo(message: MessageDto?) {
         sentMsgView.text = message?.text
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(Date(message?.createdAt!!))
@@ -53,15 +53,15 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
 const val MESSAGE_RECEIVED_CODE = 1
 const val MESSAGE_SENT_CODE =2
 
-class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog: LiveData<List<Message>>) : RecyclerView.Adapter<ChatViewHolder>() {
+class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog: LiveData<List<MessageDto>>) : RecyclerView.Adapter<ChatViewHolder>() {
 
     init {
-        chatLog.observe(context, Observer<List<Message>> { list ->
+        chatLog.observe(context, Observer<List<MessageDto>> { list ->
             this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             val currentPostition =  chatLog.value?.size
             val currentMessage = list[currentPostition!!.minus(1)]
             if(currentMessage is ReceivedMessage)
-                app.repository.getAvatarImage(currentMessage.user.avatar_url) {
+                app.repository.getAvatarImage(currentMessage.user.avatarUrl) {
                     currentMessage.userAvatar=it
                     this.notifyItemChanged(currentPostition)
                 }

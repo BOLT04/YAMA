@@ -65,13 +65,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun restoreUserInputTexts(model: LoginViewModel, sharedPref: SharedPreferences) {
-        if (model.textUser == null)
+
+        if (model.textOrganization == "")
             model.textUser = sharedPref.getString(getString(R.string.userId), "")
 
-        if (model.textOrganization == null)
+        if (model.textOrganization == "")
             model.textOrganization = sharedPref.getString(getString(R.string.organizationId), "")
 
-        if (model.textToken == null)
+        if (model.textToken == "")
             model.textToken = sharedPref.getString(getString(R.string.userToken), "")
 
         login_userID.text = Editable.Factory().newEditable(model.textUser)

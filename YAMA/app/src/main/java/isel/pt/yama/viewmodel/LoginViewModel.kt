@@ -6,16 +6,16 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
-import isel.pt.yama.dto.Organization
-import isel.pt.yama.dto.UserDto
+import isel.pt.yama.model.dataAccess.database.Organization
+import isel.pt.yama.model.dataAccess.database.User
 
 class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
-    var textUser: String? = null
-    var textOrganization: String? = null
-    var textToken: String? = null
+    var textUser: String = ""
+    var textOrganization: String = ""
+    var textToken: String = ""
 
-    val userInfo: MutableLiveData<UserDto> = MutableLiveData()
+    val userInfo: MutableLiveData<User> = MutableLiveData()
     private val userOrganizations: MutableLiveData<List<Organization>> = MutableLiveData()
 
     val loginIsOk: LiveData<Boolean> = tryLogin()
@@ -42,13 +42,13 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     fun submitLogin() {
         // Usage of !! is guaranteed not to be null because its initialized by LoginActivity
-        app.repository.getUserDetails(textToken!!,{
+        app.repository.getUserDetails(textUser, textToken!!,{
             userInfo.value = it
         }, {
             defaultErrorHandler(app)
         })
 
-        app.repository.getUserOrganizations(textToken!!, {
+        app.repository.getUserOrganizations(textUser, textToken!!, {
             userOrganizations.value = it
         }, {
             defaultErrorHandler(app)
@@ -60,7 +60,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
             checkLoginInfo(a, b)
         }
 
-    private fun checkLoginInfo(usr : UserDto, orgs: List<Organization>) =
+    private fun checkLoginInfo(usr : User, orgs: List<Organization>) =
         if (usr.login == textUser) {
             val organization = orgs.firstOrNull {
                 it.login == textOrganization

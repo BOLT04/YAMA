@@ -28,6 +28,6 @@ class YAMAApplication : Application() {
 
         //PopulateDbAsync(wordRoomDatabase).execute()
 
-        repository = YAMARepository(this, GithubApi(this), db.teamDAO()) //TODO: is 'this' correct here?
+        repository = YAMARepository(this, GithubApi(this), db) //TODO: is 'this' correct here?
     }
 }

@@ -1,4 +1,4 @@
-package isel.adeetc.pdm.currencywroom.kotlinx
+package isel.pt.yama.kotlinx
 
 import android.annotation.SuppressLint
 import android.os.AsyncTask

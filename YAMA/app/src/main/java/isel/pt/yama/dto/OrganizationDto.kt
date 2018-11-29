@@ -4,4 +4,5 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Organization (val login: String) : Parcelable
+class OrganizationDto (val login: String,
+                       val id: Int) : Parcelable

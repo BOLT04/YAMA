@@ -1,7 +1,6 @@
 package isel.pt.yama.activity
 
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,17 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.MembersAdapter
-import isel.pt.yama.adapter.TeamsAdapter
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
-import isel.pt.yama.dto.Team
+import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.dataAccess.database.Team
+import isel.pt.yama.model.dataAccess.database.User
 import isel.pt.yama.viewmodel.MembersViewModel
-import isel.pt.yama.viewmodel.TeamsViewModel
 import kotlinx.android.synthetic.main.activity_members.*
-import kotlinx.android.synthetic.main.activity_teams.*
 
 // Represents the activity where all the elements/members of a team are listed.
 class MembersActivity : AppCompatActivity() {
@@ -29,7 +27,7 @@ class MembersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_members)
 
-        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+        val team: TeamDto = intent.getParcelableExtra("team")//TODO: what to put on default value
 
         textViewTeamName.text = team.name
         textViewTeamDescription.text = team.description
@@ -45,7 +43,7 @@ class MembersActivity : AppCompatActivity() {
        // val intent = Intent(this, ChatActivity::class.java)
 
         val listener = object : MembersAdapter.OnMemberClickListener {
-            override fun onMemberClick(user: UserDto?) {
+            override fun onMemberClick(user: User?) {
                //TODO: implement DM
                 Toast.makeText(app, "Direct messaging comming soon", Toast.LENGTH_SHORT).show()
                 // intent.putExtra("user", user)
@@ -55,7 +53,7 @@ class MembersActivity : AppCompatActivity() {
 
         membersView.adapter = MembersAdapter(viewModel, listener)
 
-        viewModel.members.observe(this, Observer<List<UserDto>> {
+        viewModel.members.observe(this, Observer<List<User>> {
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(viewModel, listener)
         })
@@ -63,9 +61,12 @@ class MembersActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
         //TODO: this code is always the same, get sharedPref, setup the key string, get a value from it associated to that key
         //TODO:so make a function for this?? extension maybe
+        val orgIdStr = getString(R.string.organizationId)
         val userTokenStr = getString(R.string.userToken)
+
+        val orgId = sharedPref.getString(orgIdStr, "")
         val userToken = sharedPref.getString(userTokenStr, "")
 
-        viewModel.updateMembers(userToken, team.id)
+        viewModel.updateMembers(userToken, team.id, orgId)
     }
 }

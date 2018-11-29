@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.dto.UserDto
+import isel.pt.yama.model.dataAccess.database.User
 import isel.pt.yama.viewmodel.MembersViewModel
 import kotlinx.android.synthetic.main.abc_activity_chooser_view_list_item.view.*
 
@@ -31,7 +32,7 @@ class MembersAdapter(private val viewModel: MembersViewModel,
     }
 
     interface OnMemberClickListener {
-        fun onMemberClick(user: UserDto?)
+        fun onMemberClick(user: User?)
     }
 }
 
@@ -39,7 +40,7 @@ class MembersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val memberAvatar: ImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
 
-    fun bindTo(user: UserDto?, listener: MembersAdapter.OnMemberClickListener) {
+    fun bindTo(user: User?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
         memberAvatar.setImageBitmap(null)
