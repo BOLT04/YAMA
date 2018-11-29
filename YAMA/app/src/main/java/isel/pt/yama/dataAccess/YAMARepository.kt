@@ -1,4 +1,4 @@
-package isel.pt.yama.model.dataAccess
+package isel.pt.yama.dataAccess
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -12,13 +12,9 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.OrganizationDto
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.model.dataAccess.database.*
-import isel.pt.yama.model.dataAccess.github.GithubApi
+import isel.pt.yama.dataAccess.database.*
+import isel.pt.yama.dataAccess.github.GithubApi
 import isel.pt.yama.network.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,

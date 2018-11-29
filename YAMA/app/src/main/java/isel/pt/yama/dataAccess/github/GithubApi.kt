@@ -1,4 +1,4 @@
-package isel.pt.yama.model.dataAccess.github
+package isel.pt.yama.dataAccess.github
 
 import android.content.Context
 import android.util.Log

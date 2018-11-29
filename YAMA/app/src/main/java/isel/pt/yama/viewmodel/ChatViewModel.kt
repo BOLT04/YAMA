@@ -7,8 +7,8 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dto.UserDto
-import isel.pt.yama.model.dataAccess.database.User
+import isel.pt.yama.dataAccess.database.User
+import kotlinx.android.synthetic.main.activity_chat.*
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
@@ -46,7 +46,7 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
-        receiveMessage(ReceivedMessage(anotheruser!!, "dj kalled text", 0))
+        receiveMessage(ReceivedMessage(anotheruser!!, "dj kalled text alksjdfhlaksdjhflkljg kljg lkljg lkjhg lkjg lkjg lkjg lkjg lkjglkjglkjg lkjg lkjgl kjglkjg lkjg lkjg lkjglkjglkjglkjg kasjdhflkjashdf laksjdh flkja lkjh lkjh lkjh lkjh lkjhlkjhlkjhlkjhlkj çoiuçoiyuçoiyupoiyupo poiypoiypo hsdlkfj halkfjh salkdfj hlkasjh dflkjhaslfdkjh a alksdhf lkashjd flk hasd", 0))
         receiveMessage(ReceivedMessage(user, "dj kalled text", 0))
         receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
         receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
@@ -62,12 +62,12 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     fun sendMessage(message: SentMessage){
         initchat.add(message)
         chatLogInternal.value=initchat
-
     }
-   fun receiveMessage(message: ReceivedMessage){
+
+    fun receiveMessage(message: ReceivedMessage){
        initchat.add(message)
        getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatarUrl){message.userAvatar=it}
        chatLogInternal.value=initchat
-   }
+    }
 
 }

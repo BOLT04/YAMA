@@ -1,4 +1,4 @@
-package isel.pt.yama.model.dataAccess.database
+package isel.pt.yama.dataAccess.database
 
 import androidx.room.*
 
@@ -21,7 +21,7 @@ interface TeamDAO {
 
 @Dao
 interface MessageDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(message: Message)
 
     @Query("SELECT * from messages ORDER BY createdAt ASC")
@@ -30,7 +30,7 @@ interface MessageDAO {
 
 @Dao
 interface UserDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUsers(vararg users: User)
 
     @Query("SELECT * FROM users WHERE login = :user")

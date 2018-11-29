@@ -1,7 +1,7 @@
 package isel.pt.yama.dto
 
 import android.graphics.Bitmap
-import isel.pt.yama.model.dataAccess.database.User
+import isel.pt.yama.dataAccess.database.User
 
 abstract class MessageDto(val user: User,
                           val text : String,

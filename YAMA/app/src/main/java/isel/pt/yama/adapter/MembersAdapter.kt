@@ -8,10 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
-import isel.pt.yama.dto.UserDto
-import isel.pt.yama.model.dataAccess.database.User
+import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.viewmodel.MembersViewModel
-import kotlinx.android.synthetic.main.abc_activity_chooser_view_list_item.view.*
 
 class MembersAdapter(private val viewModel: MembersViewModel,
                      private val listener: OnMemberClickListener) : RecyclerView.Adapter<MembersViewHolder>() {
