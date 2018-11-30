@@ -30,7 +30,7 @@ class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatVi
 
     override fun bindTo(message: MessageDto?) {
         avatarImgView.setImageBitmap((message as ReceivedMessage).userAvatar)//make request Uri.parse(message?.user?.avatar_url))
-        sentMsgView.text = message.text
+        sentMsgView.text = message.content
         userNameView.text= message.user.name
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(Date(message.createdAt))
@@ -43,7 +43,7 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
     override fun bindTo(message: MessageDto?) {
-        sentMsgView.text = message?.text
+        sentMsgView.text = message?.content
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(Date(message?.createdAt!!))
     }

@@ -23,6 +23,8 @@ class ProfileActivity : AppCompatActivity() {
             ProfileViewModel(app)
         }
 
+        // The responsibility of initializing user property ia on MainActivity or LoginActivity
+        // So when we're here, its guaranteed to be not null.
         val user = app.repository.user!!
 
         user_profile_login.text = user.login

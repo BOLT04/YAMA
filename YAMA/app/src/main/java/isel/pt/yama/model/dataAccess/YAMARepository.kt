@@ -10,20 +10,22 @@ import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.OrganizationDto
+import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.model.dataAccess.database.*
+import isel.pt.yama.model.dataAccess.firebase.FirebaseDatabase
 import isel.pt.yama.model.dataAccess.github.GithubApi
 import isel.pt.yama.network.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,
                      private val api: GithubApi,
-                     private val db: YAMADatabase) {
+                     private val localDb: YAMADatabase,
+                     private val firebase: FirebaseDatabase) {
+
+
+
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -31,22 +33,22 @@ class YAMARepository(private val app: YAMAApplication,
             //TODO: what is success property???
             //if (dto.success) syncSaveTeamsFromDTO(app, teamDao, teams)
             //else listOf()
-            syncSaveTeamsFromDTO(app, db, orgId, teams)
+            syncSaveTeamsFromDTO(app, localDb, orgId, teams)
         }
     }
     private fun saveToDB(user: UserDto): AsyncWork<User> {
         return runAsync {
-            syncSaveUserFromDTO(app, db, user)
+            syncSaveUserFromDTO(app, localDb, user)
         }
     }
     private fun saveToDB(organizations: List<OrganizationDto>): AsyncWork<List<Organization>> {
         return runAsync {
-            syncSaveOrganizationsFromDTO(app, db, organizations)
+            syncSaveOrganizationsFromDTO(app, localDb, organizations)
         }
     }
     private fun saveToDB(team: Int, organization: String, members: List<UserDto>): AsyncWork<List<User>> {
         return runAsync {
-            syncSaveTeamMembersFromDTO(app, db, team, organization, members)
+            syncSaveTeamMembersFromDTO(app, localDb, team, organization, members)
         }
     }
     private fun syncSaveTeamsFromDTO(app: YAMAApplication, db: YAMADatabase, organization: String, teams: List<TeamDto>): List<Team> {
@@ -87,7 +89,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun getUserDetails(userLogin: String, accessToken : String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting user from DB")
-            db.userDAO().getUser(userLogin)
+            localDb.userDAO().getUser(userLogin)
         }.andThen { user ->
             if (user == null)
                 api.getUserDetails(accessToken, {
@@ -103,7 +105,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun getUserOrganizations(user: String, accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting organizations from DB")
-            db.organizationMembersDAO().getUserOrganizations(user)
+            localDb.organizationMembersDAO().getUserOrganizations(user)
         }.andThen { organizations ->
             if (organizations.isEmpty())
                 api.getUserOrganizations(accessToken, {
@@ -119,11 +121,11 @@ class YAMARepository(private val app: YAMAApplication,
     fun getTeams(organization: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting teams from DB")
-            db.teamDAO().getOrganizationTeams(organization)
+            localDb.teamDAO().getOrganizationTeams(organization)
         }.andThen { teams ->
-            if (teams.isEmpty())// Then data isn't stored in db so fetch from API
+            if (teams.isEmpty())// Then data isn't stored in localDb so fetch from API
                 api.getTeams(organization, {
-                    //TODO: finish saving to db
+                    //TODO: finish saving to localDb
                     saveToDB(organization, it).andThen(success)
                 }, fail)
             else {
@@ -136,7 +138,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun getTeamMembers(team: Int, organization: String, success: (List<User>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting team members from DB")
-            db.teamMembersDAO().getTeamMembers(team, organization)
+            localDb.teamMembersDAO().getTeamMembers(team, organization)
         }.andThen { members ->
             if (members.isEmpty())
                 api.getTeamMembers(team, {
@@ -168,4 +170,11 @@ class YAMARepository(private val app: YAMAApplication,
                     Toast.makeText(app, R.string.error_network, Toast.LENGTH_LONG).show()})
         queue.add(request)
     }
+
+
+    fun sendMessageToFirebase(message: SentMessage, team: Team){
+
+        firebase.sendMessage(message, team)
+    }
+
 }

@@ -7,11 +7,11 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dto.UserDto
+import isel.pt.yama.model.dataAccess.database.Team
 import isel.pt.yama.model.dataAccess.database.User
 
 
-class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewModel(app) {
     //TODO get user id selected, probably from intent?
 
     val user : User? = app.repository.user
@@ -37,29 +37,31 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
         mutableLiveData.value= initchat
 
         //here for proof of concept
-        receiveMessage(ReceivedMessage(user!!, "some text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        sendMessage(SentMessage(user, "another text", 0))
-        receiveMessage(ReceivedMessage(anotheruser!!, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(user, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(user, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessage(user!!, "some content", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        sendMessage(SentMessage(user, "another one", 0))
+        receiveMessage(ReceivedMessage(anotheruser!!, "dj kalled", 0))
+        receiveMessage(ReceivedMessage(user, "dj kalled", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled", 0))
+        receiveMessage(ReceivedMessage(user, "dj kalled content", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled ", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled ", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled ", 0))
+        receiveMessage(ReceivedMessage(anotheruser, "dj kalled ", 0))
 
 
     }
 
     fun sendMessage(message: SentMessage){
+        app.repository.sendMessageToFirebase(message, team)
+
         initchat.add(message)
         chatLogInternal.value=initchat
 

@@ -11,6 +11,7 @@ import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.dataAccess.database.Team
 import isel.pt.yama.model.dataAccess.database.User
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -28,11 +29,12 @@ class ChatActivity : AppCompatActivity() {
 
         val user : User = app.repository.user!!
 
+        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
-            ChatViewModel(app)
+            ChatViewModel(app, team)
         }
 
-        val team: TeamDto = intent.getParcelableExtra("team")//TODO: what to put on default value
 
         teamName.text=team.name
 

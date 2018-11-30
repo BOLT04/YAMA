@@ -34,6 +34,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
             }
         }
 
+
         result.addSource(this) { source1emitted = true; mergeF.invoke() }
         result.addSource(other) { source2emitted = true; mergeF.invoke() }
 
