@@ -4,14 +4,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dataAccess.database.User
-import kotlinx.android.synthetic.main.activity_chat.*
 
 
-class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+
+class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewModel(app) {
     //TODO get user id selected, probably from intent?
 
     val user : User? = app.repository.user
@@ -57,9 +58,12 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
         receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
 
 
+
     }
 
     fun sendMessage(message: SentMessage){
+        app.repository.sendMessageToFirebase(message, team)
+
         initchat.add(message)
         chatLogInternal.value=initchat
     }

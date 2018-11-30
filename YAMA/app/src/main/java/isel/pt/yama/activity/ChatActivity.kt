@@ -4,18 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
+import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
-import androidx.recyclerview.widget.RecyclerView
-
 
 
 class ChatActivity : AppCompatActivity() {
@@ -30,11 +29,11 @@ class ChatActivity : AppCompatActivity() {
 
         val user : User = app.repository.user!!
 
-        val viewModel = getViewModel("chat view model"){ //TODO extract to field
-            ChatViewModel(app)
-        }
-
         val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+
+        val viewModel = getViewModel("chat view model"){ //TODO extract to field
+            ChatViewModel(app, team)
+        }
 
         teamName.text=team.name
 
