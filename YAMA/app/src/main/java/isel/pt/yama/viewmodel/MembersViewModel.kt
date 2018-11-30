@@ -4,7 +4,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
-import isel.pt.yama.model.dataAccess.database.User
+import isel.pt.yama.dataAccess.database.User
 
 class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 

@@ -11,10 +11,9 @@ import isel.pt.yama.adapter.TeamsAdapter
 import isel.pt.yama.adapter.TeamsAdapter.OnTeamClickListener
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
-import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.model.dataAccess.database.Team
+import isel.pt.yama.dataAccess.database.Team
 import kotlinx.android.synthetic.main.activity_teams.*
 import isel.pt.yama.viewmodel.TeamsViewModel
 

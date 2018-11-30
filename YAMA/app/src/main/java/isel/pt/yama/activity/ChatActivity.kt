@@ -4,18 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
+import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dto.TeamDto
-import isel.pt.yama.dto.UserDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.model.dataAccess.database.Team
-import isel.pt.yama.model.dataAccess.database.User
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
+
 
 class ChatActivity : AppCompatActivity() {
 
@@ -35,13 +35,21 @@ class ChatActivity : AppCompatActivity() {
             ChatViewModel(app, team)
         }
 
-
         teamName.text=team.name
 
-        messagesList.layoutManager = LinearLayoutManager(this)
-        messagesList.adapter = ChatAdapter(app, this, viewModel.chatLog)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.stackFromEnd = true
 
+        messagesList.layoutManager = layoutManager
+        messagesList.setHasFixedSize(true)
 
+        val adapter = ChatAdapter(app, this, viewModel.chatLog)
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                layoutManager.smoothScrollToPosition(messagesList, null, adapter.itemCount)
+            }
+        })
+        messagesList.adapter = adapter
 
         sendBtn.setOnClickListener {
             val msg = userMessageTxt.text

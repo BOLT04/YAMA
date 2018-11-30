@@ -1,4 +1,4 @@
-package isel.pt.yama.model.dataAccess
+package isel.pt.yama.dataAccess
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -9,14 +9,15 @@ import isel.pt.yama.kotlinx.AsyncWork
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dataAccess.database.*
+import isel.pt.yama.dataAccess.github.GithubApi
 import isel.pt.yama.dto.OrganizationDto
 import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.model.dataAccess.database.*
-import isel.pt.yama.model.dataAccess.firebase.FirebaseDatabase
-import isel.pt.yama.model.dataAccess.github.GithubApi
-import isel.pt.yama.network.*
+import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
+import isel.pt.yama.network.GetRequestImage
+
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,

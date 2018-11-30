@@ -15,6 +15,10 @@ import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.dto.SentMessage
 import java.text.SimpleDateFormat
 import java.util.Date
+import android.app.Application
+import androidx.recyclerview.widget.LinearLayoutManager
+
+
 
 
 abstract class ChatViewHolder( view: ViewGroup) : RecyclerView.ViewHolder(view){
@@ -30,8 +34,10 @@ class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatVi
 
     override fun bindTo(message: MessageDto?) {
         avatarImgView.setImageBitmap((message as ReceivedMessage).userAvatar)//make request Uri.parse(message?.user?.avatar_url))
+
         sentMsgView.text = message.content
-        userNameView.text= message.user.name
+        userNameView.text= message.user.name ?: message.user.login
+
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(Date(message.createdAt))
     }
@@ -53,17 +59,20 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
 const val MESSAGE_RECEIVED_CODE = 1
 const val MESSAGE_SENT_CODE =2
 
-class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner ,val chatLog: LiveData<List<MessageDto>>) : RecyclerView.Adapter<ChatViewHolder>() {
+class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner,
+                  val chatLog: LiveData<List<MessageDto>>) : RecyclerView.Adapter<ChatViewHolder>() {
 
     init {
         chatLog.observe(context, Observer<List<MessageDto>> { list ->
-            this.notifyItemChanged(chatLog.value?.size!!.minus(1))
-            val currentPostition =  chatLog.value?.size
-            val currentMessage = list[currentPostition!!.minus(1)]
+            //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
+            this.notifyItemInserted(chatLog.value?.size!!)
+
+            val currentPosition =  chatLog.value?.size
+            val currentMessage = list[currentPosition!!.minus(1)]
             if(currentMessage is ReceivedMessage)
                 app.repository.getAvatarImage(currentMessage.user.avatarUrl) {
                     currentMessage.userAvatar=it
-                    this.notifyItemChanged(currentPostition)
+                    this.notifyItemChanged(currentPosition)
                 }
         })
 

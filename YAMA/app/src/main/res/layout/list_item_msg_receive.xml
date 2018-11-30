@@ -9,45 +9,52 @@
 
     <TextView
         android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userAvatar"
-        app:layout_constraintTop_toTopOf="@+id/userAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
         tools:background="@android:color/holo_blue_light"
         tools:text="message" />
 
     <ImageView
         android:id="@+id/userAvatar"
         android:layout_width="46dp"
-        android:layout_height="37dp"
+        android:layout_height="46dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="4dp"
+        android:baselineAlignBottom="false"
         android:contentDescription="@string/sender_avatar"
+        android:scaleType="fitStart"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/userAvatar"
-        app:layout_constraintStart_toEndOf="@+id/userAvatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTime"
         tools:text="user name" />
 
     <TextView
         android:id="@+id/dateTime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="18-08-2012 15:54"
         android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="@+id/message"
-        app:layout_constraintStart_toEndOf="@+id/message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="18-08-2012 15:54" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

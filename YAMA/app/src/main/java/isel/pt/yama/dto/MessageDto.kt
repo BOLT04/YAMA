@@ -1,7 +1,7 @@
 package isel.pt.yama.dto
 
 import android.graphics.Bitmap
-import isel.pt.yama.model.dataAccess.database.User
+import isel.pt.yama.dataAccess.database.User
 
 const val USER_ID = "user_id"
 const val CONTENT = "content"

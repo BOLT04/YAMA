@@ -9,50 +9,50 @@
 
     <EditText
         android:id="@+id/userMessageTxt"
-        android:layout_width="258dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/userMessage_hint"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textMultiLine"
+        android:maxLines="3"
+        android:scrollHorizontally="false"
+        android:singleLine="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendBtn"
-        app:layout_constraintHorizontal_bias="0.619"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messagesList" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sendBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:clickable="true"
+        android:focusable="true"
         app:backgroundTint="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messagesList"
-        app:srcCompat="@mipmap/ic_send"
-        android:focusable="true" />
+        app:srcCompat="@mipmap/ic_send" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesList"
-        android:layout_width="321dp"
-        android:layout_height="357dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
         android:foregroundGravity="bottom"
         android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/userMessageTxt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/teamName"
-        app:stackFromEnd="false" />
+        app:stackFromEnd="true" />
 
     <TextView
         android:id="@+id/teamName"

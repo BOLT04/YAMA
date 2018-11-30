@@ -1,16 +1,13 @@
-package isel.pt.yama.model.dataAccess.database
+package isel.pt.yama.dataAccess.database
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
+import androidx.room.*
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
 @Entity(tableName = "teams", primaryKeys = ["organization", "id"])
-data class Team(
+data class Team (
         val name : String,
         val id : Int,
         @ForeignKey(entity = Organization::class, parentColumns = ["login"],
@@ -48,7 +45,6 @@ data class TeamMember (
                     childColumns = ["organization", "team"])
         val organization : String,
         val team : Int,
-
         @ForeignKey(entity = User::class, parentColumns = ["login"],
                     childColumns = ["user"])
         val user : String)
@@ -62,6 +58,20 @@ data class OrganizationMember (
         @ForeignKey(entity = User::class, parentColumns = ["login"],
                 childColumns = ["user"])
         val user : String)
+
+/*data class UserOrganizations (
+        @Embedded
+        val user : User,
+        @Relation(parentColumn = "login", entityColumn = "login", entity = Organization::class)
+        val organizations : List<Organization> = listOf()
+)
+
+data class TeamMembers (
+        @Embedded
+        val team : Team,
+        @Relation(parentColumn = "login", entityColumn = "login", entity = User::class)
+        val users : List<User> = listOf()
+)*/
 
 @Entity(tableName = "organizations")
 data class Organization (

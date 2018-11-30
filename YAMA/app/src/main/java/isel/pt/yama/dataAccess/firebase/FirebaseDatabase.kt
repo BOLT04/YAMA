@@ -1,9 +1,8 @@
-package isel.pt.yama.model.dataAccess.firebase
+package isel.pt.yama.dataAccess.firebase
 
 import isel.pt.yama.Chat
+import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.model.dataAccess.database.Message
-import isel.pt.yama.model.dataAccess.database.Team
 
 class FirebaseDatabase(private val chatBoard : Chat){
 

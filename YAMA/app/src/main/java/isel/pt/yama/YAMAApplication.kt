@@ -6,10 +6,10 @@ import androidx.room.Room
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseApp
-import isel.pt.yama.model.dataAccess.github.GithubApi
-import isel.pt.yama.model.dataAccess.YAMARepository
-import isel.pt.yama.model.dataAccess.database.YAMADatabase
-import isel.pt.yama.model.dataAccess.firebase.FirebaseDatabase
+import isel.pt.yama.dataAccess.YAMARepository
+import isel.pt.yama.dataAccess.database.YAMADatabase
+import isel.pt.yama.dataAccess.github.GithubApi
+import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
 
 
 class YAMAApplication : Application() {
@@ -26,8 +26,9 @@ class YAMAApplication : Application() {
 
         var localDb =
                 //Room.databaseBuilder(this, YAMARoomDatabase::class.java, "YAMA_db")
-                        Room.inMemoryDatabaseBuilder(this, YAMADatabase::class.java)
-                        .build()
+                       // Room.inMemoryDatabaseBuilder(this, YAMADatabase::class.java)
+                       // .build()
+         Room.databaseBuilder(this, YAMADatabase::class.java, "YAMA_db").build()
 
 
         FirebaseApp.initializeApp(this)
