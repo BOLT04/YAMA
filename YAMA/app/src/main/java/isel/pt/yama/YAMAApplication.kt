@@ -13,6 +13,7 @@ class YAMAApplication : Application() {
     val TAG = "YAMAApplication"
     lateinit var queue: RequestQueue
     lateinit var repository: YAMARepository
+        private set
 
     override fun onCreate() {
         super.onCreate()

@@ -19,6 +19,36 @@ const val NOTIFICATION_ID = 100012
 class UpdateTeamsWorker(context : Context, params : WorkerParameters)
     : Worker(context, params) {
 
+	override fun doWork(): Result {
+        return try {
+            val app = applicationContext as YAMAApplication
+            Log.v(app.TAG, "Updating local DB with teams")
+            //val teamsDto = syncFetchTeams(app)
+            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
+            sendNotification(app) //TODO: do we need a notification for this
+            Result.SUCCESS
+        }
+        catch (error: VolleyError) {
+            if (canRecover(error)) Result.RETRY else Result.FAILURE
+        }
+    }
+	
+	/*
+	override fun doWork(): Result =
+        try {
+            val app = applicationContext as YAMAApplication
+            Log.v(app.TAG, "Updating local DB with teams")
+            //val teamsDto = syncFetchTeams(app)
+            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
+            sendNotification(app) //TODO: do we need a notification for this
+            
+			Result.SUCCESS
+        }
+        catch (error: VolleyError) {
+            if (canRecover(error)) Result.RETRY else Result.FAILURE
+        }
+	*/
+	
     private fun sendNotification(app: YAMAApplication) {
 
         val action = PendingIntent.getActivity(app, 101,
@@ -41,17 +71,5 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
         return statusCode in 500..599
     }
 
-    override fun doWork(): Result {
-        return try {
-            val app = applicationContext as YAMAApplication
-            Log.v(app.TAG, "Updating local DB with teams")
-            //val teamsDto = syncFetchTeams(app)
-            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
-            sendNotification(app) //TODO: do we need a notification for this
-            Result.SUCCESS
-        }
-        catch (error: VolleyError) {
-            if (canRecover(error)) Result.RETRY else Result.FAILURE
-        }
-    }
+    
 }
