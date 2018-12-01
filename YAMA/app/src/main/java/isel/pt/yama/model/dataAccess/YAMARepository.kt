@@ -31,8 +31,6 @@ class YAMARepository(private val app: YAMAApplication,
                      private val api: GithubApi,
                      private val teamDao: TeamDAO) {
 
-    val TAG = YAMARepository::class.java.simpleName
-
     //TODO: implement this
     private fun saveToDB(teams: List<Team>): AsyncWork<List<Team>> {
         return runAsync {
@@ -64,7 +62,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeams(orgId: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(TAG, "Getting teams from DB")
+            Log.v(app.TAG, "Getting teams from DB")
             teamDao.getOrganizationTeams(orgId)
         }.andThen { teams ->
             if (teams.isEmpty())// Then data isn't stored in db so fetch from API
@@ -74,7 +72,7 @@ class YAMARepository(private val app: YAMAApplication,
                     //success(it)
                 }, fail)
             else {
-                Log.v(TAG, "Got teams from DB")
+                Log.v(app.TAG, "Got teams from DB")
                 success(teams)
             }
         }
