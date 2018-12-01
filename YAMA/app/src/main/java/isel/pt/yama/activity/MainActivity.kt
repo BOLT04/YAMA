@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
             val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
+
             //TODO: Can we do this, use another activity's view model
             val viewModel = getViewModel(VIEW_MODEL_KEY){
                 LoginViewModel(app)

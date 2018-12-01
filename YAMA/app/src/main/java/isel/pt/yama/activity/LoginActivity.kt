@@ -43,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
+
+
         login_btn.setOnClickListener {
             saveUserInputsToModel(viewModel)
             viewModel.submitLogin()

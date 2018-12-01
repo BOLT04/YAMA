@@ -19,19 +19,19 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
 
     //here for proof of concept
     val anotheruser : User? = User("Login", 123, "Name", null, "http://2.bp.blogspot.com/-CmBgofK7QzU/TVj3u3N1h2I/AAAAAAAADN8/OszBhGvvXRU/s640/tumblr_lg7h9gpbtP1qap9qio1_500.jpeg", 1, 3) //TODO get user id selected, probably from intent?
-    val initchat:MutableList<MessageDto> = mutableListOf()
+    val initchat:MutableList<MutableLiveData<MessageDto>> = mutableListOf()
 
 
 
-    private var  chatLogInternal: MutableLiveData<List<MessageDto>>
+    private var  chatLogInternal: MutableLiveData<List<MutableLiveData<MessageDto>>>
 
-    val chatLog: LiveData<List<MessageDto>>
+    val chatLog: LiveData<List<MutableLiveData<MessageDto>>>
         get() = chatLogInternal
 
 
     init{
 
-        var mutableLiveData = MutableLiveData<List<MessageDto>>()
+        var mutableLiveData = MutableLiveData<List<MutableLiveData<MessageDto>>>()
 
         chatLogInternal = mutableLiveData
 
@@ -63,13 +63,16 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
 
     fun sendMessage(message: SentMessage){
         app.repository.sendMessageToFirebase(message, team)
-
-        initchat.add(message)
+        val msg: MutableLiveData<MessageDto> = MutableLiveData()
+        msg.value=message
+        initchat.add(msg)
         chatLogInternal.value=initchat
     }
 
     fun receiveMessage(message: ReceivedMessage){
-       initchat.add(message)
+        val msg: MutableLiveData<MessageDto> = MutableLiveData()
+        msg.value=message
+        initchat.add(msg)
        getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatarUrl){message.userAvatar=it}
        chatLogInternal.value=initchat
     }
