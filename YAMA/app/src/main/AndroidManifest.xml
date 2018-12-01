@@ -15,21 +15,23 @@
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.ChatActivity"></activity>
         <activity
-            android:name=".activity.ChatActivity"
-            >
-
-        </activity>
-        <activity android:name=".activity.MainActivity"
-            android:noHistory="true"
-            android:label="YAMA">
+            android:name=".activity.MainActivity"
+            android:label="YAMA"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.TeamsActivity" />
-        <activity android:name=".activity.MembersActivity"></activity>
+        <activity android:name=".activity.MembersActivity" />
+        <activity
+            android:name=".activity.Home2Activity"
+            android:label="@string/title_activity_home2"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

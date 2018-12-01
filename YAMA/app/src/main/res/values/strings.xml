@@ -34,4 +34,5 @@
     <string name="teams_notification_content">Teams have been downloaded</string>
     <string name="teams_channel_name">Teams updates</string>
     <string name="teams_channel_description">Channel for team\'s updates notification</string>
+    <string name="title_activity_home2">Home2Activity</string>
 </resources>
