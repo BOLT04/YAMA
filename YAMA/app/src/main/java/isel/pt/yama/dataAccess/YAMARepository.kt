@@ -25,8 +25,7 @@ class YAMARepository(private val app: YAMAApplication,
                      private val localDb: YAMADatabase,
                      private val firebase: FirebaseDatabase) {
 
-
-
+    val TAG = YAMARepository::class.java.simpleName
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -100,7 +99,7 @@ class YAMARepository(private val app: YAMAApplication,
     }
 
     private fun syncSaveUserOrganizationsFromDTO(app: YAMAApplication, db: YAMADatabase, user: String, organizations: List<OrganizationDto>): List<Organization> {
-        Log.v(app.TAG, "Saving user organizations to DB")
+        Log.v(TAG, "Saving user organizations to DB")
 
         val data = organizations.map { dto ->
             OrganizationMember(dto.login, user)
@@ -113,7 +112,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getUserDetails(userLogin: String, accessToken : String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting user from DB")
+            Log.v(TAG, "Getting user from DB")
             localDb.userDAO().getUser(userLogin)
         }.andThen { user ->
             if (user == null)
@@ -121,7 +120,7 @@ class YAMARepository(private val app: YAMAApplication,
                     saveToDB(it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got user from DB")
+                Log.v(TAG, "Got user from DB")
                 success(user)
             }
         }
@@ -129,7 +128,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getUserOrganizations(user: String, accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting organizations from DB")
+            Log.v(TAG, "Getting organizations from DB")
             localDb.organizationMembersDAO().getUserOrganizations(user)
         }.andThen { organizations ->
             if (organizations.isEmpty())
@@ -137,7 +136,7 @@ class YAMARepository(private val app: YAMAApplication,
                      saveToDBUSer(user, it).andThen(success)
             }, fail)
             else {
-                Log.v(app.TAG, "Got organizations from DB")
+                Log.v(TAG, "Got organizations from DB")
                 success(organizations)
             }
         }
@@ -145,7 +144,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeams(organization: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting teams from DB")
+            Log.v(TAG, "Getting teams from DB")
             localDb.teamDAO().getOrganizationTeams(organization)
         }.andThen { teams ->
             if (teams.isEmpty())// Then data isn't stored in localDb so fetch from API
@@ -154,7 +153,7 @@ class YAMARepository(private val app: YAMAApplication,
                     saveToDB(organization, it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got teams from DB")
+                Log.v(TAG, "Got teams from DB")
                 success(teams)
             }
         }
@@ -162,7 +161,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeamMembers(team: Int, organization: String, success: (List<User>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting team members from DB")
+            Log.v(TAG, "Getting team members from DB")
             localDb.teamMembersDAO().getTeamMembers(team, organization)
         }.andThen { members ->
             if (members.isEmpty())
@@ -170,7 +169,7 @@ class YAMARepository(private val app: YAMAApplication,
                     saveToDB(team, organization, it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got organizations from DB")
+                Log.v(TAG, "Got organizations from DB")
                 success(members)
             }
         }
@@ -198,7 +197,6 @@ class YAMARepository(private val app: YAMAApplication,
 
 
     fun sendMessageToFirebase(message: SentMessage, team: Team){
-
         firebase.sendMessage(message, team)
     }
 
