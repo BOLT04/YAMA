@@ -16,6 +16,10 @@ abstract class MessageDto(val user: User,
             CONTENT to content,
             CREATED_AT to createdAt.toString()
     )
+
+    fun fromMap(msg: Map<String, String>): MessageDto {
+        MessageDto(msg.get(USER_ID), msg.get(CONTENT), msg.get(CREATED_AT))
+    }
 }
 
 

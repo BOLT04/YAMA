@@ -1,5 +1,6 @@
 package isel.pt.yama.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dataAccess.database.User
+import isel.pt.yama.dataAccess.firebase.ChatBoard
 import isel.pt.yama.dto.SentMessage
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
@@ -26,13 +28,11 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
-
-        val user : User = app.repository.user!!
-
-        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+        val user: User = app.repository.user!!
+        val team: Team = app.repository.team.value!!
 
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
-            ChatViewModel(app, team)
+            ChatViewModel(app)
         }
 
         teamName.text=team.name
@@ -43,7 +43,7 @@ class ChatActivity : AppCompatActivity() {
         messagesList.layoutManager = layoutManager
         messagesList.setHasFixedSize(true)
 
-        val adapter = ChatAdapter(app, this, viewModel.chatLog)
+        val adapter = ChatAdapter(app, this, viewModel)
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 layoutManager.smoothScrollToPosition(messagesList, null, adapter.itemCount)

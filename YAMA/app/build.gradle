@@ -12,7 +12,7 @@ androidExtensions {
     experimental = true
 }
 
-ext.kotlin_version = '1.3.10'
+//ext.kotlin_version = '1.3.10'
 
 android {
     compileSdkVersion 28
@@ -34,18 +34,21 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-firestore:17.1.2'
-
+    implementation 'com.google.firebase:firebase-firestore:17.1.3'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'androidx.core:core-ktx:1.0.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.0.0'
-    implementation "androidx.room:room-runtime:2.1.0-alpha02"
-    kapt "androidx.room:room-compiler:2.1.0-alpha02"
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
-    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha11"
+    def lifecycle_version = "2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version" // use kapt for Kotlin
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version" // use -ktx for Kotlin
+
+    def room_version = "2.1.0-alpha02"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
+
+    def work_version = "1.0.0-alpha11"
+    implementation "android.arch.work:work-runtime-ktx:$work_version" // use -ktx for Kotlin
 
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.7'
@@ -55,11 +58,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
 
 }

@@ -16,9 +16,10 @@ import isel.pt.yama.dto.SentMessage
 import java.text.SimpleDateFormat
 import java.util.Date
 import android.app.Application
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-
-
+import isel.pt.yama.dataAccess.firebase.ChatBoard
+import isel.pt.yama.viewmodel.ChatViewModel
 
 
 abstract class ChatViewHolder( view: ViewGroup) : RecyclerView.ViewHolder(view){
@@ -60,10 +61,21 @@ const val MESSAGE_RECEIVED_CODE = 1
 const val MESSAGE_SENT_CODE =2
 
 class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner,
-                  val chatLog: LiveData<List<MessageDto>>) : RecyclerView.Adapter<ChatViewHolder>() {
+                  val viewModel: ChatViewModel) : RecyclerView.Adapter<ChatViewHolder>() {
+
+    private val chatBoard: ChatBoard = app.chatBoard
+    private val chatLog = viewModel.chatLog
 
     init {
-        chatLog.observe(context, Observer<List<MessageDto>> { list ->
+
+        chatBoard.content.observe(context, Observer {
+/*            for (msg in messages)
+                Log.v("YAMAApp", "${msg.key} > ${msg.value}")*/
+            for (msg in it)
+                Log.v("YAMAApp", "${msg.user} : ${msg.content} : ${msg.createdAt}")
+        })
+
+        /*chatLog.observe(context, Observer<List<MessageDto>> { list ->
             //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             this.notifyItemInserted(chatLog.value?.size!!)
 
@@ -74,9 +86,11 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner,
                     currentMessage.userAvatar=it
                     this.notifyItemChanged(currentPosition)
                 }
-        })
+        })*/
 
     }
+
+
 
 
     override fun getItemCount(): Int = chatLog.value?.size ?: 0

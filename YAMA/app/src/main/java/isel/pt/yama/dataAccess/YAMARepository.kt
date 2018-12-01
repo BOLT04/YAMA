@@ -3,6 +3,8 @@ package isel.pt.yama.dataAccess
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import isel.pt.yama.kotlinx.AsyncWork
@@ -26,7 +28,9 @@ class YAMARepository(private val app: YAMAApplication,
                      private val firebase: FirebaseDatabase) {
 
 
-
+    var user: User? = null
+    var team: MutableLiveData<Team> = MutableLiveData()
+    private val avatarCache : HashMap<String, Bitmap> = HashMap()
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -152,10 +156,6 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
-    var user: User? = null
-
-    private val avatarCache : HashMap<String, Bitmap> = HashMap()
-
     fun getAvatarImage(url: String, cb: (Bitmap) -> Unit ) {
 
         if(avatarCache.containsKey(url))
@@ -173,9 +173,16 @@ class YAMARepository(private val app: YAMAApplication,
     }
 
 
-    fun sendMessageToFirebase(message: SentMessage, team: Team){
+    fun sendMessageToFirebase(message: SentMessage){
+        firebase.sendMessage(message, team.value!!)
+    }
 
-        firebase.sendMessage(message, team)
+    fun sendMessage(message: SentMessage) {
+        // TODO pick destination
+    }
+
+    fun getMessagesFromFirebase(team: Team){
+        firebase.getMessages(team)
     }
 
 }
