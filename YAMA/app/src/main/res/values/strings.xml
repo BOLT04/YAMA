@@ -24,6 +24,9 @@
     <string name="teams">Teams</string>
     <string name="options">Options</string>
 
+    <!-- Toolbar -->
+    <string name="logout">Logout</string>
+
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
