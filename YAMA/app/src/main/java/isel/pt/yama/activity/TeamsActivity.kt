@@ -56,15 +56,15 @@ class TeamsActivity : AppCompatActivity() {
             teamsView.adapter = TeamsAdapter(viewModel, listener)
         })
 
-        val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+/*        val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
         //TODO: this code is always the same, get sharedPref, setup the key string, get a value from it associated to that key
         //TODO:so make a function for this?? extension maybe
         val orgIdStr = getString(R.string.organizationId)
         val userTokenStr = getString(R.string.userToken)
 
         val orgId = sharedPref.getString(orgIdStr, "")
-        val userToken = sharedPref.getString(userTokenStr, "")
+        val userToken = sharedPref.getString(userTokenStr, "")*/
 
-        viewModel.updateTeams(userToken, orgId)
+        viewModel.updateTeams()
     }
 }

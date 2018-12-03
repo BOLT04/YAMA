@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
+import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
@@ -39,12 +40,13 @@ class MainActivity : AppCompatActivity() {
 
             // Get values in shared preferences.
             restoreUserInputTexts(viewModel, sharedPref)
+            fillRepositoryInfo(app, viewModel)
             viewModel.submitLogin()
 
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
+                    app.repository.user = viewModel.userInfo.value
                     val intent = Intent(this, HomeActivity::class.java)
-                    app.repository.user=viewModel.userInfo.value
                     startActivity(intent)
                 } else {
                     val intent = Intent(this, LoginActivity::class.java)
@@ -57,8 +59,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun restoreUserInputTexts(model: LoginViewModel, sharedPref: SharedPreferences) {
-            model.textUser = sharedPref.getString(getString(R.string.userId), "")
-            model.textOrganization = sharedPref.getString(getString(R.string.organizationId), "")
-            model.textToken = sharedPref.getString(getString(R.string.userToken), "")
+        model.textUser = sharedPref.getString(getString(R.string.userId), "")
+        model.textOrganization = sharedPref.getString(getString(R.string.organizationId), "")
+        model.textToken = sharedPref.getString(getString(R.string.userToken), "")
+    }
+
+    private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
+        app.repository.organization = model.textOrganization
+        app.repository.token = model.textToken
     }
 }

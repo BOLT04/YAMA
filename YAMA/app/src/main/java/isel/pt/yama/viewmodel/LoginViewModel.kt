@@ -43,13 +43,13 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     fun submitLogin() {
         // Usage of !! is guaranteed not to be null because its initialized by LoginActivity
-        app.repository.getUserDetails(textUser, textToken!!,{
+        app.repository.getUserDetails(textUser, textToken,{
             userInfo.value = it
         }, {
             defaultErrorHandler(app)
         })
 
-        app.repository.getUserOrganizations(textUser, textToken!!, {
+        app.repository.getUserOrganizations(textUser, textToken, {
             userOrganizations.value = it
         }, {
             defaultErrorHandler(app)

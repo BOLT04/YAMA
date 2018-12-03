@@ -5,14 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.*
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
+import isel.pt.yama.dto.ReceivedMessage
+import isel.pt.yama.kotlinx.runAsync
+import kotlinx.coroutines.runBlocking
 
 
 class ChatBoard(private val app: YAMAApplication) {
 
     val content = MutableLiveData<List<MessageDto>>()
     val db = FirebaseFirestore.getInstance()
-    val teamsRef = db.collection("teams")
-    val teamsObserved = HashMap<String, ListenerRegistration>()
+    private val teamsRef = db.collection("teams")
+    private val teamsObserved = HashMap<String, ListenerRegistration>()
+    private var chat : MutableList<MessageDto> = mutableListOf()
+    var aa : MutableMap<String, MessageDto> = mutableMapOf()
 
     fun associateTeam(teamName : String) {
         if (teamsObserved.containsKey(teamName)) return
@@ -24,49 +29,44 @@ class ChatBoard(private val app: YAMAApplication) {
                         Log.w("YAMAApp", "Listen failed.", e)
                         return@EventListener
                     }
-                    for (dc in snapshots!!.documentChanges) {
-                        if (dc.type == DocumentChange.Type.ADDED) {
-                            MessageDto
-                                for (msg in dc.document.data)
-                                    Log.d("YAMAApp", "${msg.key} : ${msg.value}")
+                    runAsync {
+                        for (dc in snapshots!!.documentChanges) {
+                            if (dc.type == DocumentChange.Type.ADDED) {
+                                var msg = dc.document.toObject(MessageDto::class.java)
+                                if (app.repository.user?.login != msg.user) {
+                                    app.repository.getAvatarImage(msg.user) { _ ->
+                                        aa[dc.document.id] = ReceivedMessage(msg, app.repository.avatarCache[msg.user]!!)
+                                    }
+                                    msg = ReceivedMessage(msg, )//TODO: Imagem por omissão)//app.repository.avatarCache[msg.user]!!)
+                                }
+                                //chat.add(msg)
+                                aa[dc.document.id] = msg
+                                chat = aa.values as MutableList<MessageDto>
+                            }
                         }
+                    }.andThen {
+                        content.value = chat
                     }
-/*                    for (doc in value!!) {
-                        for (msg in doc.data)
-                            Log.d("YAMAApp", "${msg.key} : ${msg.value}")
-                    }*/
                 })
         teamsObserved[teamName] = registration
     }
 
+    fun updateImage(msgId : String, msg : MessageDto) {
+        aa[msgId] = ReceivedMessage(msg, app.repository.avatarCache[msg.user]!!)
+    }
 
-    fun post(newMessage: Map<String, String>, teamName: String) {
+    fun post(newMessage: MessageDto, teamName: String) {
         Log.d("YAMAApp", "inside post")
         db.collection("teams")
                 .document(teamName)
                 .collection("messages")
                 .add(newMessage)
                 .addOnSuccessListener{
-                    Log.v("YAMAApp", "Message sent with success")
+                    Log.d("YAMAApp", "Message sent with success")
                 }
                 .addOnFailureListener{
-                    Log.v("YAMAApp", "Message failed to be sent")
-                    Log.v("YAMAApp", it.toString())
-                }
-    }
-
-    fun get(teamName: String) {
-        db.collection("teams")
-                .document(teamName)
-                .collection("messages")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        Log.d("FS MSG", document.id + " => " + document.data)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("FS MSG", "Error getting documents.", exception)
+                    Log.d("YAMAApp", "Message failed to be sent")
+                    Log.d("YAMAApp", it.toString())
                 }
     }
 }

@@ -10,8 +10,8 @@ class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<Team>> = MutableLiveData()
 
-    fun updateTeams(token: String, organization: String) {
-        app.repository.getTeams(organization, {
+    fun updateTeams() {
+        app.repository.getTeams({
             teams.value = it
         }, {
             defaultErrorHandler(app)

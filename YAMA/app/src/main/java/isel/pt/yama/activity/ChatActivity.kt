@@ -10,8 +10,7 @@ import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.dataAccess.firebase.ChatBoard
-import isel.pt.yama.dto.SentMessage
+import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.ChatViewModel
@@ -57,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.sendMessage(SentMessage(user, msg.toString(), Date().time))
+            viewModel.sendMessage(MessageDto(user.login, msg.toString(), Date()))
             userMessageTxt.text.clear()
         }
 

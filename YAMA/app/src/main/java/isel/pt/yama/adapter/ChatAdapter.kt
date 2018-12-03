@@ -12,7 +12,6 @@ import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
-import isel.pt.yama.dto.SentMessage
 import java.text.SimpleDateFormat
 import java.util.Date
 import android.app.Application
@@ -37,10 +36,10 @@ class ReceivedChatViewHolder(val app: YAMAApplication, view: ViewGroup) : ChatVi
         avatarImgView.setImageBitmap((message as ReceivedMessage).userAvatar)//make request Uri.parse(message?.user?.avatar_url))
 
         sentMsgView.text = message.content
-        userNameView.text= message.user.name ?: message.user.login
+        userNameView.text= message.user//.name ?: message.user.login
 
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(Date(message.createdAt))
+        dateTimeView.text= sdf.format(message.createdAt)
     }
 }
 
@@ -52,7 +51,7 @@ class SentChatViewHolder(view: ViewGroup) : ChatViewHolder(view) {
     override fun bindTo(message: MessageDto?) {
         sentMsgView.text = message?.content
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(Date(message?.createdAt!!))
+        dateTimeView.text= sdf.format(message?.createdAt!!)
     }
 }
 
@@ -69,10 +68,20 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner,
     init {
 
         chatBoard.content.observe(context, Observer {
-/*            for (msg in messages)
-                Log.v("YAMAApp", "${msg.key} > ${msg.value}")*/
-            for (msg in it)
-                Log.v("YAMAApp", "${msg.user} : ${msg.content} : ${msg.createdAt}")
+
+            for (msg in it) {
+                this.notifyItemInserted(chatBoard.content.value?.size!!)
+
+/*                val currentPosition = chatLog.value?.size
+                val currentMessage = list[currentPosition!!.minus(1)]
+                if (currentMessage is ReceivedMessage)
+                    app.repository.getAvatarImage(currentMessage.user.avatarUrl) {
+                        currentMessage.userAvatar = it
+                        this.notifyItemChanged(currentPosition)
+                    }*/
+            }
+            //for (msg in it)
+                //Log.v("YAMAApp", "${msg.user} : ${msg.content} : ${msg.createdAt}")
         })
 
         /*chatLog.observe(context, Observer<List<MessageDto>> { list ->
@@ -95,10 +104,10 @@ class ChatAdapter(val app: YAMAApplication, context: LifecycleOwner,
 
     override fun getItemCount(): Int = chatLog.value?.size ?: 0
     override fun getItemViewType(position: Int) =
-            if(chatLog.value?.get(position) is SentMessage)
-                MESSAGE_SENT_CODE
-            else
+            if(chatLog.value?.get(position) is ReceivedMessage)
                 MESSAGE_RECEIVED_CODE
+            else
+                MESSAGE_SENT_CODE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder =
             if (viewType == MESSAGE_RECEIVED_CODE)

@@ -21,6 +21,7 @@ const val GITHUB_API_USER = "$GITHUB_API_HOST/user"
 const val GITHUB_API_USER_ORGS = "$GITHUB_API_HOST/user/orgs"
 const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
+const val GITHUB_API_USER_NAME = "$GITHUB_API_HOST/users"
 
 //TODO: move to package with better name -> dataAccess.cloud
 class GithubApi(private val app: YAMAApplication) {
@@ -59,6 +60,17 @@ class GithubApi(private val app: YAMAApplication) {
                 Response.Listener(success),
                 Response.ErrorListener(fail),
                 buildRequestHeaders(accessToken)
+            )
+        }
+    }
+
+    fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
+        getAndLog("Fetching user from Github API") {
+            GetRequestUser(
+                    "$GITHUB_API_USER_NAME/$name",
+                    Response.Listener(success),
+                    Response.ErrorListener(fail),
+                    authHeaderMap
             )
         }
     }

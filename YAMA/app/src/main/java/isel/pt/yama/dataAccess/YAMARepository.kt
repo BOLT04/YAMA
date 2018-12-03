@@ -11,13 +11,11 @@ import isel.pt.yama.kotlinx.AsyncWork
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.common.defaultErrorHandler
 import isel.pt.yama.dataAccess.database.*
 import isel.pt.yama.dataAccess.github.GithubApi
-import isel.pt.yama.dto.OrganizationDto
-import isel.pt.yama.dto.SentMessage
-import isel.pt.yama.dto.TeamDto
-import isel.pt.yama.dto.UserDto
 import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
+import isel.pt.yama.dto.*
 import isel.pt.yama.network.GetRequestImage
 
 
@@ -27,10 +25,11 @@ class YAMARepository(private val app: YAMAApplication,
                      private val localDb: YAMADatabase,
                      private val firebase: FirebaseDatabase) {
 
-
+    var token: String = ""
+    var organization: String = ""
     var user: User? = null
     var team: MutableLiveData<Team> = MutableLiveData()
-    private val avatarCache : HashMap<String, Bitmap> = HashMap()
+    val avatarCache : HashMap<String, Bitmap> = HashMap()
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -91,6 +90,46 @@ class YAMARepository(private val app: YAMAApplication,
         return result
     }
 
+    fun getAvatarImage(login : String, cb : () -> Unit) {
+        fun success(user : User) {
+            getAvatarImage(user.avatarUrl) { image ->
+                avatarCache[user.login] = image
+                cb()
+            }
+        }
+        Log.d(app.TAG, "Getting user from DB")
+        val user = localDb.userDAO().getUser(login)
+        if (user == null)
+            api.getUserDetailsForName(login, {
+                saveToDB(it).andThen { user ->
+                    success(user)
+                }
+            }, {
+                defaultErrorHandler(app)
+            })
+        else {
+            Log.d(app.TAG, "Got user from DB")
+            success(user)
+        }
+        /*runAsync {
+            Log.d(app.TAG, "Getting user from DB")
+            localDb.userDAO().getUser(login)
+        }.andThen { user ->
+            if (user == null)
+                api.getUserDetails(token, {
+                    saveToDB(it).andThen { user ->
+                        success(user)
+                    }
+                }, {
+                    defaultErrorHandler(app)
+                })
+            else {
+                Log.d(app.TAG, "Got user from DB")
+                success(user)
+            }
+        }*/
+    }
+
     fun getUserDetails(userLogin: String, accessToken : String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting user from DB")
@@ -123,7 +162,7 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
-    fun getTeams(organization: String, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getTeams(success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(app.TAG, "Getting teams from DB")
             localDb.teamDAO().getOrganizationTeams(organization)
@@ -173,16 +212,12 @@ class YAMARepository(private val app: YAMAApplication,
     }
 
 
-    fun sendMessageToFirebase(message: SentMessage){
+    fun sendMessageToFirebase(message: MessageDto){
         firebase.sendMessage(message, team.value!!)
     }
 
-    fun sendMessage(message: SentMessage) {
-        // TODO pick destination
-    }
-
-    fun getMessagesFromFirebase(team: Team){
-        firebase.getMessages(team)
+    fun sendMessage(message: MessageDto) {
+        sendMessageToFirebase(message)
     }
 
 }
