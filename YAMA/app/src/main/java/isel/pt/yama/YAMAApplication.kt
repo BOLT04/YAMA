@@ -17,7 +17,15 @@ class YAMAApplication : Application() {
 
     lateinit var queue: RequestQueue
     lateinit var repository: YAMARepository
+
     lateinit var chatBoard: ChatBoard
+        private set
+
+    override fun registerActivityLifecycleCallbacks(callback: ActivityLifecycleCallbacks?) {
+        Log.v("$TAG::actlog",callback?.javaClass.toString())
+        Log.v("$TAG::actlog",callback?.toString())
+    }
+
 
     override fun onCreate() {
         super.onCreate()

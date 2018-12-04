@@ -11,6 +11,7 @@ import isel.pt.yama.R
 import isel.pt.yama.adapter.MembersAdapter
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
+import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
@@ -25,7 +26,7 @@ class MembersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_members)
 
-        val team: TeamDto = intent.getParcelableExtra("team")//TODO: what to put on default value
+        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
 
         textViewTeamName.text = team.name
         textViewTeamDescription.text = team.description
@@ -67,4 +68,20 @@ class MembersActivity : AppCompatActivity() {
 
         viewModel.updateMembers(userToken, team.id, orgId)
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
 }

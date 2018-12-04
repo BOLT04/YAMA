@@ -30,6 +30,8 @@ class YAMARepository(private val app: YAMAApplication,
     var team: MutableLiveData<Team> = MutableLiveData()
     val avatarCache : HashMap<String, Bitmap> = HashMap()
     val userAvatarUrlCache : HashMap<String, String> = HashMap()
+    val TAG = YAMARepository::class.java.simpleName
+
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -50,11 +52,19 @@ class YAMARepository(private val app: YAMAApplication,
             syncSaveOrganizationsFromDTO(app, localDb, organizations)
         }
     }
+
+    private fun saveToDBUSer(user : String, organizations: List<OrganizationDto>): AsyncWork<List<Organization>> {
+        return saveToDB(organizations).andThen {
+            runAsync { syncSaveUserOrganizationsFromDTO(app, localDb, user, organizations) }}
+    }
     private fun saveToDB(team: Int, organization: String, members: List<UserDto>): AsyncWork<List<User>> {
         return runAsync {
-            syncSaveTeamMembersFromDTO(app, localDb, team, organization, members)
-        }
+                    syncSaveTeamMemberFromDTO(app, localDb, team, organization, members)
+                }
     }
+
+
+
     private fun syncSaveTeamsFromDTO(app: YAMAApplication, db: YAMADatabase, organization: String, teams: List<TeamDto>): List<Team> {
         Log.v(app.TAG, "syncSaveTeamsFromDTO: Saving teams to DB")
 
@@ -65,15 +75,21 @@ class YAMARepository(private val app: YAMAApplication,
         db.teamDAO().insertAll(*result.toTypedArray())//result.toTypedArray())
         return result
     }
-    private fun syncSaveTeamMembersFromDTO(app: YAMAApplication, db: YAMADatabase, team: Int, organization: String, members: List<UserDto>): List<User> {
-        Log.v(app.TAG, "syncSaveTeamMembersFromDTO: Saving team members to DB")
-        val data = members.map { dto ->
-            TeamMember(organization, team, dto.login)
+  
+
+    private fun syncSaveTeamMemberFromDTO(app: YAMAApplication, db: YAMADatabase, team: Int, organization: String, members: List<UserDto>): List<User> {
+        Log.v(app.TAG, "Saving team members to DB")
+
+        members.forEach {
+            if (db.userDAO().getUser(it.login) == null)
+                db.userDAO().insertUser(
+                        User(it.login, it.id, it.name, it.email, it.avatar_url, it.followers, it.following)
+                )
+            db.teamMembersDAO().insert(TeamMember(organization, team, it.login))
         }
-        db.teamMembersDAO().insertAll(*data.toTypedArray())
-        return members.map { dto ->
-            User(dto.login, dto.id, dto.name, dto.email, dto.avatar_url, dto.followers, dto.following)
-        }
+
+        return db.teamMembersDAO().getTeamMembers(team, organization)
+
     }
     private fun syncSaveOrganizationsFromDTO(app: YAMAApplication, db: YAMADatabase, organizations: List<OrganizationDto>): List<Organization> {
         Log.v(app.TAG, "syncSaveOrganizationsFromDTO: Saving organizations to DB")
@@ -90,9 +106,22 @@ class YAMARepository(private val app: YAMAApplication,
         return result
     }
 
+    private fun syncSaveUserOrganizationsFromDTO(app: YAMAApplication, db: YAMADatabase, user: String, organizations: List<OrganizationDto>): List<Organization> {
+        Log.v(TAG, "Saving user organizations to DB")
+
+        val data = organizations.map { dto ->
+            OrganizationMember(dto.login, user)
+        }
+
+        db.organizationMembersDAO().insertAll(*data.toTypedArray())
+
+        return organizations.map { Organization(it.login, it.id) }
+    }
+
     fun getUserDetails(userLogin: String, accessToken : String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "getUserDetails: Getting user from DB")
+            Log.v(TAG, "Getting user from DB")
+
             localDb.userDAO().getUser(userLogin)
         }.andThen { user ->
             if (user == null)
@@ -103,6 +132,7 @@ class YAMARepository(private val app: YAMAApplication,
             else {
                 Log.v(app.TAG, "getUserDetails: Got user from DB")
                 userAvatarUrlCache[userLogin] = user.avatarUrl
+
                 success(user)
             }
         }
@@ -110,15 +140,15 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getUserOrganizations(user: String, accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting organizations from DB")
+            Log.v(TAG, "Getting organizations from DB")
             localDb.organizationMembersDAO().getUserOrganizations(user)
         }.andThen { organizations ->
             if (organizations.isEmpty())
                 api.getUserOrganizations(accessToken, {
-                    saveToDB(it).andThen(success)
+                     saveToDBUSer(user, it).andThen(success)
             }, fail)
             else {
-                Log.v(app.TAG, "Got organizations from DB")
+                Log.v(TAG, "Got organizations from DB")
                 success(organizations)
             }
         }
@@ -126,7 +156,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeams(success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting teams from DB")
+            Log.v(TAG, "Getting teams from DB")
             localDb.teamDAO().getOrganizationTeams(organization)
         }.andThen { teams ->
             if (teams.isEmpty())// Then data isn't stored in localDb so fetch from API
@@ -135,7 +165,7 @@ class YAMARepository(private val app: YAMAApplication,
                     saveToDB(organization, it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got teams from DB")
+                Log.v(TAG, "Got teams from DB")
                 success(teams)
             }
         }
@@ -143,7 +173,7 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getTeamMembers(team: Int, organization: String, success: (List<User>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting team members from DB")
+            Log.v(TAG, "Getting team members from DB")
             localDb.teamMembersDAO().getTeamMembers(team, organization)
         }.andThen { members ->
             if (members.isEmpty())
@@ -151,7 +181,7 @@ class YAMARepository(private val app: YAMAApplication,
                     saveToDB(team, organization, it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got organizations from DB")
+                Log.v(TAG, "Got organizations from DB")
                 success(members)
             }
         }
@@ -211,6 +241,9 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun sendMessage(message: MessageDto) {
         sendMessageToFirebase(message)
+    }
+    fun sendMessageToFirebase(message: SentMessage, team: Team){
+        firebase.sendMessage(message, team)
     }
 
 }

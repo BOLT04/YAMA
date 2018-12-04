@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -36,13 +37,19 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
                 saveSharedPreferences(sharedPref)
+
                 fillRepositoryInfo(app, viewModel)
-                val intent = Intent(this, HomeActivity::class.java)
+              
+                val intent = Intent(this, Home2Activity::class.java)
+                app.repository.user=viewModel.userInfo.value
+
                 startActivity(intent)
             } else {
                 Toast.makeText(application, R.string.error_login, Toast.LENGTH_LONG).show()
             }
         })
+
+
 
         login_btn.setOnClickListener {
             saveUserInputsToModel(viewModel)
@@ -81,9 +88,27 @@ class LoginActivity : AppCompatActivity() {
         login_personalToken.text = Editable.Factory().newEditable(model.textToken)
     }
 
+
     private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
         app.repository.user = model.userInfo.value
         app.repository.organization = model.textOrganization
         app.repository.token = model.textToken
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
 }

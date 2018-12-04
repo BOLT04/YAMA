@@ -24,4 +24,6 @@
     <string name="teams_notification_content">Equipas foram descarregadas</string>
     <string name="teams_channel_name">Atualizações de Equipas</string>
     <string name="teams_channel_description">Canal das notificações de equipas</string>
+    <!-- Toolbar -->
+    <string name="logout">Sair</string>
 </resources>

@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.os.AsyncTask
 
 class AsyncWork<T>(private val work: () -> T) {
-    private var completion: ((T) -> Unit)? = null
+    private var completion: MutableList<((T) -> Unit)?> = mutableListOf()
     init {
         @SuppressLint("StaticFieldLeak")
         val worker = object : AsyncTask<Unit, Unit, T>() {
             override fun doInBackground(vararg params: Unit?): T = work()
-            override fun onPostExecute(result: T) { completion?.let { it(result) } }
+            override fun onPostExecute(result: T) { completion.forEach{
+                completion -> completion?.let { it(result) } }
+            }
         }
         worker.execute()
 		/*
@@ -21,8 +23,9 @@ class AsyncWork<T>(private val work: () -> T) {
 		
     }
 
-    infix fun andThen(completion: (T) -> Unit) {
-        this.completion = completion
+    infix fun andThen(completion: (T) -> Unit): AsyncWork<T> {
+        this.completion.add(completion)
+        return this
     }
 }
 

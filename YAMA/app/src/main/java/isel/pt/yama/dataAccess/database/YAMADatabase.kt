@@ -24,6 +24,9 @@ interface UserDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUsers(vararg users: User)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertUser( user: User)
+
     @Query("SELECT * FROM users WHERE login = :user")
     fun getUser(user: String): User?
 }
@@ -40,17 +43,26 @@ interface OrganizationMembersDAO {
             "INNER JOIN organization_members ON organizations.login=organization_members.organization " +
             "WHERE user = :user")
     fun getUserOrganizations(user: String): List<Organization>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg organizationMembers: OrganizationMember)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(organizationMember: OrganizationMember)
 }
 
 @Dao
 interface TeamMembersDAO {
     @Query("SELECT * FROM users " +
             "INNER JOIN team_members ON users.login=team_members.user " +
-            "WHERE team = :team AND organization = :organization")
+            "WHERE team_members.team = :team AND team_members.organization = :organization")
     fun getTeamMembers(team: Int, organization: String): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg members: TeamMember)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(member: TeamMember)
 }
 
 

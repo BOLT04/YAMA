@@ -1,4 +1,6 @@
 <resources>
+    <string name="TAG" translatable="false"> YAMA_APP</string>
+
     <string name="app_name">YAMA</string>
     <string name="user_id">User id</string>
     <string name="organization_id">Organization id</string>
@@ -24,6 +26,9 @@
     <string name="teams">Teams</string>
     <string name="options">Options</string>
 
+    <!-- Toolbar -->
+    <string name="logout">Logout</string>
+
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
@@ -34,4 +39,5 @@
     <string name="teams_notification_content">Teams have been downloaded</string>
     <string name="teams_channel_name">Teams updates</string>
     <string name="teams_channel_description">Channel for team\'s updates notification</string>
+    <string name="title_activity_home2">Home2Activity</string>
 </resources>

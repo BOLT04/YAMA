@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
             val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
+
             //TODO: Can we do this, use another activity's view model
             val viewModel = getViewModel(VIEW_MODEL_KEY){
                 LoginViewModel(app)
@@ -45,8 +47,10 @@ class MainActivity : AppCompatActivity() {
 
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
-                    app.repository.user = viewModel.userInfo.value
-                    val intent = Intent(this, HomeActivity::class.java)
+
+                    val intent = Intent(this, Home2Activity::class.java)
+                    app.repository.user=viewModel.userInfo.value
+
                     startActivity(intent)
                 } else {
                     val intent = Intent(this, LoginActivity::class.java)
@@ -68,4 +72,21 @@ class MainActivity : AppCompatActivity() {
         app.repository.organization = model.textOrganization
         app.repository.token = model.textToken
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
+
 }
