@@ -8,10 +8,12 @@ import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
-import isel.pt.yama.dto.SentMessage
 
 
 
+
+class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+/*
 class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewModel(app) {
     //TODO get user id selected, probably from intent?
 
@@ -57,11 +59,19 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
         receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
         receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
 
+*/
 
+    val user: User? = app.repository.user
+    val team: Team? = app.repository.team.value
+    val chatLog: MutableLiveData<List<MessageDto>> = app.chatBoard.content[team?.name]!!
 
+    fun sendMessage(message: MessageDto){
+        app.repository.sendMessage(message)
     }
 
-    fun sendMessage(message: SentMessage){
+
+
+/*    fun sendMessage(message: SentMessage){
         app.repository.sendMessageToFirebase(message, team)
         val msg: MutableLiveData<MessageDto> = MutableLiveData()
         msg.value=message
@@ -76,5 +86,5 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
        getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatarUrl){message.userAvatar=it}
        chatLogInternal.value=initchat
     }
-
+*/
 }

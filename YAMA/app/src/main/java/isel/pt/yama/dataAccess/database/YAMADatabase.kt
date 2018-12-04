@@ -20,15 +20,6 @@ interface TeamDAO {
 }
 
 @Dao
-interface MessageDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(message: Message)
-
-    @Query("SELECT * from messages ORDER BY createdAt ASC")
-    fun getAllMessages(): List<Message>
-}
-
-@Dao
 interface UserDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUsers(vararg users: User)
@@ -76,12 +67,11 @@ interface TeamMembersDAO {
 
 
 @Database(entities = [OrganizationMember::class, Organization::class, User::class,
-                        Team::class, TeamMember::class, Message::class], version = 1)
+                        Team::class, TeamMember::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class YAMADatabase : RoomDatabase() {
     abstract fun teamDAO(): TeamDAO
     abstract fun teamMembersDAO(): TeamMembersDAO
-    abstract fun messagesDAO(): MessageDAO
     abstract fun userDAO(): UserDAO
     abstract fun organizationDAO(): OrganizationDAO
     abstract fun organizationMembersDAO(): OrganizationMembersDAO

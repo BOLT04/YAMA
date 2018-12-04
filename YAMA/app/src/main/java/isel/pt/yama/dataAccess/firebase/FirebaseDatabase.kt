@@ -1,12 +1,10 @@
 package isel.pt.yama.dataAccess.firebase
 
-import isel.pt.yama.Chat
 import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.dto.SentMessage
+import isel.pt.yama.dto.MessageDto
 
-class FirebaseDatabase(private val chatBoard : Chat){
-
-    fun sendMessage(message: SentMessage, team: Team) {
-        chatBoard.post(message.toMap(), team.name)
+class FirebaseDatabase(private val chatBoard : ChatBoard){
+    fun sendMessage(message: MessageDto, team: Team) {
+        chatBoard.post(message, team.name)
     }
 }

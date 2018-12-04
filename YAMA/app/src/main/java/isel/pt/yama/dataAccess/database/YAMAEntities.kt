@@ -26,9 +26,9 @@ data class User (
         val followers : Int?,
         val following : Int)
 
-@Entity(tableName = "messages")
+/*@Entity(tableName = "messages")
 data class Message (
-        @PrimaryKey(autoGenerate = true)
+        @PrimaryKey
         val id : Int,
         @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],
                 childColumns = ["organization", "team"])
@@ -36,7 +36,7 @@ data class Message (
         val team : Int,
         val content : String,
         val createdAt : Date
-)
+)*/
 
 
 @Entity(tableName = "team_members", primaryKeys = ["organization", "team", "user"])

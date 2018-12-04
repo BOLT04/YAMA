@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
+import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
@@ -36,8 +37,12 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
                 saveSharedPreferences(sharedPref)
+
+                fillRepositoryInfo(app, viewModel)
+              
                 val intent = Intent(this, Home2Activity::class.java)
                 app.repository.user=viewModel.userInfo.value
+
                 startActivity(intent)
             } else {
                 Toast.makeText(application, R.string.error_login, Toast.LENGTH_LONG).show()
@@ -81,6 +86,13 @@ class LoginActivity : AppCompatActivity() {
         login_userID.text = Editable.Factory().newEditable(model.textUser)
         login_orgID.text = Editable.Factory().newEditable(model.textOrganization)
         login_personalToken.text = Editable.Factory().newEditable(model.textToken)
+    }
+
+
+    private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
+        app.repository.user = model.userInfo.value
+        app.repository.organization = model.textOrganization
+        app.repository.token = model.textToken
     }
 
 

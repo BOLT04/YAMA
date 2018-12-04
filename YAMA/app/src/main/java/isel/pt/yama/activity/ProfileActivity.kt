@@ -37,7 +37,8 @@ class ProfileActivity : AppCompatActivity() {
             user_profile_userAvatar.setImageBitmap(it)
         })
 
-        app.repository.getAvatarImage(user.avatarUrl){viewModel.userAvatarImage.value=it}
+        app.repository.getAvatarImageFromUrl(user.avatarUrl){viewModel.userAvatarImage.value=it}
+        //app.repository.getAvatarImageFromUrl(user.login){viewModel.userAvatarImage.value=it} // TODO: avatarurl or login
     }
 
     override fun onStart() {

@@ -33,6 +33,7 @@
         android:scaleType="fitStart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userName"
+        android:src="@drawable/ic_person_black_24dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView

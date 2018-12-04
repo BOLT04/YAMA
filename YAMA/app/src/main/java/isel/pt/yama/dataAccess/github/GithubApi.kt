@@ -22,6 +22,7 @@ const val GITHUB_API_USER_NAME = "$GITHUB_API_HOST/users"
 const val GITHUB_API_USER_ORGS = "$GITHUB_API_HOST/user/orgs"
 const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
+const val GITHUB_API_USER_NAME = "$GITHUB_API_HOST/users"
 
 //TODO: move to package with better name -> dataAccess.cloud
 class GithubApi(private val app: YAMAApplication) {
@@ -54,7 +55,7 @@ class GithubApi(private val app: YAMAApplication) {
 	//!
 
     fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
-        getAndLog("Fetching user from Github API") {
+        getAndLog("getUserDetails: Fetching user from Github API") {
             GetRequestUser(
                     GITHUB_API_USER,
                 Response.Listener(success),
@@ -75,8 +76,19 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
+    fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
+        getAndLog("getUserDetailsForName: Fetching user from Github API") {
+            GetRequestUser(
+                    "$GITHUB_API_USER_NAME/$name",
+                    Response.Listener(success),
+                    Response.ErrorListener(fail),
+                    authHeaderMap
+            )
+        }
+    }
+
     fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
-        getAndLog("Fetching user organizations from Github API") {
+        getAndLog("getUserOrganizations: Fetching user organizations from Github API") {
             GetRequestOrganizations(
                     GITHUB_API_USER_ORGS,
                 Response.Listener(success),
@@ -87,7 +99,7 @@ class GithubApi(private val app: YAMAApplication) {
     }
 
     fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
-        getAndLog("Fetching teams  from Github API") {
+        getAndLog("getTeams: Fetching teams from Github API") {
             GetTeamsRequest(
                 "$GITHUB_API_ORGS/$orgId/teams",
                 Response.Listener(success),
