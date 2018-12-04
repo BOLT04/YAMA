@@ -27,7 +27,7 @@ data class User (
         val following : Int)
 
 /*@Entity(tableName = "messages")
-data class Message (
+data class MessageMD (
         @PrimaryKey
         val id : Int,
         @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],

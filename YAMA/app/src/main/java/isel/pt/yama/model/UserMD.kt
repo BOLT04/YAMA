@@ -8,4 +8,11 @@ class UserMD (
     val email : String?,
     val followers : Int?,
     val following : Int,
-    val organizations : List<OrganizationMD>?)
+    val organizations : List<OrganizationMD>?){
+
+    override fun equals(other: Any?): Boolean =
+            other is UserMD && this.login==other.login
+
+
+
+}

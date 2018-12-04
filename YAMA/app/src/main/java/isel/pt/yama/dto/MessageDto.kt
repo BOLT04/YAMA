@@ -1,7 +1,5 @@
 package isel.pt.yama.dto
 
-import android.graphics.Bitmap
-import isel.pt.yama.dataAccess.database.User
 import java.util.*
 
 const val USER_ID = "user_id"
@@ -10,14 +8,15 @@ const val CREATED_AT = "created_at"
 
 open class MessageDto(val user: String = "",
                   val content : String = "",
-                  val createdAt: Date = Date())
+                  val createdAt: Date = Date())/*:Dto<MessageMD>{
 
-class ReceivedMessage(msg : MessageDto):
-        MessageDto(msg.user, msg.content, msg.createdAt) {
+    override fun fromObj(obj: MessageMD): Dto<MessageMD> =
+            MessageDto(obj.user.login, obj.content, obj.createdAt)
 
-    var userAvatar: Bitmap? = null
-    constructor(msg: MessageDto, userAvatar: Bitmap?) : this(msg) {
-        this.userAvatar = userAvatar
-    }
+    override fun toObj(dto: Dto<MessageMD>): MessageMD =
+            MessageMD()
+
 
 }
+
+*/

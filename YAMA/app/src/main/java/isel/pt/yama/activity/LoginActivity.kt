@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
                 fillRepositoryInfo(app, viewModel)
               
-                val intent = Intent(this, Home2Activity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 app.repository.user=viewModel.userInfo.value
 
                 startActivity(intent)

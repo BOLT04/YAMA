@@ -46,7 +46,7 @@ class TeamsActivity : AppCompatActivity() {
         val listener = object : OnTeamClickListener {
             override fun onTeamClick(team: Team?) {
                 app.repository.team.value = team
-                app.chatBoard.associateTeam(team?.name!!)
+                app.chatBoard.associateTeam(team?.id!!)
                 startActivity(intent)
             }
         }

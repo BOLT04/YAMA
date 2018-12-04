@@ -19,13 +19,12 @@ import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
 import androidx.lifecycle.Observer
 import android.R.attr.data
-
-
+import isel.pt.yama.model.SentMessageMD
 
 
 class ChatActivity : AppCompatActivity() {
 
-    //TODO: make view model for this activity that holds a list of  an object containing sent message and avatar img of the user who sent it!
+    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the user who sent it!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +38,7 @@ class ChatActivity : AppCompatActivity() {
             ChatViewModel(app)
         }
 
+
         teamName.text=team.name
 
         val layoutManager = LinearLayoutManager(this)
@@ -47,7 +47,7 @@ class ChatActivity : AppCompatActivity() {
         messagesList.layoutManager = layoutManager
         messagesList.setHasFixedSize(true)
 
-        val adapter = ChatAdapter(app, viewModel)
+        val adapter = ChatAdapter(app, this, viewModel.chatLog)
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 layoutManager.smoothScrollToPosition(messagesList, null, adapter.itemCount)
@@ -61,12 +61,14 @@ class ChatActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.sendMessage(MessageDto(user.login, msg.toString(), Date()))
+            viewModel.sendMessage(SentMessageMD(user, msg.toString(), Date()))
             userMessageTxt.text.clear()
         }
 
+        /*
+        //TODO
         viewModel.chatLog.observe(this, Observer<List<MessageDto>> {
-            val newAdapter = ChatAdapter(app, viewModel)
+            val newAdapter = ChatAdapter(app, this, viewModel.chatLog)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     layoutManager.smoothScrollToPosition(messagesList, null, newAdapter.itemCount)
@@ -75,7 +77,7 @@ class ChatActivity : AppCompatActivity() {
             messagesList.adapter = newAdapter
             newAdapter.notifyDataSetChanged()
 
-        })
+        })*/
 
         teamName.setOnClickListener{
             val intent = Intent(this, MembersActivity::class.java)

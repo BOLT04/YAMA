@@ -15,6 +15,9 @@ import isel.pt.yama.dataAccess.database.*
 import isel.pt.yama.dataAccess.github.GithubApi
 import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
 import isel.pt.yama.dto.*
+import isel.pt.yama.model.MessageMD
+import isel.pt.yama.model.ReceivedMessageMD
+import isel.pt.yama.model.SentMessageMD
 import isel.pt.yama.network.GetRequestImage
 
 
@@ -138,6 +141,32 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
+    fun getUser(userLogin: String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
+
+        runAsync {
+            Log.v(TAG, "Getting user from DB")
+
+            localDb.userDAO().getUser(userLogin)
+        }.andThen { user ->
+            if (user == null)
+                api.getUserDetailsForName(userLogin, {
+                    userAvatarUrlCache[userLogin] = it.avatar_url
+                    saveToDB(it).andThen(success)
+                }, fail)
+            else {
+                Log.v(app.TAG, "getUserDetails: Got user from DB")
+                userAvatarUrlCache[userLogin] = user.avatarUrl
+
+                success(user)
+            }
+        }
+    }
+
+
+
+
+
+
     fun getUserOrganizations(user: String, accessToken : String, success: (List<Organization>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting organizations from DB")
@@ -202,6 +231,13 @@ class YAMARepository(private val app: YAMAApplication,
         queue.add(request)
     }
 
+
+    fun getAvatarImageFromUrlSync(url: String):Bitmap? =
+            avatarCache[url]
+
+
+
+
     private fun getAvatarImageFromUser(user: User, cb: () -> Unit ) {
         getAvatarImageFromUrl(user.avatarUrl) {
             cb()
@@ -239,11 +275,47 @@ class YAMARepository(private val app: YAMAApplication,
         firebase.sendMessage(message, team.value!!)
     }
 
-    fun sendMessage(message: MessageDto) {
-        sendMessageToFirebase(message)
+    fun sendMessage(messageMD: MessageMD) {
+        sendMessageToFirebase(messsageToDto(messageMD))
     }
-    fun sendMessageToFirebase(message: SentMessage, team: Team){
-        firebase.sendMessage(message, team)
+
+    /*
+    fun sendMessageToFirebase(messageMD: SentMessage, team: Team){
+        firebase.sendMessage(messageMD, team)
     }
+
+    */
+
+
+
+    ////////////////////////////////////
+
+    public fun messsageToDto(messageMD: MessageMD):MessageDto =
+            MessageDto(messageMD.user.login,
+                    messageMD.content,
+                    messageMD.createdAt)
+
+     public fun dtoToMessage(dto: MessageDto, cb: (MessageMD) -> Unit) =
+             getUser(dto.user,
+                     {
+                         if( it == user)
+                            cb(SentMessageMD(it, dto.content, dto.createdAt))
+                         else
+                             cb(ReceivedMessageMD(it, dto.content, dto.createdAt))
+
+                     },
+                     { error -> throw Error(error)}//TODO shady biz
+    )
+
+
+
+
+
+
+
+
+
+
+
 
 }

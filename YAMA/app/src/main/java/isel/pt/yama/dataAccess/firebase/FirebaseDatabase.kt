@@ -5,6 +5,6 @@ import isel.pt.yama.dto.MessageDto
 
 class FirebaseDatabase(private val chatBoard : ChatBoard){
     fun sendMessage(message: MessageDto, team: Team) {
-        chatBoard.post(message, team.name)
+        chatBoard.post(message, team.id)
     }
 }

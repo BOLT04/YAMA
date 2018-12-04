@@ -20,7 +20,7 @@
         app:layout_constraintStart_toEndOf="@+id/userAvatar"
         app:layout_constraintTop_toBottomOf="@+id/userName"
         tools:background="@android:color/holo_blue_light"
-        tools:text="message" />
+        tools:text="messageMD" />
 
     <ImageView
         android:id="@+id/userAvatar"

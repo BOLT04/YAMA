@@ -1,15 +1,11 @@
 package isel.pt.yama.viewmodel
 
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.dto.MessageDto
-import isel.pt.yama.dto.ReceivedMessage
-
-
+import isel.pt.yama.model.MessageMD
 
 
 class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
@@ -40,7 +36,7 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
         mutableLiveData.value= initchat
 
         //here for proof of concept
-        receiveMessage(ReceivedMessage(user!!, "some text", 0))
+        receiveMessage(ReceivedMessageMD(user!!, "some text", 0))
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
@@ -49,41 +45,42 @@ class ChatViewModel(val app : YAMAApplication, val team: Team) : AndroidViewMode
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
         sendMessage(SentMessage(user, "another text", 0))
-        receiveMessage(ReceivedMessage(anotheruser!!, "dj kalled text alksjdfhlaksdjhflkljg kljg lkljg lkjhg lkjg lkjg lkjg lkjg lkjglkjglkjg lkjg lkjgl kjglkjg lkjg lkjg lkjglkjglkjglkjg kasjdhflkjashdf laksjdh flkja lkjh lkjh lkjh lkjh lkjhlkjhlkjhlkjhlkj çoiuçoiyuçoiyupoiyupo poiypoiypo hsdlkfj halkfjh salkdfj hlkasjh dflkjhaslfdkjh a alksdhf lkashjd flk hasd", 0))
-        receiveMessage(ReceivedMessage(user, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(user, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
-        receiveMessage(ReceivedMessage(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser!!, "dj kalled text alksjdfhlaksdjhflkljg kljg lkljg lkjhg lkjg lkjg lkjg lkjg lkjglkjglkjg lkjg lkjgl kjglkjg lkjg lkjg lkjglkjglkjglkjg kasjdhflkjashdf laksjdh flkja lkjh lkjh lkjh lkjh lkjhlkjhlkjhlkjhlkj çoiuçoiyuçoiyupoiyupo poiypoiypo hsdlkfj halkfjh salkdfj hlkasjh dflkjhaslfdkjh a alksdhf lkashjd flk hasd", 0))
+        receiveMessage(ReceivedMessageMD(user, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(user, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
+        receiveMessage(ReceivedMessageMD(anotheruser, "dj kalled text", 0))
 
 */
 
     val user: User? = app.repository.user
     val team: Team? = app.repository.team.value
-    val chatLog: MutableLiveData<List<MessageDto>> = app.chatBoard.content[team?.name]!!
+    val chatLog: MutableLiveData<List<MutableLiveData<MessageMD>>>
+            = app.chatBoard.getTeamChat(team?.id!!).liveData
 
-    fun sendMessage(message: MessageDto){
-        app.repository.sendMessage(message)
+    fun sendMessage(messageMD: MessageMD){
+        app.repository.sendMessage(messageMD)
     }
 
 
 
-/*    fun sendMessage(message: SentMessage){
-        app.repository.sendMessageToFirebase(message, team)
+/*    fun sendMessage(messageMD: SentMessage){
+        app.repository.sendMessageToFirebase(messageMD, team)
         val msg: MutableLiveData<MessageDto> = MutableLiveData()
-        msg.value=message
+        msg.value=messageMD
         initchat.add(msg)
         chatLogInternal.value=initchat
     }
 
-    fun receiveMessage(message: ReceivedMessage){
+    fun receiveMessage(messageMD: ReceivedMessageMD){
         val msg: MutableLiveData<MessageDto> = MutableLiveData()
-        msg.value=message
+        msg.value=messageMD
         initchat.add(msg)
-       getApplication<YAMAApplication>().repository.getAvatarImage(message.user.avatarUrl){message.userAvatar=it}
+       getApplication<YAMAApplication>().repository.getAvatarImage(messageMD.user.avatarUrl){messageMD.userAvatar=it}
        chatLogInternal.value=initchat
     }
 */
