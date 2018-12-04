@@ -16,8 +16,7 @@ class ReceivedMessage(msg : MessageDto):
         MessageDto(msg.user, msg.content, msg.createdAt) {
 
     var userAvatar: Bitmap? = null
-    constructor(msg: MessageDto, userAvatar: Bitmap):
-           this(msg){
+    constructor(msg: MessageDto, userAvatar: Bitmap?) : this(msg) {
         this.userAvatar = userAvatar
     }
 

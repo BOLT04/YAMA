@@ -15,11 +15,12 @@ class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     val user: User? = app.repository.user
     val team: Team? = app.repository.team.value
-    val chatLog: MutableLiveData<List<MessageDto>> = app.chatBoard.content
+    val chatLog: MutableLiveData<List<MessageDto>> = app.chatBoard.content[team?.name]!!
 
     fun sendMessage(message: MessageDto){
         app.repository.sendMessage(message)
     }
+
 
 
 }

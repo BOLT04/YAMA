@@ -3,7 +3,6 @@ package isel.pt.yama.dataAccess
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -30,6 +29,7 @@ class YAMARepository(private val app: YAMAApplication,
     var user: User? = null
     var team: MutableLiveData<Team> = MutableLiveData()
     val avatarCache : HashMap<String, Bitmap> = HashMap()
+    val userAvatarUrlCache : HashMap<String, String> = HashMap()
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<Team>> {
@@ -56,7 +56,7 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
     private fun syncSaveTeamsFromDTO(app: YAMAApplication, db: YAMADatabase, organization: String, teams: List<TeamDto>): List<Team> {
-        Log.v(app.TAG, "Saving teams to DB")
+        Log.v(app.TAG, "syncSaveTeamsFromDTO: Saving teams to DB")
 
         //val result = dto.quotes.map { Quote(it.currency, it.quote, date) }
         val result = teams.map { dto ->
@@ -66,7 +66,7 @@ class YAMARepository(private val app: YAMAApplication,
         return result
     }
     private fun syncSaveTeamMembersFromDTO(app: YAMAApplication, db: YAMADatabase, team: Int, organization: String, members: List<UserDto>): List<User> {
-        Log.v(app.TAG, "Saving team members to DB")
+        Log.v(app.TAG, "syncSaveTeamMembersFromDTO: Saving team members to DB")
         val data = members.map { dto ->
             TeamMember(organization, team, dto.login)
         }
@@ -76,7 +76,7 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
     private fun syncSaveOrganizationsFromDTO(app: YAMAApplication, db: YAMADatabase, organizations: List<OrganizationDto>): List<Organization> {
-        Log.v(app.TAG, "Saving organizations to DB")
+        Log.v(app.TAG, "syncSaveOrganizationsFromDTO: Saving organizations to DB")
         val result = organizations.map { dto ->
             Organization(dto.login, dto.id)
         }
@@ -84,63 +84,25 @@ class YAMARepository(private val app: YAMAApplication,
         return result
     }
     private fun syncSaveUserFromDTO(app: YAMAApplication, db: YAMADatabase, user: UserDto): User {
-        Log.v(app.TAG, "Saving user to DB")
+        Log.v(app.TAG, "syncSaveUserFromDTO: Saving user to DB")
         val result = User(user.login,user.id, user.name, user.email, user.avatar_url, user.followers, user.following)
         db.userDAO().insertUsers(result)
         return result
     }
 
-    fun getAvatarImage(login : String, cb : () -> Unit) {
-        fun success(user : User) {
-            getAvatarImage(user.avatarUrl) { image ->
-                avatarCache[user.login] = image
-                cb()
-            }
-        }
-        Log.d(app.TAG, "Getting user from DB")
-        val user = localDb.userDAO().getUser(login)
-        if (user == null)
-            api.getUserDetailsForName(login, {
-                saveToDB(it).andThen { user ->
-                    success(user)
-                }
-            }, {
-                defaultErrorHandler(app)
-            })
-        else {
-            Log.d(app.TAG, "Got user from DB")
-            success(user)
-        }
-        /*runAsync {
-            Log.d(app.TAG, "Getting user from DB")
-            localDb.userDAO().getUser(login)
-        }.andThen { user ->
-            if (user == null)
-                api.getUserDetails(token, {
-                    saveToDB(it).andThen { user ->
-                        success(user)
-                    }
-                }, {
-                    defaultErrorHandler(app)
-                })
-            else {
-                Log.d(app.TAG, "Got user from DB")
-                success(user)
-            }
-        }*/
-    }
-
     fun getUserDetails(userLogin: String, accessToken : String, success: (User) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
-            Log.v(app.TAG, "Getting user from DB")
+            Log.v(app.TAG, "getUserDetails: Getting user from DB")
             localDb.userDAO().getUser(userLogin)
         }.andThen { user ->
             if (user == null)
                 api.getUserDetails(accessToken, {
+                    userAvatarUrlCache[userLogin] = it.avatar_url
                     saveToDB(it).andThen(success)
                 }, fail)
             else {
-                Log.v(app.TAG, "Got user from DB")
+                Log.v(app.TAG, "getUserDetails: Got user from DB")
+                userAvatarUrlCache[userLogin] = user.avatarUrl
                 success(user)
             }
         }
@@ -195,8 +157,7 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
-    fun getAvatarImage(url: String, cb: (Bitmap) -> Unit ) {
-
+    fun getAvatarImageFromUrl(url: String, cb: (Bitmap) -> Unit ) {
         if(avatarCache.containsKey(url))
             return(cb(avatarCache[url]!!))
 
@@ -211,8 +172,40 @@ class YAMARepository(private val app: YAMAApplication,
         queue.add(request)
     }
 
+    private fun getAvatarImageFromUser(user: User, cb: () -> Unit ) {
+        getAvatarImageFromUrl(user.avatarUrl) {
+            cb()
+        }
+    }
 
-    fun sendMessageToFirebase(message: MessageDto){
+    fun getAvatarImageFromLogin(login : String, cb : () -> Unit) {
+        fun success(user : User) {
+            getAvatarImageFromUser(user) {
+                //avatarCache[user.avatarUrl] = it
+                cb()
+            }
+        }
+        Log.d(app.TAG, "getAvatarImageFromLogin: Getting user from DB")
+        val user = localDb.userDAO().getUser(login)
+        if (user == null) {
+            Log.d(app.TAG, "getAvatarImageFromLogin: Getting user from API")
+            api.getUserDetailsForName(login, {
+                Log.d(app.TAG, "getAvatarImageFromLogin: Got user from API")
+                userAvatarUrlCache[login] = it.avatar_url
+                saveToDB(it).andThen { user ->
+                    success(user)
+                }
+            }, {
+                defaultErrorHandler(app)
+            })
+        } else {
+            Log.d(app.TAG, "getAvatarImageFromLogin: Got user from DB")
+            userAvatarUrlCache[login] = user.avatarUrl
+            success(user)
+        }
+    }
+
+    private fun sendMessageToFirebase(message: MessageDto){
         firebase.sendMessage(message, team.value!!)
     }
 

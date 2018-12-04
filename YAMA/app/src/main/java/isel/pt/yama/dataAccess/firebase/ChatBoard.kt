@@ -7,65 +7,81 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.ReceivedMessage
 import isel.pt.yama.kotlinx.runAsync
-import kotlinx.coroutines.runBlocking
 
 
 class ChatBoard(private val app: YAMAApplication) {
-
-    val content = MutableLiveData<List<MessageDto>>()
     val db = FirebaseFirestore.getInstance()
     private val teamsRef = db.collection("teams")
-    private val teamsObserved = HashMap<String, ListenerRegistration>()
-    private var chat : MutableList<MessageDto> = mutableListOf()
-    var aa : MutableMap<String, MessageDto> = mutableMapOf()
+
+    // teamName -> registrations (makes it possible to unregister)
+    private val observedTeams = HashMap<String, ListenerRegistration>()
+
+    // teamName -> msgId, msgDto
+    private var teamsMessages : MutableMap<String, MutableMap<String, MessageDto>> = mutableMapOf()
+
+    // teamName -> msgList(=chatLog)
+    var content : MutableMap<String, MutableLiveData<List<MessageDto>>> = mutableMapOf()
+
+    // single team chat
+    //private var chat : MutableList<MessageDto> = mutableListOf()
 
     fun associateTeam(teamName : String) {
-        if (teamsObserved.containsKey(teamName)) return
-        Log.d("YAMAApp", "teamName = $teamName")
+        if (observedTeams.containsKey(teamName)) return
+        teamsMessages[teamName] = mutableMapOf()
+        content[teamName] = MutableLiveData()
+        Log.d(app.TAG, "associateTeam: teamName = $teamName")
         val registration = teamsRef.document(teamName)
                 .collection("messages")
+                .orderBy("createdAt")
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null) {
-                        Log.w("YAMAApp", "Listen failed.", e)
+                        Log.w(app.TAG, "Listen failed.", e)
                         return@EventListener
                     }
+                    val msgMap = teamsMessages[teamName]!!
                     runAsync {
                         for (dc in snapshots!!.documentChanges) {
                             if (dc.type == DocumentChange.Type.ADDED) {
                                 var msg = dc.document.toObject(MessageDto::class.java)
                                 if (app.repository.user?.login != msg.user) {
-                                    app.repository.getAvatarImage(msg.user) { _ ->
-                                        aa[dc.document.id] = ReceivedMessage(msg, app.repository.avatarCache[msg.user]!!)
+                                    val avatarUrl = app.repository.userAvatarUrlCache[msg.user]
+                                    Log.d(app.TAG, "avatarUrl = $avatarUrl")
+                                    if (avatarUrl == null) {
+                                        msg = ReceivedMessage(msg)
+                                        app.repository.getAvatarImageFromLogin(msg.user) {
+                                            msg = ReceivedMessage(msg,
+                                                    app.repository.avatarCache[
+                                                            app.repository.userAvatarUrlCache[msg.user]
+                                                    ])
+                                            msgMap[dc.document.id] = msg
+                                            content[teamName]?.postValue(ArrayList(msgMap.values))
+                                            Log.d(app.TAG, "returning from callback. avatarUrl = $msg.")
+                                        }
+                                    } else {
+                                        msg = ReceivedMessage(msg, app.repository.avatarCache[avatarUrl])
                                     }
-                                    msg = ReceivedMessage(msg, )//TODO: Imagem por omissão)//app.repository.avatarCache[msg.user]!!)
                                 }
-                                //chat.add(msg)
-                                aa[dc.document.id] = msg
-                                chat = aa.values as MutableList<MessageDto>
+                                msgMap[dc.document.id] = msg
+                                content[teamName]?.postValue(ArrayList(msgMap.values))
                             }
                         }
-                    }.andThen {
-                        content.value = chat
-                    }
+                    }//.andThen {
+                        //content[teamName]?.postValue(ArrayList(msgMap.values))
+                    //}
                 })
-        teamsObserved[teamName] = registration
-    }
-
-    fun updateImage(msgId : String, msg : MessageDto) {
-        aa[msgId] = ReceivedMessage(msg, app.repository.avatarCache[msg.user]!!)
+        observedTeams[teamName] = registration
     }
 
     fun post(newMessage: MessageDto, teamName: String) {
-        Log.d("YAMAApp", "inside post")
         db.collection("teams")
                 .document(teamName)
                 .collection("messages")
                 .add(newMessage)
                 .addOnSuccessListener{
-                    Log.d("YAMAApp", "Message sent with success")
+                    Log.d("YAMAApp", "post: Message sent with success")
                 }
                 .addOnFailureListener{
-                    Log.d("YAMAApp", "Message failed to be sent")
+                    Log.d("YAMAApp", "post: Message failed to be sent")
                     Log.d("YAMAApp", it.toString())
                 }
     }

@@ -11,12 +11,9 @@ import isel.pt.yama.dataAccess.database.YAMADatabase
 import isel.pt.yama.dataAccess.firebase.ChatBoard
 import isel.pt.yama.dataAccess.github.GithubApi
 import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
-import java.util.*
-
 
 class YAMAApplication : Application() {
     val TAG = "YAMAApplication"
-    val deviceId = UUID.randomUUID()
 
     lateinit var queue: RequestQueue
     lateinit var repository: YAMARepository
