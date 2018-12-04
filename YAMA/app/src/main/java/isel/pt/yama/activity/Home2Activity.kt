@@ -1,7 +1,9 @@
 package isel.pt.yama.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +29,33 @@ class Home2Activity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.logout -> {
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit().clear().apply()
+                finish()
+                val intent = Intent(this, LoginActivity::class.java)
+                //intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                startActivity(intent)
+                true
+            }
+            android.R.id.home ->{
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
 }

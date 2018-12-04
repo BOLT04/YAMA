@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
 import isel.pt.yama.common.SP_NAME
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, Home2Activity::class.java)
                     app.repository.user=viewModel.userInfo.value
                     startActivity(intent)
                 } else {
@@ -62,4 +63,21 @@ class MainActivity : AppCompatActivity() {
             model.textOrganization = sharedPref.getString(getString(R.string.organizationId), "")
             model.textToken = sharedPref.getString(getString(R.string.userToken), "")
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
+
 }

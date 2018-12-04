@@ -2,6 +2,7 @@ package isel.pt.yama.activity
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
@@ -37,5 +38,19 @@ class ProfileActivity : AppCompatActivity() {
         })
 
         app.repository.getAvatarImage(user.avatarUrl){viewModel.userAvatarImage.value=it}
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
     }
 }

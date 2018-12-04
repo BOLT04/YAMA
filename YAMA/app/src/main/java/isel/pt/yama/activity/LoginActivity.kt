@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -35,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
                 saveSharedPreferences(sharedPref)
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, Home2Activity::class.java)
                 app.repository.user=viewModel.userInfo.value
                 startActivity(intent)
             } else {
@@ -81,4 +82,21 @@ class LoginActivity : AppCompatActivity() {
         login_orgID.text = Editable.Factory().newEditable(model.textOrganization)
         login_personalToken.text = Editable.Factory().newEditable(model.textToken)
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(getString(R.string.TAG), "Started :: "+this.localClassName.toString())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(getString(R.string.TAG), "Stopped :: "+this.localClassName.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
+    }
+
 }
