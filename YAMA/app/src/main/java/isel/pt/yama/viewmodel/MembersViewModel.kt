@@ -8,11 +8,19 @@ import isel.pt.yama.dataAccess.database.User
 
 class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
-    val members: MutableLiveData<List<User>> = MutableLiveData()
+    val members: MutableLiveData<List<MutableLiveData<User>>> = MutableLiveData()
 
     fun updateMembers(token: String, team: Int, organization: String) {
         app.repository.getTeamMembers(team, organization, {
-            members.value = it
+            list ->
+            members.value = list.map {
+                    val ld = MutableLiveData<User>()
+                    ld.value = it
+                    app.repository.getAvatarImageFromUrl(it.avatarUrl){
+                        b->ld.value=ld.value
+                    }
+                ld
+            }
         }, {
             defaultErrorHandler(app)
         })

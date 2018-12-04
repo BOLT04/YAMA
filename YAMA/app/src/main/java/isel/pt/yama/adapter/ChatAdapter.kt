@@ -65,7 +65,6 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
 
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(messageMD?.createdAt)
-
     }
 }
 

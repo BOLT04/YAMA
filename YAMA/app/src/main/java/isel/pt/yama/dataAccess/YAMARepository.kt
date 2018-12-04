@@ -232,8 +232,12 @@ class YAMARepository(private val app: YAMAApplication,
     }
 
 
-    fun getAvatarImageFromUrlSync(url: String):Bitmap? =
-            avatarCache[url]
+    fun getAvatarImageFromUrlSync(url: String):Bitmap? {
+        val bitmap = avatarCache[url]
+        if(bitmap==null)
+            getAvatarImageFromUrl(url){} //TODO discutivel
+        return bitmap
+    }
 
 
 
