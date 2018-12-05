@@ -200,6 +200,10 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
+    fun getSubscribedTeams(success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
+        firebase.getSubscribedTeams(user!!, success, fail)
+    }
+
     fun getTeamMembers(team: Int, organization: String, success: (List<User>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting team members from DB")

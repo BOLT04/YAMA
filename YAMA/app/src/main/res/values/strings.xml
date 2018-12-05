@@ -2,10 +2,11 @@
     <string name="TAG" translatable="false"> YAMA_APP</string>
 
     <string name="app_name">YAMA</string>
-    <string name="user_id">User id</string>
-    <string name="organization_id">Organization id</string>
-    <string name="personal_token">Personal token</string>
+    <string name="user_id">User Login</string>
+    <string name="organization_id">Organization</string>
+    <string name="personal_token">Access Token</string>
     <string name="login_btn">Login</string>
+    <string name="keep_signed_in">Keep me signed in</string>
 
     <string name="user_profile_name">Name :</string>
     <string name="user_profile_email" translatable="false">e-mail :</string>
@@ -22,11 +23,13 @@
     <string name="error_organization">Incorrect organization for given access token</string>
 
     <!-- Navigation Drawer -->
-    <string name="profile">Profile</string>
-    <string name="teams">Teams</string>
+
+
     <string name="options">Options</string>
 
     <!-- Toolbar -->
+    <string name="profile">Profile</string>
+    <string name="teams">Teams</string>
     <string name="logout">Logout</string>
 
     <!-- Messaging -->

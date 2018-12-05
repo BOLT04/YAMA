@@ -36,11 +36,12 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
-                saveSharedPreferences(sharedPref)
+                if (keep_login_checkbox.isChecked)
+                    saveSharedPreferences(sharedPref)
 
                 fillRepositoryInfo(app, viewModel)
               
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, Home2Activity::class.java)
                 app.repository.user=viewModel.userInfo.value
 
                 startActivity(intent)
@@ -49,11 +50,16 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-
-
         login_btn.setOnClickListener {
             saveUserInputsToModel(viewModel)
             viewModel.submitLogin()
+        }
+
+        keep_login_checkbox.setOnClickListener {
+            if (login_userID.text.isNullOrBlank()
+                || login_orgID.text.isNullOrBlank()
+                || login_personalToken.text.isNullOrBlank())
+                keep_login_checkbox.isChecked = false
         }
     }
 

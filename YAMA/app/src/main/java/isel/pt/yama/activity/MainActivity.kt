@@ -18,6 +18,7 @@ import isel.pt.yama.viewmodel.LoginViewModel
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
 
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = Intent(this, Home2Activity::class.java)
                     app.repository.user=viewModel.userInfo.value
 
                     startActivity(intent)

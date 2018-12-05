@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">YAMA</string>
-    <string name="user_id">Id do utilizador</string>
-    <string name="organization_id">Id da Organização</string>
+    <string name="user_id">Login do utilizador</string>
+    <string name="organization_id">Organização</string>
     <string name="personal_token">Token pessoal</string>
     <string name="login_btn">Iniciar sessão</string>
+    <string name="keep_signed_in">Manter-me ligado</string>
     <string name="user_profile_name">Nome :</string>
     <string name="user_profile_followers">seguidores :</string>
     <string name="error_network">Não foi possível aceder aos dados</string>
@@ -13,8 +14,8 @@
     <string name="userId">IdUtilizador</string>
     <string name="userToken">Token</string>
     <string name="error_login">Erro no login para o token fornecido</string>
-    <string name="profile">Perfil</string>
-    <string name="teams">Equipas</string>
+
+
     <string name="options">Opções</string>
     <string name="sender_avatar">Avatar do remetente</string>
     <string name="receiver_avatar">Avatar do destinatário</string>
@@ -24,6 +25,9 @@
     <string name="teams_notification_content">Equipas foram descarregadas</string>
     <string name="teams_channel_name">Atualizações de Equipas</string>
     <string name="teams_channel_description">Canal das notificações de equipas</string>
+
     <!-- Toolbar -->
+    <string name="profile">Perfil</string>
+    <string name="teams">Equipas</string>
     <string name="logout">Sair</string>
 </resources>

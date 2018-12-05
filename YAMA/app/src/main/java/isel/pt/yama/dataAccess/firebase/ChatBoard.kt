@@ -5,7 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.*
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.MessageDto
+import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.model.MessageMD
 import isel.pt.yama.model.ReceivedMessageMD
@@ -14,14 +17,15 @@ import isel.pt.yama.model.ReceivedMessageMD
 class ChatBoard(private val app: YAMAApplication) {
     val db = FirebaseFirestore.getInstance()
     private val teamsRef = db.collection("teams")
+    private val chatsRef = db.collection("users")
 
     // teamName -> registrations (makes it possible to unregister)
     private val observedTeams = HashMap<Int, ListenerRegistration>()
 
     // teamName -> msgId, msgDto
-    public var globalTeamChats : MutableMap<Int, TeamChat> = mutableMapOf()
+    var globalTeamChats : MutableMap<Int, TeamChat> = mutableMapOf()
 
-    public fun getTeamChat(id: Int): TeamChat{
+    fun getTeamChat(id: Int): TeamChat{
         var tc = globalTeamChats[id]
         if(tc==null){
             tc= TeamChat()
@@ -29,8 +33,6 @@ class ChatBoard(private val app: YAMAApplication) {
         }
 
         return tc
-
-
     }
 
 
@@ -105,20 +107,49 @@ class ChatBoard(private val app: YAMAApplication) {
 
                     }
                 })
+        addToSubscribedTeams(teamId)
         observedTeams[teamId] = registration
     }
 
     fun post(newMessage: MessageDto, teamId: Int) {
-        db.collection("teams")
-                .document(teamId.toString())
+        teamsRef.document(teamId.toString())
                 .collection("messages")
                 .add(newMessage)
                 .addOnSuccessListener{
-                    Log.d("YAMAApp", "post: MessageMD sent with success")
+                    Log.d(app.TAG, "post: MessageMD sent with success")
                 }
                 .addOnFailureListener{
-                    Log.d("YAMAApp", "post: MessageMD failed to be sent")
-                    Log.d("YAMAApp", it.toString())
+                    Log.d(app.TAG, "post: MessageMD failed to be sent")
+                    Log.d(app.TAG, it.toString())
+                }
+    }
+
+    fun addToSubscribedTeams(teamId: Int) {
+        chatsRef.document(app.repository.user?.login!!)
+                .collection("chats")
+                .add(teamId) // TODO: needs to be a POJO!!!
+                .addOnSuccessListener{
+                    Log.d(app.TAG, "addToSubscribedTeams: success")
+                }
+                .addOnFailureListener{
+                    Log.d(app.TAG, "addToSubscribedTeams: error")
+                    Log.d(app.TAG, it.toString())
+                }
+    }
+
+    fun getSubscribedTeams(user: User) {
+        chatsRef.document(user.login)
+                .collection("chats")
+                .orderBy("name")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        associateTeam(document.toObject(TeamDto::class.java))
+                        Log.d(app.TAG, document.id + " => " + document.data)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(app.TAG, "Error getting documents: ", exception)
                 }
     }
 }

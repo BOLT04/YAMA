@@ -1,9 +1,12 @@
 package isel.pt.yama
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.util.Log
+import android.util.LruCache
 import androidx.room.Room
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseApp
 import isel.pt.yama.dataAccess.YAMARepository
@@ -17,9 +20,10 @@ class YAMAApplication : Application() {
 
     lateinit var queue: RequestQueue
     lateinit var repository: YAMARepository
-
     lateinit var chatBoard: ChatBoard
         private set
+
+    lateinit var imageLoader: ImageLoader
 
     override fun registerActivityLifecycleCallbacks(callback: ActivityLifecycleCallbacks?) {
         Log.v("$TAG::actlog",callback?.javaClass.toString())
@@ -32,6 +36,17 @@ class YAMAApplication : Application() {
         Log.i(TAG, "onCreate application")
 
         queue = Volley.newRequestQueue(this)
+        imageLoader = ImageLoader(queue,
+                    object : ImageLoader.ImageCache {
+                        private val cache = LruCache<String, Bitmap>(20)
+                        override fun getBitmap(url: String): Bitmap {
+                            return cache.get(url)
+                        }
+                        override fun putBitmap(url: String, bitmap: Bitmap) {
+                            cache.put(url, bitmap)
+                        }
+                    })
+
 
         val localDb = Room.databaseBuilder(this, YAMADatabase::class.java, "YAMA_db").build()
         //Room.databaseBuilder(this, YAMARoomDatabase::class.java, "YAMA_db")
