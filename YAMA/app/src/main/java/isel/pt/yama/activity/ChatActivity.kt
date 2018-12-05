@@ -31,7 +31,6 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
-        val user: User = app.repository.user!!
         val team: Team = app.repository.team.value!!
 
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
@@ -57,11 +56,11 @@ class ChatActivity : AppCompatActivity() {
 
         sendBtn.setOnClickListener {
             val msg = userMessageTxt.text
-            if (msg.isEmpty()) {
+            if (msg.isEmpty())
                 return@setOnClickListener
-            }
 
-            viewModel.sendMessage(SentMessageMD(user, msg.toString(), Date()))
+            val sentMsg = SentMessageMD(app.repository.user!!, msg.toString(), Date())
+            viewModel.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
 

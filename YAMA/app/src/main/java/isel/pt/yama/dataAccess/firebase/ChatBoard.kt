@@ -23,6 +23,7 @@ class ChatBoard(private val app: YAMAApplication) {
     private val observedTeams = HashMap<Int, ListenerRegistration>()
 
     // teamName -> msgId, msgDto
+    //TODO: DOCUMENT what is this for
     var globalTeamChats : MutableMap<Int, TeamChat> = mutableMapOf()
 
     fun getTeamChat(id: Int): TeamChat{
@@ -100,7 +101,7 @@ class ChatBoard(private val app: YAMAApplication) {
                                         val messageLD = teamChat.add(it)
                                         if (it is ReceivedMessageMD) {
                                             app.repository.getAvatarImageFromUrl(it.user.avatarUrl){
-                                                _ -> messageLD.value=messageLD.value
+                                                _ -> messageLD.value = messageLD.value
                                             }
                                         }
                                     }
@@ -144,7 +145,7 @@ class ChatBoard(private val app: YAMAApplication) {
                 .get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
-                        associateTeam(document.toObject(TeamDto::class.java))
+                        associateTeam(document.toObject(Int::class.java))
                         Log.d(app.TAG, document.id + " => " + document.data)
                     }
                 }
