@@ -16,11 +16,14 @@ import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.TeamMD
 import isel.pt.yama.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home2.*
 
 
 class Home2Activity : AppCompatActivity() {
+
+    lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +34,15 @@ class Home2Activity : AppCompatActivity() {
         chatsView.layoutManager = LinearLayoutManager(this)
 
         val app = getYAMAApplication()
-        val viewModel = getViewModel(VIEW_MODEL_KEY){
+        viewModel = getViewModel(VIEW_MODEL_KEY){
             HomeViewModel(app)
         }
 
         val intent = Intent(this, ChatActivity::class.java)
 
         val listener = object : HomeAdapter.OnTeamClickListener {
-            override fun onTeamClick(team: Team?) {
-                app.repository.team.value = team
+            override fun onTeamClick(team: TeamMD?) {
+                app.repository.team = team
                 // app.chatBoard.associateTeam(team?.id!!)
                 startActivity(intent)
             }
@@ -47,7 +50,7 @@ class Home2Activity : AppCompatActivity() {
 
         chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
 
-        viewModel.teams.observe(this, Observer<List<Team>> {
+        viewModel.teams.observe(this, Observer<List<TeamMD>> {
             chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
         })
 
@@ -102,4 +105,8 @@ class Home2Activity : AppCompatActivity() {
         Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateTeams()
+    }
 }

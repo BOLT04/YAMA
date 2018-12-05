@@ -9,14 +9,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.model.TeamMD
 import isel.pt.yama.viewmodel.HomeViewModel
 
-class HomeAdapter(private val teamsLv: MutableLiveData<List<Team>>,
+class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
                   val context: LifecycleOwner,
                   private val listener: OnTeamClickListener) : RecyclerView.Adapter<HomeViewHolder>() {
 
     init {
-        teamsLv.observe(context, Observer<List<Team>> { teams ->
+        teamsLv.observe(context, Observer<List<TeamMD>> { teams ->
             //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             this.notifyItemInserted(teamsLv.value?.size!!)
         })
@@ -38,14 +39,14 @@ class HomeAdapter(private val teamsLv: MutableLiveData<List<Team>>,
     }
 
     interface OnTeamClickListener {
-        fun onTeamClick(team: Team?)
+        fun onTeamClick(team: TeamMD?)
     }
 }
 
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val teamNameView: TextView = view.findViewById(android.R.id.text1)
 
-    fun bindTo(team: Team?, listener: HomeAdapter.OnTeamClickListener) {
+    fun bindTo(team: TeamMD?, listener: HomeAdapter.OnTeamClickListener) {
         teamNameView.text = team?.name
         itemView.setOnClickListener { listener.onTeamClick(team) }
     }

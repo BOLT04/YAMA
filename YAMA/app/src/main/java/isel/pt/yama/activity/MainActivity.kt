@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
                 if (loginIsOk) {
 
                     val intent = Intent(this, Home2Activity::class.java)
-                    app.repository.user=viewModel.userInfo.value
+                    app.repository.currentUser=viewModel.userInfo.value
+                    app.chatBoard.start()
 
                     startActivity(intent)
                 } else {
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
-        app.repository.organization = model.textOrganization
+        app.repository.organizationID = model.textOrganization
         app.repository.token = model.textToken
     }
 

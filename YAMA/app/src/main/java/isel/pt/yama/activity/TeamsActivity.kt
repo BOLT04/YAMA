@@ -15,6 +15,7 @@ import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.model.TeamMD
 import kotlinx.android.synthetic.main.activity_teams.*
 import isel.pt.yama.viewmodel.TeamsViewModel
 
@@ -41,19 +42,19 @@ class TeamsActivity : AppCompatActivity() {
             TeamsViewModel(app)
         }
 
-        val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, TeamChatActivity::class.java)
 
         val listener = object : OnTeamClickListener {
-            override fun onTeamClick(team: Team?) {
-                app.repository.team.value = team
-                app.chatBoard.associateTeam(team!!.id)// TODO: double bang...
+            override fun onTeamClick(team: TeamMD?) {
+                app.repository.team = team
+                app.chatBoard.associateTeam(team!!)
                 startActivity(intent)
             }
         }
 
         teamsView.adapter = TeamsAdapter(viewModel, listener)
 
-        viewModel.teams.observe(this, Observer<List<Team>> {
+        viewModel.teams.observe(this, Observer<List<TeamMD>> {
             teamsView.adapter = TeamsAdapter(viewModel, listener)
         })
 

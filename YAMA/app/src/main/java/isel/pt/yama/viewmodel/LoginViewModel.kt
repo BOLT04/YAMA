@@ -8,6 +8,8 @@ import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
 import isel.pt.yama.dataAccess.database.Organization
 import isel.pt.yama.dataAccess.database.User
+import isel.pt.yama.model.OrganizationMD
+import isel.pt.yama.model.UserMD
 
 class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
@@ -15,8 +17,8 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     var textOrganization: String = ""
     var textToken: String = ""
 
-    val userInfo: MutableLiveData<User> = MutableLiveData()
-    private val userOrganizations: MutableLiveData<List<Organization>> = MutableLiveData()
+    val userInfo: MutableLiveData<UserMD> = MutableLiveData()
+    private val userOrganizations: MutableLiveData<List<OrganizationMD>> = MutableLiveData()
 
     val loginIsOk: LiveData<Boolean> = tryLogin()
 
@@ -61,7 +63,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
             checkLoginInfo(a, b)
         }
 
-    private fun checkLoginInfo(usr : User, orgs: List<Organization>) =
+    private fun checkLoginInfo(usr : UserMD, orgs: List<OrganizationMD>) =
         if (usr.login == textUser) {
             val organization = orgs.firstOrNull {
                 it.login == textOrganization

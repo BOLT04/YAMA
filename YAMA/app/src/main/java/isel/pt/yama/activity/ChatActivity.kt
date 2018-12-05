@@ -1,6 +1,5 @@
 package isel.pt.yama.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,36 +8,34 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.dto.MessageDto
+import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
-import androidx.lifecycle.Observer
-import android.R.attr.data
 import isel.pt.yama.model.SentMessageMD
+import isel.pt.yama.model.TeamMD
 
 
-class ChatActivity : AppCompatActivity() {
+open class ChatActivity : AppCompatActivity() {
 
-    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the user who sent it!
+    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the currentUser who sent it!
+
+    lateinit var repo : YAMARepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
-        val team: Team = app.repository.team.value!!
+
+        repo = app.repository
 
         val viewModel = getViewModel("chat view model"){ //TODO extract to field
             ChatViewModel(app)
         }
 
-
-        teamName.text=team.name
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
@@ -59,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
             if (msg.isEmpty())
                 return@setOnClickListener
 
-            val sentMsg = SentMessageMD(app.repository.user!!, msg.toString(), Date())
+            val sentMsg = SentMessageMD(app.repository.currentUser!!, msg.toString(), Date())
             viewModel.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
@@ -78,9 +75,8 @@ class ChatActivity : AppCompatActivity() {
 
         })*/
 
-        teamName.setOnClickListener{
+        chatName.setOnClickListener{
             val intent = Intent(this, MembersActivity::class.java)
-            intent.putExtra("team", team)
             startActivity(intent)
         }
 

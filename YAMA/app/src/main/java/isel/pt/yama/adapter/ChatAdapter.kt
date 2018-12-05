@@ -43,12 +43,12 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
     override fun bindTo(messageMD: MessageDto?) {
         val msg = messageMD as ReceivedMessageMD
         if (msg.userAvatar != null)
-            avatarImgView.setImageBitmap(msg.userAvatar)//make request Uri.parse(messageMD?.user?.avatar_url))
+            avatarImgView.setImageBitmap(msg.userAvatar)//make request Uri.parse(messageMD?.currentUser?.avatar_url))
         // else
         // Log.d(TAG, "avatar is null")
 
         sentMsgView.text = messageMD.content
-        userNameView.text = messageMD.user//.name ?: messageMD.user.login
+        userNameView.text = messageMD.currentUser//.name ?: messageMD.currentUser.login
 
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text = sdf.format(messageMD.createdAt)
@@ -57,8 +57,8 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
 
     override fun bindToView(messageMD: MessageMD?) {
         avatarImgView.setImageBitmap(
-                app.repository.getAvatarImageFromUrlSync(messageMD?.user?.avatarUrl!!)
-        )//make request Uri.parse(messageMD?.user?.avatar_url))
+                app.repository.getAvatarImageFromUrlSync(messageMD?.user?.avatar_url!!)
+        )//make request Uri.parse(messageMD?.currentUser?.avatar_url))
 
         sentMsgView.text = messageMD?.content
         userNameView.text= messageMD?.user?.name ?: messageMD?.user?.login
@@ -98,7 +98,7 @@ class ChatAdapter(val app: YAMAApplication,
             val currentPosition =  chatLog.value?.size
             val currentMessage = list[currentPosition!!.minus(1)].value
             if(currentMessage is ReceivedMessageMD)
-                app.repository.getAvatarImage(currentMessage.user.avatarUrl) {
+                app.repository.getAvatarImage(currentMessage.currentUser.avatarUrl) {
                     currentMessage.userAvatar=it
                     this.notifyItemChanged(currentPosition)
                 }
