@@ -10,8 +10,8 @@ class FirebaseDatabase(private val chatBoard : ChatBoard){
         chatBoard.post(message, team.id)
     }
 
-    fun getSubscribedTeams(user: User, success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
-        chatBoard.getSubscribedTeams(user)
+    fun getSubscribedTeams(user: User, success: (List<Team>) -> Unit, fail: (Exception) -> Unit) {
+        chatBoard.getSubscribedTeams(user, success, fail)
     }
 
 

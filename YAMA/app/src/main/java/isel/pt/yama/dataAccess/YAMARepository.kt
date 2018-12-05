@@ -200,7 +200,7 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
-    fun getSubscribedTeams(success: (List<Team>) -> Unit, fail: (VolleyError) -> Unit) {
+    fun getSubscribedTeams(success: (List<Team>) -> Unit, fail: (Exception) -> Unit) {
         firebase.getSubscribedTeams(user!!, success, fail)
     }
 

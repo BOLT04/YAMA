@@ -1,14 +1,12 @@
 package isel.pt.yama.dataAccess.firebase
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.*
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.dataAccess.database.User
 import isel.pt.yama.dto.MessageDto
-import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.model.MessageMD
 import isel.pt.yama.model.ReceivedMessageMD
@@ -17,7 +15,7 @@ import isel.pt.yama.model.ReceivedMessageMD
 class ChatBoard(private val app: YAMAApplication) {
     val db = FirebaseFirestore.getInstance()
     private val teamsRef = db.collection("teams")
-    private val chatsRef = db.collection("users")
+    private val usersRef = db.collection("users")
 
     // teamName -> registrations (makes it possible to unregister)
     private val observedTeams = HashMap<Int, ListenerRegistration>()
@@ -35,6 +33,8 @@ class ChatBoard(private val app: YAMAApplication) {
 
         return tc
     }
+
+    private data class TeamId(val teamId: Int)
 
 
     public class TeamChat{
@@ -126,9 +126,9 @@ class ChatBoard(private val app: YAMAApplication) {
     }
 
     fun addToSubscribedTeams(teamId: Int) {
-        chatsRef.document(app.repository.user?.login!!)
+        usersRef.document(app.repository.user?.login!!)
                 .collection("chats")
-                .add(teamId) // TODO: needs to be a POJO!!!
+                .add(TeamId(teamId)) // TODO: needs to be a POJO!!!
                 .addOnSuccessListener{
                     Log.d(app.TAG, "addToSubscribedTeams: success")
                 }
@@ -138,19 +138,20 @@ class ChatBoard(private val app: YAMAApplication) {
                 }
     }
 
-    fun getSubscribedTeams(user: User) {
-        chatsRef.document(user.login)
+    fun getSubscribedTeams(user: User, success: (List<Team>) -> Unit, fail: (Exception) -> Unit) {
+        usersRef.document(user.login)
                 .collection("chats")
-                .orderBy("name")
                 .get()
                 .addOnSuccessListener { result ->
-                    for (document in result) {
-                        associateTeam(document.toObject(Int::class.java))
+                    success(result.toObjects(Team::class.java))
+                   /* for (document in result) {
+                        associateTeam(document.toObject(TeamId::class.java).teamId)
                         Log.d(app.TAG, document.id + " => " + document.data)
-                    }
+                    }*/
                 }
                 .addOnFailureListener { exception ->
                     Log.d(app.TAG, "Error getting documents: ", exception)
+                    fail(exception)
                 }
     }
 }

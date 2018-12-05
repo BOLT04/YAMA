@@ -45,10 +45,10 @@ class Home2Activity : AppCompatActivity() {
             }
         }
 
-        chatsView.adapter = HomeAdapter(viewModel, listener)
+        chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
 
         viewModel.teams.observe(this, Observer<List<Team>> {
-            chatsView.adapter = HomeAdapter(viewModel, listener)
+            chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
         })
 
         viewModel.updateTeams()
