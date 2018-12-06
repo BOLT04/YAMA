@@ -50,8 +50,9 @@ class MembersActivity : AppCompatActivity() {
         val listener = object : MembersAdapter.OnMemberClickListener {
             override fun onMemberClick(user: UserMD?) {
                //TODO: implement DM
-                app.chatBoard.associateUser(user!!)
+
                 app.repository.otherUser = user
+
                 startActivity(intent)
             }
         }

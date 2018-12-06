@@ -21,10 +21,12 @@ class ChatBoard(private val app: YAMAApplication) {
     private val usersRef = db.collection("users")
     private val userChatsRef = db.collection("userChats")
 
-    // teamName -> registrations (makes it possible to unregister)
+    // teamID -> registrations (makes it possible to unregister)
     private val observedTeams = HashMap<Int, ListenerRegistration>()
 
-    // teamName -> msgId, msgDto
+    private val observedDM = HashMap<String, ListenerRegistration>()
+
+    // teamID -> msgId, msgDto
     //TODO: DOCUMENT what is this for
     // Used to observe da observar vários chats de várias teams
     //e saberes em qual é que vais meter as msgs q chegam
@@ -35,11 +37,13 @@ class ChatBoard(private val app: YAMAApplication) {
     fun start() {
         val user = app.repository.currentUser!!
 
+        /*val dummy = "Dummy"
         usersRef
                 .document(user.login)
                 .collection("userChats")
-                .add("abcd" to "id")
-
+                .document(dummy)
+                .set(mutableMapOf(dummy to dummy) as Map<String, Any>)
+*/
         usersRef
                 .document(user.login)
                 .collection("userChats")
@@ -49,22 +53,42 @@ class ChatBoard(private val app: YAMAApplication) {
                         return@EventListener
                     }
                     runAsync {
+                        var d : DocumentChange?  =null
                         for (dc in snapshots!!.documentChanges)
-                            if (dc.type == DocumentChange.Type.ADDED) {
+                            if (dc.type == DocumentChange.Type.ADDED /*&& dc.document.id!= dummy*/) {
 
+                                if(d==null)
+                                    d=dc
+                                else {
+                                    Log.v("MYTAG", (dc == d).toString())
+                                    Log.v("MYTAG", dc.toString())
+                                    Log.v("MYTAG", d.toString())
+                                }
+
+
+                                val otherLogin = dc.document.id
                                 val chatId = dc.document["chatId"] as String
 
                                 Log.v("DM DEBUG", "listeing to $chatId")
 
-                                val userChat = UserChat(chatId)
+                                var userChat = globalUserChats[otherLogin]
 
-                                globalUserChats[dc.document.id] = userChat
-                                userChatsRef
-                                        .document(chatId.toString())
-                                        .collection("messages")
-                                        .addSnapshotListener(getListener(userChat))
+                                if(userChat==null){
+                                    userChat = UserChat(dc.document.id)
+                                    globalUserChats[dc.document.id]=userChat
+                                }
+
+
+                                if(observedDM[otherLogin] == null) {
+
+                                    val registration = userChatsRef
+                                            .document(chatId)
+                                            .collection("messages")
+                                            .addSnapshotListener(getListener(userChat))
+
+                                    observedDM[otherLogin] = registration
+                                }
                             }
-
                     }
                 })
     }
@@ -95,18 +119,15 @@ class ChatBoard(private val app: YAMAApplication) {
     }
 
 
-    fun getTeamChat(id: Int): Chat{
-        var tc = globalTeamChats[id]
-        if(tc==null){
-            tc= Chat()
-            globalTeamChats[id] = tc
+    fun getTeamChat(teamId: Int): Chat{
+        var tc = globalTeamChats[teamId]
+        if (tc == null){
+            tc = Chat()
+            globalTeamChats[teamId] = tc
         }
 
         return tc
     }
-
-
-
 
 
     fun getListener(chat : Chat): EventListener<QuerySnapshot> {
@@ -116,19 +137,29 @@ class ChatBoard(private val app: YAMAApplication) {
                 return@EventListener
             }
             runAsync {
+                var d : DocumentChange?  =null
                 for (dc in snapshots!!.documentChanges)
-                    if (dc.type == DocumentChange.Type.ADDED)
+                    if (dc.type == DocumentChange.Type.ADDED) {
+
+                        if (d == null)
+                            d = dc
+                        else {
+                            Log.v("MYTAG_INNER", (dc == d).toString())
+                            Log.v("MYTAG_INNER", dc.toString())
+                            Log.v("MYTAG_INNER", d.toString())
+                        }
+
                         app.repository.mappers.messageMapper.dtoToMD(dc.document.toObject(MessageDto::class.java))
                         {
                             Log.v("DM DEBUG", "message received")
                             val messageLD = chat.add(it)
                             if (it is ReceivedMessageMD) {
-                                app.repository.getAvatarImageFromUrl(it.user.avatar_url){
-                                    _ -> messageLD.value = messageLD.value
+                                app.repository.getAvatarImageFromUrl(it.user.avatar_url) { _ ->
+                                    messageLD.value = messageLD.value
                                 }
                             }
                         }
-
+                    }
             }
         }
     }
@@ -146,11 +177,38 @@ class ChatBoard(private val app: YAMAApplication) {
         Log.d(app.TAG, "associateTeam: teamId = $teamId")
         val registration = teamsRef.document(teamId.toString())
                 .collection("messages")
-                .orderBy("createdAt")
+                //.orderBy("createdAt")
                 .addSnapshotListener (getListener(teamChat))
         addToSubscribedTeams(team)
         observedTeams[teamId] = registration
     }
+
+
+    fun associateUser(otherLogin: String) {
+
+        val currentLogin = app.repository.currentUser!!.login
+        val id = Random(Date().time).nextInt().toString()
+
+        if(globalUserChats.containsKey(otherLogin)) return
+
+        val userChat = UserChat(id)
+
+        /*val registration = userChatsRef
+                .document(id)
+                .collection("messages")
+                //.orderBy("createdAt")
+                .addSnapshotListener (getListener(userChat))
+*/
+
+        //observedTeams[teamId] = registration
+
+        associateUserAux(currentLogin, otherLogin, id)
+        associateUserAux(otherLogin, currentLogin, id)
+
+        globalUserChats[otherLogin]= userChat
+    }
+
+
 
     fun post(newMessage: MessageDto, teamId: Int) {
         teamsRef.document(teamId.toString())
@@ -212,23 +270,6 @@ class ChatBoard(private val app: YAMAApplication) {
     }
 
 
-    fun associateUser(user: UserMD) {
-        val otherLogin = user.login
-        val currentLogin = app.repository.currentUser!!.login
-
-        if(globalUserChats[otherLogin]!=null) return
-
-       // usersRef.document(currentLogin).
-
-
-
-        val id = Random(Date().time).nextInt().toString()
-
-        associateUserAux(currentLogin, otherLogin, id)
-        associateUserAux(otherLogin, currentLogin, id)
-
-        globalUserChats[otherLogin]= UserChat(id)
-    }
 
 
 
@@ -250,11 +291,12 @@ class ChatBoard(private val app: YAMAApplication) {
                 }
     }
 
-    fun getUserChat(userLogin: String): UserChat? =
-            globalUserChats[userLogin]
+    fun getUserChat(userLogin: String): UserChat {
 
-
-
+        if(globalUserChats[userLogin]==null)
+            associateUser(userLogin)
+        return globalUserChats[userLogin]!!
+    }
 }
 
 
