@@ -22,7 +22,7 @@
         tools:background="@android:color/holo_blue_light"
         tools:text="messageMD" />
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/userAvatar"
         android:layout_width="46dp"
         android:layout_height="46dp"

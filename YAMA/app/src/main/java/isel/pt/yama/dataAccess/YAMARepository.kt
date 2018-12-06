@@ -288,24 +288,9 @@ class YAMARepository(private val app: YAMAApplication,
         firebase.sendMessage(mappers.messageMapper.mdToDto(message), team)
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    fun sendUserMessage(otherUserLogin: String, message: MessageMD) {
+        firebase.sendUserMessage(mappers.messageMapper.mdToDto(message), otherUserLogin)
+    }
 
 
 }

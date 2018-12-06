@@ -34,7 +34,7 @@ class MembersAdapter(val app: YAMAApplication,
     override fun onBindViewHolder(holder: MembersViewHolder, position: Int) {
         Log.v("YAMA DEBUG", "viewModel.members.value?.size: " + viewModel.members.value?.size)
 
-        holder.associateAndBind(viewModel.members.value?.get(position))
+        holder.associateAndBind(viewModel.members.value?.get(position), listener)
     }
 
     override fun onViewRecycled(holder: MembersViewHolder) {
@@ -49,34 +49,37 @@ class MembersAdapter(val app: YAMAApplication,
 
 class MembersViewHolder(val app: YAMAApplication,
                         val context: LifecycleOwner,
-                        view: View, var userLd: MutableLiveData<User>? = null)
+                        view: View,
+                        var userLd: MutableLiveData<UserMD>? = null,
+                        var listener: MembersAdapter.OnMemberClickListener?=null)
     : RecyclerView.ViewHolder(view) {
 
-    val observer: Observer<User> = Observer { bindToView(it) }
+    val observer: Observer<UserMD> = Observer { bindToView(it,listener!!) }
 
     private val memberAvatar: ImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
+    private val member : androidx.constraintlayout.widget.ConstraintLayout = view.findViewById(R.id.member_view)
 
 
-    fun associateAndBind(user: MutableLiveData<User>?){
+
+    fun associateAndBind(user: MutableLiveData<UserMD>?, listener: MembersAdapter.OnMemberClickListener){
         this.userLd = user
+        this.listener = listener
         user?.observe(context, observer)
-        bindToView(user?.value)
+        bindToView(user?.value, listener)
+
+
     }
 
-    fun bindToView(user: User?) {
+    fun bindToView(user: UserMD?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
 
-        memberAvatar.setImageBitmap(
-                app.repository.getAvatarImageFromUrlSync(user?.avatarUrl!!)
-        )
+        memberAvatar.setImageBitmap(app.repository.getAvatarImageFromUrlSync(user?.avatar_url!!))
 
         memberName.text = user.login
+
+        member.setOnClickListener{listener.onMemberClick(user)}
     }
 
-    fun bindToView(user: User?, listener: MembersAdapter.OnMemberClickListener) {
-        bindToView(user)
-        itemView.setOnClickListener { listener.onMemberClick(user) }
-    }
 }

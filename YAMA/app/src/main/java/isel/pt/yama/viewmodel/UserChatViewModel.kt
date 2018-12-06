@@ -8,16 +8,17 @@ import isel.pt.yama.model.TeamMD
 import isel.pt.yama.model.UserMD
 
 
-class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+class UserChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     val user: UserMD = app.repository.currentUser!!
+    val otherUser: UserMD = app.repository.otherUser!!
     val team: TeamMD = app.repository.team!!
 
     val chatLog: MutableLiveData<List<MutableLiveData<MessageMD>>>
-            = app.chatBoard.getTeamChat(team.id).liveData
+            = app.chatBoard.getUserChat(otherUser.login)!!.liveData
 
     fun sendMessage(messageMD: MessageMD){
-        app.repository.sendTeamMessage(team, messageMD)
+        app.repository.sendUserMessage(otherUser.login, messageMD)
     }
 
 

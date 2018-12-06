@@ -38,7 +38,7 @@ class Home2Activity : AppCompatActivity() {
             HomeViewModel(app)
         }
 
-        val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, TeamChatActivity::class.java)
 
         val listener = object : HomeAdapter.OnTeamClickListener {
             override fun onTeamClick(team: TeamMD?) {

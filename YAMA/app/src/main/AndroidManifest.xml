@@ -23,9 +23,9 @@
             android:noHistory="true">
         </activity>
         <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.ChatActivity"></activity>
-        <!--><activity android:name=".activity.TeamChatActivity"></activity>
-        <activity android:name=".activity.UserChatActivity"></activity> </!-->
+        <!--><activity android:name=".activity.ChatActivity"></activity><!-->
+        <activity android:name=".activity.TeamChatActivity"></activity>
+        <activity android:name=".activity.UserChatActivity"></activity>
         <activity
             android:name=".activity.MainActivity"
             android:label="YAMA"
