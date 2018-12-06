@@ -6,14 +6,16 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-@Entity(tableName = "teams", primaryKeys = ["organization", "id"])
+@Entity(tableName = "teams", primaryKeys = ["organizationID", "id"])
 data class Team (
         val name : String,
         val id : Int,
         @ForeignKey(entity = Organization::class, parentColumns = ["login"],
-                childColumns = ["organization"])
-        val organization : String,
-        val description : String?) : Parcelable
+                childColumns = ["organizationID"])
+        val organizationID : String,
+        val description : String?) : Parcelable {
+
+}
 
 @Entity(tableName = "users")
 data class User (
@@ -30,30 +32,30 @@ data class User (
 data class MessageMD (
         @PrimaryKey
         val id : Int,
-        @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],
-                childColumns = ["organization", "team"])
-        val organization : String,
+        @ForeignKey(entity = Team::class, parentColumns = ["organizationID", "id"],
+                childColumns = ["organizationID", "team"])
+        val organizationID : String,
         val team : Int,
         val content : String,
         val createdAt : Date
 )*/
 
 
-@Entity(tableName = "team_members", primaryKeys = ["organization", "team", "user"])
+@Entity(tableName = "team_members", primaryKeys = ["organizationID", "team", "user"])
 data class TeamMember (
-        @ForeignKey(entity = Team::class, parentColumns = ["organization", "id"],
-                    childColumns = ["organization", "team"])
-        val organization : String,
+        @ForeignKey(entity = Team::class, parentColumns = ["organizationID", "id"],
+                    childColumns = ["organizationID", "team"])
+        val organizationID : String,
         val team : Int,
         @ForeignKey(entity = User::class, parentColumns = ["login"],
                     childColumns = ["user"])
         val user : String)
 
-@Entity(tableName = "organization_members", primaryKeys = ["organization", "user"])
+@Entity(tableName = "organization_members", primaryKeys = ["organizationID", "user"])
 data class OrganizationMember (
         @ForeignKey(entity = Organization::class, parentColumns = ["login"],
-                childColumns = ["organization"])
-        val organization : String,
+                childColumns = ["organizationID"])
+        val organizationID : String,
 
         @ForeignKey(entity = User::class, parentColumns = ["login"],
                 childColumns = ["user"])
@@ -61,7 +63,7 @@ data class OrganizationMember (
 
 /*data class UserOrganizations (
         @Embedded
-        val user : User,
+        val currentUser : User,
         @Relation(parentColumn = "login", entityColumn = "login", entity = Organization::class)
         val organizations : List<Organization> = listOf()
 )

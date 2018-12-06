@@ -7,12 +7,12 @@ import isel.pt.yama.common.defaultErrorHandler
 import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.model.TeamMD
 
-class TeamsViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
+class HomeViewModel (val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<TeamMD>> = MutableLiveData()
 
     fun updateTeams() {
-        app.repository.getTeams({
+        app.repository.getSubscribedTeams({
             teams.value = it
         }, {
             defaultErrorHandler(app)

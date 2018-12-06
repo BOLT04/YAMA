@@ -51,11 +51,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamName"
+        app:layout_constraintTop_toBottomOf="@+id/chatName"
         app:stackFromEnd="true" />
 
     <TextView
-        android:id="@+id/teamName"
+        android:id="@+id/chatName"
         android:layout_width="wrap_content"
         android:layout_height="17dp"
         android:layout_marginStart="8dp"
@@ -68,6 +68,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="teamName" />
+        tools:text="chatName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

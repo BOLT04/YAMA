@@ -1,6 +1,7 @@
 package isel.pt.yama.activity
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,8 @@ import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.dataAccess.database.User
+import isel.pt.yama.model.TeamMD
+import isel.pt.yama.model.UserMD
 import isel.pt.yama.viewmodel.MembersViewModel
 import kotlinx.android.synthetic.main.activity_members.*
 
@@ -27,7 +30,9 @@ class MembersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_members)
 
-        val team: Team = intent.getParcelableExtra("team")//TODO: what to put on default value
+        val app = getYAMAApplication()
+
+        val team: TeamMD = app.repository.team!!
 
         textViewTeamName.text = team.name
         textViewTeamDescription.text = team.description
@@ -35,25 +40,26 @@ class MembersActivity : AppCompatActivity() {
         membersView.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
         membersView.layoutManager = LinearLayoutManager(this)
 
-        val app = getYAMAApplication()
+
         val viewModel = getViewModel(VIEW_MODEL_KEY){
             MembersViewModel(app)
         }
 
-       // val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, UserChatActivity::class.java)
 
         val listener = object : MembersAdapter.OnMemberClickListener {
-            override fun onMemberClick(user: User?) {
+            override fun onMemberClick(user: UserMD?) {
                //TODO: implement DM
-                Toast.makeText(app, "Direct messaging comming soon", Toast.LENGTH_SHORT).show()
-                // intent.putExtra("user", user)
-                //startActivity(intent)
+                app.chatBoard.associateUser(user!!)
+                app.repository.otherUser = user
+                startActivity(intent)
             }
         }
 
         membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
         viewModel.members.observe(this, Observer<List<MutableLiveData<User>>> {
+
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(app, this, viewModel, listener)
         })
@@ -67,7 +73,7 @@ class MembersActivity : AppCompatActivity() {
         val orgId = sharedPref.getString(orgIdStr, "")
         val userToken = sharedPref.getString(userTokenStr, "")
 
-        viewModel.updateMembers(userToken, team.id, orgId)
+        viewModel.updateMembers(userToken, orgId)
     }
 
     override fun onStart() {

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dataAccess.database.User
+import isel.pt.yama.model.UserMD
 import isel.pt.yama.viewmodel.MembersViewModel
 
 class MembersAdapter(val app: YAMAApplication,
@@ -42,7 +43,7 @@ class MembersAdapter(val app: YAMAApplication,
     }
 
     interface OnMemberClickListener {
-        fun onMemberClick(user: User?)
+        fun onMemberClick(user: UserMD?)
     }
 }
 
@@ -56,6 +57,7 @@ class MembersViewHolder(val app: YAMAApplication,
     private val memberAvatar: ImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
 
+
     fun associateAndBind(user: MutableLiveData<User>?){
         this.userLd = user
         user?.observe(context, observer)
@@ -64,6 +66,7 @@ class MembersViewHolder(val app: YAMAApplication,
 
     fun bindToView(user: User?) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
+
 
         memberAvatar.setImageBitmap(
                 app.repository.getAvatarImageFromUrlSync(user?.avatarUrl!!)

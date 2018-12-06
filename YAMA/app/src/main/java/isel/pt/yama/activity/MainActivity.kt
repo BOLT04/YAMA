@@ -18,6 +18,7 @@ import isel.pt.yama.viewmodel.LoginViewModel
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -48,8 +49,9 @@ class MainActivity : AppCompatActivity() {
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
 
-                    val intent = Intent(this, HomeActivity::class.java)
-                    app.repository.user=viewModel.userInfo.value
+                    val intent = Intent(this, Home2Activity::class.java)
+                    app.repository.currentUser=viewModel.userInfo.value
+                    app.chatBoard.start()
 
                     startActivity(intent)
                 } else {
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
-        app.repository.organization = model.textOrganization
+        app.repository.organizationID = model.textOrganization
         app.repository.token = model.textToken
     }
 

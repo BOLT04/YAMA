@@ -36,12 +36,17 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.loginIsOk.observe(this, Observer<Boolean> { loginIsOk ->
             if (loginIsOk) {
-                saveSharedPreferences(sharedPref)
+                if (keep_login_checkbox.isChecked)
+                    saveSharedPreferences(sharedPref)
 
                 fillRepositoryInfo(app, viewModel)
-              
-                val intent = Intent(this, HomeActivity::class.java)
-                app.repository.user=viewModel.userInfo.value
+
+
+
+                val intent = Intent(this, Home2Activity::class.java)
+                app.repository.currentUser=viewModel.userInfo.value
+
+                app.chatBoard.start()
 
                 startActivity(intent)
             } else {
@@ -49,11 +54,16 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-
-
         login_btn.setOnClickListener {
             saveUserInputsToModel(viewModel)
             viewModel.submitLogin()
+        }
+
+        keep_login_checkbox.setOnClickListener {
+            if (login_userID.text.isNullOrBlank()
+                || login_orgID.text.isNullOrBlank()
+                || login_personalToken.text.isNullOrBlank())
+                keep_login_checkbox.isChecked = false
         }
     }
 
@@ -90,8 +100,8 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
-        app.repository.user = model.userInfo.value
-        app.repository.organization = model.textOrganization
+        app.repository.currentUser = model.userInfo.value
+        app.repository.organizationID = model.textOrganization
         app.repository.token = model.textToken
     }
 

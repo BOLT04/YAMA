@@ -9,8 +9,8 @@ interface TeamDAO {
     fun getAllByDate(date: Calendar): List<TeamDto>
     */
 
-    @Query("SELECT * FROM teams WHERE organization = :organization")
-    fun getOrganizationTeams(organization: String): List<Team>
+    @Query("SELECT * FROM teams WHERE organizationID = :organizationID")
+    fun getOrganizationTeams(organizationID: String): List<Team>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg teams: Team)
@@ -39,9 +39,9 @@ interface OrganizationDAO {
 
 @Dao
 interface OrganizationMembersDAO {
-    @Query("SELECT * FROM organizations " +
-            "INNER JOIN organization_members ON organizations.login=organization_members.organization " +
-            "WHERE user = :user")
+    @Query("""SELECT * FROM organizations
+            INNER JOIN organization_members ON organizations.login=organization_members.organizationID
+            WHERE user = :user""")
     fun getUserOrganizations(user: String): List<Organization>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -53,10 +53,10 @@ interface OrganizationMembersDAO {
 
 @Dao
 interface TeamMembersDAO {
-    @Query("SELECT * FROM users " +
-            "INNER JOIN team_members ON users.login=team_members.user " +
-            "WHERE team_members.team = :team AND team_members.organization = :organization")
-    fun getTeamMembers(team: Int, organization: String): List<User>
+    @Query("""SELECT * FROM users
+            INNER JOIN team_members ON users.login=team_members.user
+            WHERE team_members.team = :team AND team_members.organizationID = :organizationID""")
+    fun getTeamMembers(team: Int, organizationID: String): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg members: TeamMember)
@@ -67,7 +67,7 @@ interface TeamMembersDAO {
 
 
 @Database(entities = [OrganizationMember::class, Organization::class, User::class,
-                        Team::class, TeamMember::class], version = 2)
+                        Team::class, TeamMember::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class YAMADatabase : RoomDatabase() {
     abstract fun teamDAO(): TeamDAO
