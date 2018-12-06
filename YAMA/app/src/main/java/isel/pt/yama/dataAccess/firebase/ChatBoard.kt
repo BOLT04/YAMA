@@ -28,7 +28,7 @@ class ChatBoard(private val app: YAMAApplication) {
     //TODO: DOCUMENT what is this for
     // Used to observe da observar vários chats de várias teams
     //e saberes em qual é que vais meter as msgs q chegam
-    var globalChats : MutableMap<Int, Chat> = mutableMapOf()
+    var globalTeamChats : MutableMap<Int, Chat> = mutableMapOf()
 
 
     fun start() {
@@ -85,16 +85,15 @@ class ChatBoard(private val app: YAMAApplication) {
 
 
     fun getTeamChat(id: Int): Chat{
-        var tc = globalChats[id]
+        var tc = globalTeamChats[id]
         if(tc==null){
             tc= Chat()
-            globalChats[id] = tc
+            globalTeamChats[id] = tc
         }
 
         return tc
     }
 
-    private data class TeamId(val teamId: Int)
 
 
     class Chat{
@@ -137,7 +136,28 @@ class ChatBoard(private val app: YAMAApplication) {
 
 
 
+    fun getListener(teamChat : Chat): EventListener<QuerySnapshot> {
+        return EventListener<QuerySnapshot> { snapshots, e ->
+            if (e != null) {
+                Log.w(app.TAG, "Listen failed.", e)
+                return@EventListener
+            }
+            runAsync {
+                for (dc in snapshots!!.documentChanges)
+                    if (dc.type == DocumentChange.Type.ADDED)
+                        app.repository.mappers.messageMapper.dtoToMD(dc.document.toObject(MessageDto::class.java))
+                        {
+                            val messageLD = teamChat.add(it)
+                            if (it is ReceivedMessageMD) {
+                                app.repository.getAvatarImageFromUrl(it.user.avatar_url){
+                                    _ -> messageLD.value = messageLD.value
+                                }
+                            }
+                        }
 
+            }
+        }
+    }
 
 
     // single team chat
@@ -150,14 +170,12 @@ class ChatBoard(private val app: YAMAApplication) {
 
         val teamChat = Chat()
 
-        globalChats[teamId] = teamChat
+        globalTeamChats[teamId] = teamChat
         Log.d(app.TAG, "associateTeam: teamId = $teamId")
         val registration = teamsRef.document(teamId.toString())
                 .collection("messages")
                 .orderBy("createdAt")
-                .addSnapshotListener { snapshots, e ->
-                    onDocumentChange(snapshots, e)
-                }
+                .addSnapshotListener (getListener(teamChat))
         addToSubscribedTeams(team)
         observedTeams[teamId] = registration
     }
@@ -193,11 +211,11 @@ class ChatBoard(private val app: YAMAApplication) {
                 .collection("chats")
                 .get()
                 .addOnSuccessListener { result ->
-                    success(result.toObjects(TeamDto::class.java).map(app.repository.mappers.teamMapper::dtoToMD))
-                   /* for (document in result) {
-                        associateTeam(document.toObject(TeamId::class.java).teamId)
-                        Log.d(app.TAG, document.id + " => " + document.data)
-                    }*/
+                    val map = result.toObjects(TeamDto::class.java)
+                            .map(app.repository.mappers.teamMapper::dtoToMD)
+
+                   // map.forEach{teamMD -> associateTeam(teamMD)}
+                    success(map)
                 }
                 .addOnFailureListener { exception ->
                     Log.d(app.TAG, "Error getting documents: ", exception)

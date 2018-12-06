@@ -90,7 +90,8 @@ class ChatAdapter(val app: YAMAApplication,
     : RecyclerView.Adapter<ChatViewHolder>() {
 
     init {
-        chatLog.observe(context, Observer<List<MutableLiveData<MessageMD>>> { list ->
+        chatLog.observe(context, Observer<List<MutableLiveData<MessageMD>>> {
+            list ->
             //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             this.notifyItemInserted(chatLog.value?.size!!)
 

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
@@ -11,14 +13,14 @@ import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
+import isel.pt.yama.model.MessageMD
 import isel.pt.yama.viewmodel.ChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
-import java.util.*
 import isel.pt.yama.model.SentMessageMD
-import isel.pt.yama.model.TeamMD
+import java.util.*
 
 
-open class ChatActivity : AppCompatActivity() {
+open class ChatActivity : AppCompatActivity()/*, DefaultLifeStatusTracker("ChatActivity") */{
 
     //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the currentUser who sent it!
 
@@ -36,6 +38,7 @@ open class ChatActivity : AppCompatActivity() {
             ChatViewModel(app)
         }
 
+        chatName.text = repo.team!!.name
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
@@ -44,6 +47,7 @@ open class ChatActivity : AppCompatActivity() {
         messagesList.setHasFixedSize(true)
 
         val adapter = ChatAdapter(app, this, viewModel.chatLog)
+
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 layoutManager.smoothScrollToPosition(messagesList, null, adapter.itemCount)
@@ -61,9 +65,10 @@ open class ChatActivity : AppCompatActivity() {
             userMessageTxt.text.clear()
         }
 
-        /*
-        //TODO
-        viewModel.chatLog.observe(this, Observer<List<MessageDto>> {
+
+
+        viewModel.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
+
             val newAdapter = ChatAdapter(app, this, viewModel.chatLog)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -73,7 +78,7 @@ open class ChatActivity : AppCompatActivity() {
             messagesList.adapter = newAdapter
             newAdapter.notifyDataSetChanged()
 
-        })*/
+        })
 
         chatName.setOnClickListener{
             val intent = Intent(this, MembersActivity::class.java)
@@ -98,4 +103,23 @@ open class ChatActivity : AppCompatActivity() {
         Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
     }
 
+}
+
+
+
+class UserChatActivity : ChatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        chatName.text = repo.otherUser!!.name
+    }
+}
+
+class TeamChatActivity : ChatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        chatName.text = repo.team!!.name
+    }
 }

@@ -17,8 +17,8 @@ import isel.pt.yama.network.GetRequestUser
 import isel.pt.yama.network.GetTeamsRequest
 
 const val GITHUB_API_HOST = "https://api.github.com"
-const val GITHUB_API_USER = "$GITHUB_API_HOST/currentUser"
-const val GITHUB_API_USER_ORGS = "$GITHUB_API_HOST/currentUser/orgs"
+const val GITHUB_API_USER = "$GITHUB_API_HOST/user"
+const val GITHUB_API_USER_ORGS = "$GITHUB_API_HOST/user/orgs"
 const val GITHUB_API_ORGS = "$GITHUB_API_HOST/orgs"
 const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
 const val GITHUB_API_USER_NAME = "$GITHUB_API_HOST/users"
