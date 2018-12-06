@@ -21,10 +21,10 @@ class ChatBoard(private val app: YAMAApplication) {
     private val usersRef = db.collection("users")
     private val userChatsRef = db.collection("userChats")
 
-    // teamName -> registrations (makes it possible to unregister)
+    // teamID -> registrations (makes it possible to unregister)
     private val observedTeams = HashMap<Int, ListenerRegistration>()
 
-    // teamName -> msgId, msgDto
+    // teamID -> msgId, msgDto
     //TODO: DOCUMENT what is this for
     // Used to observe da observar vários chats de várias teams
     //e saberes em qual é que vais meter as msgs q chegam
@@ -95,11 +95,11 @@ class ChatBoard(private val app: YAMAApplication) {
     }
 
 
-    fun getTeamChat(id: Int): Chat{
-        var tc = globalTeamChats[id]
-        if(tc==null){
-            tc= Chat()
-            globalTeamChats[id] = tc
+    fun getTeamChat(teamId: Int): Chat{
+        var tc = globalTeamChats[teamId]
+        if (tc == null){
+            tc = Chat()
+            globalTeamChats[teamId] = tc
         }
 
         return tc
