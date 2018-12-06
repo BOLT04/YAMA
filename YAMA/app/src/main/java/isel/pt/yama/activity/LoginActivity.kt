@@ -40,9 +40,13 @@ class LoginActivity : AppCompatActivity() {
                     saveSharedPreferences(sharedPref)
 
                 fillRepositoryInfo(app, viewModel)
-              
+
+
+
                 val intent = Intent(this, Home2Activity::class.java)
-                app.repository.user=viewModel.userInfo.value
+                app.repository.currentUser=viewModel.userInfo.value
+
+                app.chatBoard.start()
 
                 startActivity(intent)
             } else {
@@ -96,8 +100,8 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun fillRepositoryInfo(app: YAMAApplication, model: LoginViewModel) {
-        app.repository.user = model.userInfo.value
-        app.repository.organization = model.textOrganization
+        app.repository.currentUser = model.userInfo.value
+        app.repository.organizationID = model.textOrganization
         app.repository.token = model.textToken
     }
 

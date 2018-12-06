@@ -54,7 +54,7 @@ class GithubApi(private val app: YAMAApplication) {
 	//!
 
     fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
-        getAndLog("getUserDetails: Fetching user from Github API") {
+        getAndLog("getUserDetails: Fetching currentUser from Github API") {
             GetRequestUser(
                     GITHUB_API_USER,
                 Response.Listener(success),
@@ -64,7 +64,7 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
     fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
-        getAndLog("Fetching user from Github API") {
+        getAndLog("Fetching currentUser from Github API") {
             GetRequestUser(
                     "$GITHUB_API_USER_NAME/$name",
                 Response.Listener(success),
@@ -76,7 +76,7 @@ class GithubApi(private val app: YAMAApplication) {
     }
 
     fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
-        getAndLog("getUserOrganizations: Fetching user organizations from Github API") {
+        getAndLog("getUserOrganizations: Fetching currentUser organizations from Github API") {
             GetRequestOrganizations(
                     GITHUB_API_USER_ORGS,
                 Response.Listener(success),

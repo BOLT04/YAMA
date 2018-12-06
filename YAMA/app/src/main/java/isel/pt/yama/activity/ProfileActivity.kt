@@ -24,9 +24,9 @@ class ProfileActivity : AppCompatActivity() {
             ProfileViewModel(app)
         }
 
-        // The responsibility of initializing user property ia on MainActivity or LoginActivity
+        // The responsibility of initializing currentUser property ia on MainActivity or LoginActivity
         // So when we're here, its guaranteed to be not null.
-        val user = app.repository.user!!
+        val user = app.repository.currentUser!!
 
         user_profile_login.text = user.login
         user_profile_name.text = user.name
@@ -37,8 +37,8 @@ class ProfileActivity : AppCompatActivity() {
             user_profile_userAvatar.setImageBitmap(it)
         })
 
-        app.repository.getAvatarImageFromUrl(user.avatarUrl){viewModel.userAvatarImage.value=it}
-        //app.repository.getAvatarImageFromUrl(user.login){viewModel.userAvatarImage.value=it} // TODO: avatarurl or login
+        app.repository.getAvatarImageFromUrl(user.avatar_url){viewModel.userAvatarImage.value=it}
+        //app.repository.getAvatarImageFromUrl(currentUser.login){viewModel.userAvatarImage.value=it} // TODO: avatarurl or login
     }
 
     override fun onStart() {
