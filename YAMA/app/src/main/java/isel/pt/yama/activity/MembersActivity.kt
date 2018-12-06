@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
@@ -55,11 +56,12 @@ class MembersActivity : AppCompatActivity() {
             }
         }
 
-        membersView.adapter = MembersAdapter(viewModel, listener)
+        membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
-        viewModel.members.observe(this, Observer<List<UserMD>> {
+        viewModel.members.observe(this, Observer<List<MutableLiveData<User>>> {
+
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
-            membersView.adapter = MembersAdapter(viewModel, listener)
+            membersView.adapter = MembersAdapter(app, this, viewModel, listener)
         })
 
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
