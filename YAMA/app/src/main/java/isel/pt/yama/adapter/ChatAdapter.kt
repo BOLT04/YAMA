@@ -60,20 +60,22 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
                 app.repository.getAvatarImageFromUrlSync(messageMD?.user?.avatar_url!!)
         )//make request Uri.parse(messageMD?.currentUser?.avatar_url))
 
-        sentMsgView.text = messageMD?.content
-        userNameView.text= messageMD?.user?.name ?: messageMD?.user?.login
+        sentMsgView.text = messageMD.content
+        userNameView.text= messageMD.user.name ?: messageMD.user.login
 
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(messageMD?.createdAt)
+        dateTimeView.text= sdf.format(messageMD.createdAt)
     }
 }
 
 class SentChatViewHolder(context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
 
     private val sentMsgView: TextView = view.findViewById(R.id.message)
+    private val iconImageView: ImageView = view.findViewById(R.id.iconImageView)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
     override fun bindToView(messageMD: MessageMD? ) {
+        iconImageView.setImageResource(messageMD?.isDelivered ?R.mipmap.ic_msg_sent)
         sentMsgView.text = messageMD?.content
         val sdf = SimpleDateFormat.getDateTimeInstance()
         dateTimeView.text= sdf.format(messageMD?.createdAt!!)

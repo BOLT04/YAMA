@@ -141,6 +141,11 @@ class ChatBoard(private val app: YAMAApplication) {
                 for (dc in snapshots!!.documentChanges)
                     if (dc.type == DocumentChange.Type.ADDED) {
 
+                        if (dc != null && dc.document.metadata.hasPendingWrites())
+                            Log.v("ICONS", "Local")
+                        else
+                            Log.v("ICONS", "Server")
+
                         if (d == null)
                             d = dc
                         else {
