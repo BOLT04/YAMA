@@ -49,11 +49,12 @@ class MembersActivity : AppCompatActivity() {
 
         val listener = object : MembersAdapter.OnMemberClickListener {
             override fun onMemberClick(user: UserMD?) {
-               //TODO: implement DM
 
-                app.repository.otherUser = user
+                if(app.repository.currentUser!=user){
 
-                startActivity(intent)
+                    app.repository.otherUser = user
+                    startActivity(intent)
+                }
             }
         }
 

@@ -11,5 +11,11 @@ const val USER_EXTRA = "LoginActivity.userExtra"
 const val ORGANIZATION_EXTRA = "LoginActivity.organizationExtra"
 const val TOKEN_EXTRA_KEY = "LoginActivity.tokenExtra"
 
+//INTENTS
+const val PRIVATE_PROFILE = "PrivateProfile"
+
+
+
+
 val TEAM_NOTIFICATION_CHANNEL_ID: String = "TeamNotificationChannelId"
 val DB_UPDATE_JOB_ID : String = "DB_UPDATE_JOB_ID"

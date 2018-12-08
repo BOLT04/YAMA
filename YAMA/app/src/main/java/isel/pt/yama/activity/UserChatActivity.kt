@@ -1,6 +1,7 @@
 package isel.pt.yama.activity
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -83,9 +84,9 @@ class UserChatActivity : AppCompatActivity() {
 
         })
 
+        val intent = Intent(this, ProfileActivity::class.java)
         chatName.setOnClickListener{
-            /*val intent = Intent(this, MembersActivity::class.java)
-            startActivity(intent)*/
+            startActivity(intent)
         }
 
     }

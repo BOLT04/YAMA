@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.HomeAdapter
+import isel.pt.yama.common.PRIVATE_PROFILE
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.dataAccess.database.Team
@@ -79,6 +80,7 @@ class Home2Activity : AppCompatActivity() {
             }
             R.id.profile -> {
                 val intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(PRIVATE_PROFILE, true)
                 startActivity(intent)
                 true
             }

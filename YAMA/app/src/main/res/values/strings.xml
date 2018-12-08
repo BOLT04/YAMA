@@ -9,8 +9,12 @@
     <string name="keep_signed_in">Keep me signed in</string>
 
     <string name="user_profile_name">Name :</string>
-    <string name="user_profile_email" translatable="false">e-mail :</string>
-    <string name="user_profile_followers">followers :</string>
+    <string name="user_profile_email" translatable="false">E-mail :</string>
+    <string name="user_profile_followers">Followers :</string>
+    <string name="user_profile_following">Following :</string>
+
+
+
     <string name="error_network">Couldn\'t access data</string>
 
     <string name="preference_file_key">preferences</string>

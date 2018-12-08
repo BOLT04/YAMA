@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import isel.pt.yama.R
+import isel.pt.yama.common.PRIVATE_PROFILE
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
@@ -20,25 +21,37 @@ class ProfileActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()
 
+        val privateProfile = intent.getBooleanExtra(PRIVATE_PROFILE, false)
+
+
+
+        val user =
+                if(privateProfile)
+                    app.repository.currentUser!!
+                else
+                    app.repository.otherUser!!
+
+
         val viewModel = getViewModel(VIEW_MODEL_KEY){
-            ProfileViewModel(app)
+            ProfileViewModel(app, user)
         }
 
         // The responsibility of initializing currentUser property ia on MainActivity or LoginActivity
         // So when we're here, its guaranteed to be not null.
-        val user = app.repository.currentUser!!
+
 
         user_profile_login.text = user.login
         user_profile_name.text = user.name
         user_profile_email.text = user.email
         user_profile_followers.text = user.followers.toString()
+        user_profile_following.text = user.following.toString()
 
         viewModel.userAvatarImage.observe(this, Observer<Bitmap> {
             user_profile_userAvatar.setImageBitmap(it)
         })
 
-        app.repository.getAvatarImageFromUrl(user.avatar_url){viewModel.userAvatarImage.value=it}
-        //repo.repository.getAvatarImageFromUrl(currentUser.login){viewModel.userAvatarImage.value=it} // TODO: avatarurl or login
+
+
     }
 
     override fun onStart() {

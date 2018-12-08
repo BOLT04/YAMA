@@ -11,10 +11,7 @@ import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.dto.OrganizationDto
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
-import isel.pt.yama.network.GetMembersRequest
-import isel.pt.yama.network.GetRequestOrganizations
-import isel.pt.yama.network.GetRequestUser
-import isel.pt.yama.network.GetTeamsRequest
+import isel.pt.yama.network.*
 
 const val GITHUB_API_HOST = "https://api.github.com"
 const val GITHUB_API_USER = "$GITHUB_API_HOST/user"
@@ -98,10 +95,25 @@ class GithubApi(private val app: YAMAApplication) {
     }
 
     fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit, fail: (VolleyError) -> Unit) {
+
+        val userList = mutableListOf<UserDto>()
         getAndLog("Fetching team members from Github API") {
-            GetMembersRequest(
+            GetIntermediaryMembersRequest(
                 "$GITHUB_API_TEAMS/$teamId/members",
-                Response.Listener(success),
+                Response.Listener{
+                    if(it.isEmpty())
+                        success(userList)
+
+                    it.map { intermediaryUserDto ->
+                        getUserDetailsForName(
+                                intermediaryUserDto.login,
+                                {userDto -> userList.add(userDto)
+                                    if(userList.size==it.size)
+                                        success(userList)
+                                },
+                                fail)
+                    }
+                },
                 Response.ErrorListener(fail),
                 authHeaderMap
             )
