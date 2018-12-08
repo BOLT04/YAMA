@@ -33,8 +33,8 @@ class UserChatActivity : AppCompatActivity() {
         val app = getYAMAApplication()
 
         repo = app.repository
-
-        chatName.text = repo.otherUser!!.name
+        val otherUser = repo.otherUser!!
+        chatName.text = otherUser.name ?: otherUser.login
 
         val viewModel = getViewModel("chat view model"){
             UserChatViewModel(app)

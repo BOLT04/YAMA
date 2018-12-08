@@ -26,11 +26,11 @@ class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
                 ld
             }
 /*
-    val team = app.repository.team!!
+    val team = repo.repository.team!!
     val members: MutableLiveData<List<UserMD>> = MutableLiveData()
 
     fun updateMembers(token: String, organization: String) {
-        app.repository.getTeamMembers(team.id, organization, {
+        repo.repository.getTeamMembers(team.id, organization, {
             team.users = it
             members.value = it
 */

@@ -23,8 +23,8 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
         return try {
             val app = applicationContext as YAMAApplication
             Log.v(app.TAG, "Updating local DB with teams")
-            //val teamsDto = syncFetchTeams(app)
-            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
+            //val teamsDto = syncFetchTeams(repo)
+            //syncSaveTeamsFromDTO(repo, repo.db, teamsDto)
             sendNotification(app) //TODO: do we need a notification for this
             Result.SUCCESS
         }
@@ -36,11 +36,11 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
 	/*
 	override fun doWork(): Result =
         try {
-            val app = applicationContext as YAMAApplication
-            Log.v(app.TAG, "Updating local DB with teams")
-            //val teamsDto = syncFetchTeams(app)
-            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
-            sendNotification(app) //TODO: do we need a notification for this
+            val repo = applicationContext as YAMAApplication
+            Log.v(repo.TAG, "Updating local DB with teams")
+            //val teamsDto = syncFetchTeams(repo)
+            //syncSaveTeamsFromDTO(repo, repo.db, teamsDto)
+            sendNotification(repo) //TODO: do we need a notification for this
             
 			Result.SUCCESS
         }

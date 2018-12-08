@@ -12,8 +12,10 @@ import isel.pt.yama.YAMAApplication
 import java.text.SimpleDateFormat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.model.MessageMD
 import isel.pt.yama.model.ReceivedMessageMD
+import isel.pt.yama.model.SentMessageMD
 
 
 abstract class ChatViewHolder(val context: LifecycleOwner, view: ViewGroup,
@@ -32,7 +34,7 @@ abstract class ChatViewHolder(val context: LifecycleOwner, view: ViewGroup,
     abstract fun bindToView(messageMD: MessageMD?)
 }
 
-class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
+class ReceivedChatViewHolder(val repo: YAMARepository, context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
 
     private val avatarImgView: ImageView = view.findViewById(R.id.userAvatar)
     private val sentMsgView: TextView = view.findViewById(R.id.message)
@@ -57,7 +59,7 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
 
     override fun bindToView(messageMD: MessageMD?) {
         avatarImgView.setImageBitmap(
-                app.repository.getAvatarImageFromUrlSync(messageMD?.user?.avatar_url!!)
+                repo.getAvatarImageFromUrlSync(messageMD?.user?.avatar_url!!)
         )//make request Uri.parse(messageMD?.currentUser?.avatar_url))
 
         sentMsgView.text = messageMD.content
@@ -68,17 +70,22 @@ class ReceivedChatViewHolder(val app: YAMAApplication, context: LifecycleOwner, 
     }
 }
 
-class SentChatViewHolder(context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
+class SentChatViewHolder(val repo: YAMARepository, context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
 
     private val sentMsgView: TextView = view.findViewById(R.id.message)
     private val iconImageView: ImageView = view.findViewById(R.id.iconImageView)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
     override fun bindToView(messageMD: MessageMD? ) {
-        iconImageView.setImageResource(messageMD?.isDelivered ?R.mipmap.ic_msg_sent)
-        sentMsgView.text = messageMD?.content
+        iconImageView.setImageResource(
+                if((messageMD as SentMessageMD).sent)
+                    R.drawable.green
+                else
+                    R.drawable.red
+        )
+        sentMsgView.text = messageMD.content
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(messageMD?.createdAt!!)
+        dateTimeView.text= sdf.format(messageMD.createdAt)
     }
 }
 
@@ -100,7 +107,7 @@ class ChatAdapter(val app: YAMAApplication,
             val currentPosition =  chatLog.value?.size
             val currentMessage = list[currentPosition!!.minus(1)].value
             if(currentMessage is ReceivedMessageMD)
-                app.repository.getAvatarImage(currentMessage.currentUser.avatarUrl) {
+                repo.repository.getAvatarImage(currentMessage.currentUser.avatarUrl) {
                     currentMessage.userAvatar=it
                     this.notifyItemChanged(currentPosition)
                 }
@@ -122,11 +129,11 @@ class ChatAdapter(val app: YAMAApplication,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder =
             if (viewType == MESSAGE_RECEIVED_CODE)
-                ReceivedChatViewHolder(app,context, LayoutInflater
+                ReceivedChatViewHolder(app.repository, context, LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.list_item_msg_receive, parent, false) as ViewGroup)
             else
-                SentChatViewHolder(context, LayoutInflater
+                SentChatViewHolder(app.repository, context, LayoutInflater
                         .from(parent.context)
                         .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup)
 

@@ -4,14 +4,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.runAsync
-import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.ReceivedMessageMD
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.model.*
 import java.util.*
 
 
@@ -74,20 +72,21 @@ class ChatBoard(private val app: YAMAApplication) {
                                 var userChat = globalUserChats[otherLogin]
 
                                 if(userChat==null){
-                                    userChat = UserChat(dc.document.id)
+                                    userChat = UserChat(chatId)
                                     globalUserChats[dc.document.id]=userChat
                                 }
 
 
-                                if(observedDM[otherLogin] == null) {
+                                //if(observedDM[otherLogin] == null) { //TODO pq e que isto ja nao e necessario?? wth? este double trigger é weird af
+
 
                                     val registration = userChatsRef
                                             .document(chatId)
                                             .collection("messages")
                                             .addSnapshotListener(getListener(userChat))
 
-                                    observedDM[otherLogin] = registration
-                                }
+                              //      observedDM[otherLogin] = registration
+                                //}
                             }
                     }
                 })
@@ -141,10 +140,13 @@ class ChatBoard(private val app: YAMAApplication) {
                 for (dc in snapshots!!.documentChanges)
                     if (dc.type == DocumentChange.Type.ADDED) {
 
-                        if (dc != null && dc.document.metadata.hasPendingWrites())
+                        if (dc != null && dc.document.metadata.hasPendingWrites()) {
+                            app.repository.msgIconResource = R.mipmap.ic_msg_not_sent
                             Log.v("ICONS", "Local")
-                        else
+                        } else {
+                            app.repository.msgIconResource = R.mipmap.ic_msg_sent
                             Log.v("ICONS", "Server")
+                        }
 
                         if (d == null)
                             d = dc
@@ -162,6 +164,16 @@ class ChatBoard(private val app: YAMAApplication) {
                                 app.repository.getAvatarImageFromUrl(it.user.avatar_url) { _ ->
                                     messageLD.value = messageLD.value
                                 }
+                            }
+                            else{
+                                if (dc != null && dc.document.metadata.hasPendingWrites()) {
+                                    //Log.v("ICONS", "Local")
+                                } else {
+                                    (it as SentMessageMD).sent=true
+                                    messageLD.value = messageLD.value
+                                   // Log.v("ICONS", "Server")
+                                }
+
                             }
                         }
                     }

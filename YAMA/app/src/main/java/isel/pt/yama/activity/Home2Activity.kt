@@ -43,7 +43,7 @@ class Home2Activity : AppCompatActivity() {
         val listener = object : HomeAdapter.OnTeamClickListener {
             override fun onTeamClick(team: TeamMD?) {
                 app.repository.team = team
-                // app.chatBoard.associateTeam(team?.id!!)
+                // repo.chatBoard.associateTeam(team?.id!!)
                 startActivity(intent)
             }
         }
