@@ -75,6 +75,7 @@ class MembersViewHolder(val app: YAMAApplication,
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
 
+
         memberAvatar.setImageBitmap(app.repository.getAvatarImageFromUrlSync(user?.avatar_url!!))
 
         memberName.text = user.login
