@@ -107,10 +107,25 @@ class GithubApi(private val app: YAMAApplication) {
     }
 
     fun syncGetTeamMembers(teamId: Int, token: String, success: Response.Listener<List<UserDto>>, fail: Response.ErrorListener) {
+        val userList = mutableListOf<UserDto>()
         getAndLog("syncGetTeamMembers: Fetching team members from Github API") {
-            GetMembersRequest(
+            GetIntermediaryMembersRequest(
+
                     "$GITHUB_API_TEAMS/$teamId/members",
-                    success,
+                    Response.Listener{
+                        if(it.isEmpty())
+                            success.onResponse(userList)
+
+                        it.map { intermediaryUserDto ->
+                            getUserDetailsForName(
+                                    intermediaryUserDto.login,
+                                    {userDto -> userList.add(userDto)
+                                        if(userList.size==it.size)
+                                            success.onResponse(userList)
+                                    },
+                                    fail::onErrorResponse)
+                        }
+                    },
                     fail,
                     buildRequestHeaders(token)
             )

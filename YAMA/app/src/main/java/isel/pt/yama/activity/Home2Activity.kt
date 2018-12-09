@@ -135,6 +135,7 @@ class Home2Activity : AppCompatActivity() {
                 }
                 R.id.profile -> {
                     val intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra(PRIVATE_PROFILE, true)
                     startActivity(intent)
                     true
                 }
@@ -145,23 +146,7 @@ class Home2Activity : AppCompatActivity() {
                 else -> super.onOptionsItemSelected(item)
             }
 
-            R.id.teams -> {
-                val intent = Intent(this, TeamsActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.profile -> {
-                val intent = Intent(this, ProfileActivity::class.java)
-                intent.putExtra(PRIVATE_PROFILE, true)
-                startActivity(intent)
-                true
-            }
-            android.R.id.home ->{
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+
 
 
 

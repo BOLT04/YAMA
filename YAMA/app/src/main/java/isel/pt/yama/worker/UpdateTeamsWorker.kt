@@ -1,12 +1,18 @@
 package isel.pt.yama.worker
 
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.android.volley.VolleyError
+import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
+import isel.pt.yama.activity.TeamsActivity
+import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
 
 class UpdateTeamsWorker(context : Context, params : WorkerParameters)
     : Worker(context, params), UpdateWorkers {
@@ -48,7 +54,8 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
             if (canRecover(error)) Result.RETRY else Result.FAILURE
         }
 	*/
-	
+
+    /*
     private fun sendNotification(app: YAMAApplication) {
 
         val action = PendingIntent.getActivity(app, 101,
@@ -61,6 +68,6 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build()
 
-
+    }*/
 
 }
