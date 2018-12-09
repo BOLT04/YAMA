@@ -8,6 +8,7 @@ import com.android.volley.VolleyError
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.SP_NAME
+import isel.pt.yama.dto.IntermediaryUserDto
 import isel.pt.yama.dto.OrganizationDto
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.dto.UserDto
@@ -52,7 +53,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
         getAndLog("getUserDetails: Fetching currentUser from Github API") {
-            GetRequestUser(
+            getRequestOf<UserDto>(
                     GITHUB_API_USER,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -62,7 +63,7 @@ class GithubApi(private val app: YAMAApplication) {
     }
     fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
         getAndLog("Fetching currentUser from Github API") {
-            GetRequestUser(
+            getRequestOf<UserDto>(
                     "$GITHUB_API_USER_NAME/$name",
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -74,7 +75,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getUserOrganizations: Fetching currentUser organizations from Github API") {
-            GetRequestOrganizations(
+            getRequestOf<List<OrganizationDto>>(
                     GITHUB_API_USER_ORGS,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -85,7 +86,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getTeams: Fetching teams from Github API") {
-            GetTeamsRequest(
+            getRequestOf<List<TeamDto>>(
                 "$GITHUB_API_ORGS/$orgId/teams",
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -98,7 +99,7 @@ class GithubApi(private val app: YAMAApplication) {
 
         val userList = mutableListOf<UserDto>()
         getAndLog("Fetching team members from Github API") {
-            GetIntermediaryMembersRequest(
+            getRequestOf<List<IntermediaryUserDto>>(
                 "$GITHUB_API_TEAMS/$teamId/members",
                 Response.Listener{
                     if(it.isEmpty())

@@ -39,12 +39,12 @@
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
-    <string name="userMessage_hint">Write your messageMD</string>
+    <string name="userMessage_hint">Write your message</string>
 
     <!-- Notifications -->
     <string name="teams_notification_title">Check the Teams</string>
     <string name="teams_notification_content">Teams have been downloaded</string>
     <string name="teams_channel_name">Teams updates</string>
     <string name="teams_channel_description">Channel for team\'s updates notification</string>
-    <string name="title_activity_home2">Home2Activity</string>
+    <string name="title_activity_home2">Home</string>
 </resources>
