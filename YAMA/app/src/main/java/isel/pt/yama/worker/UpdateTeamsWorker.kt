@@ -14,6 +14,7 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
     override fun doWork(): Result {
         return try {
             val app = applicationContext as YAMAApplication
+
             Log.v(app.TAG, "Worker is updating local DB with teams")
             val teams = app.repository.syncGetTeams(app, app.repository.token, app.repository.organizationID)
             for (team in teams) {
@@ -23,12 +24,43 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
                         .putAll(teams.map { it -> "${i++}" to it.id }.toMap())
                         .build()
             }
+
             sendNotification(app) //TODO: do we need a notification for this
             Result.SUCCESS
         } catch (error: VolleyError) {
             if (canRecover(error)) Result.RETRY else Result.FAILURE
         }
     }
+
+	
+	/*
+	override fun doWork(): Result =
+        try {
+            val repo = applicationContext as YAMAApplication
+            Log.v(repo.TAG, "Updating local DB with teams")
+            //val teamsDto = syncFetchTeams(repo)
+            //syncSaveTeamsFromDTO(repo, repo.db, teamsDto)
+            sendNotification(repo) //TODO: do we need a notification for this
+            
+			Result.SUCCESS
+        }
+        catch (error: VolleyError) {
+            if (canRecover(error)) Result.RETRY else Result.FAILURE
+        }
+	*/
+	
+    private fun sendNotification(app: YAMAApplication) {
+
+        val action = PendingIntent.getActivity(app, 101,
+                TeamsActivity.createIntent(app, true), FLAG_UPDATE_CURRENT)
+        val notification = NotificationCompat.Builder(app, TEAM_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentTitle(app.getString(R.string.teams_notification_title))
+                .setContentText(app.getString(R.string.teams_notification_content))
+                .setContentIntent(action)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build()
+
 
 
 }

@@ -36,13 +36,13 @@ class YAMARepository(private val app: YAMAApplication,
     val avatarCache : HashMap<String, Bitmap> = HashMap()
     val userAvatarUrlCache : HashMap<String, String> = HashMap()
     val TAG = YAMARepository::class.java.simpleName
-
+    var msgIconResource: Int = R.mipmap.ic_msg_not_sent
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<TeamMD>> {
         return runAsync {
             //TODO: what is success property???
-            //if (dto.success) syncSaveTeamsFromDTO(app, teamDao, teams)
+            //if (dto.success) syncSaveTeamsFromDTO(repo, teamDao, teams)
             //else listOf()
             syncSaveTeamsFromDTO(app, localDb, orgId, teams)
         }
@@ -170,6 +170,17 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
+
+    private fun getFreshUserInfo(user: String, success: (UserMD) -> Unit, fail: (VolleyError) -> Unit){
+
+        api.getUserDetailsForName(user, {
+            userAvatarUrlCache[user] = it.avatar_url
+            saveToDB(it).andThen{
+                u -> success(u)
+            }
+        }, fail)
+
+    }
 
 
     fun getUserOrganizations(user: String, accessToken : String, success: (List<OrganizationMD>) -> Unit, fail: (VolleyError) -> Unit) {
@@ -307,6 +318,34 @@ class YAMARepository(private val app: YAMAApplication,
     fun sendUserMessage(otherUserLogin: String, message: MessageMD) {
         firebase.sendUserMessage(mappers.messageMapper.mdToDto(message), otherUserLogin)
     }
+
+
+
+
+    fun updateCurrentUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            currentUser!!.login
+            ,{
+            currentUser=it
+            cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
+
+
+
+    fun updateOtherUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            otherUser!!.login
+            ,{
+                otherUser=it
+                cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
+
 
 
 

@@ -27,14 +27,14 @@ open class ChatActivity() : AppCompatActivity()/*, DefaultLifeStatusTracker("Cha
 
     lateinit var repo : YAMARepository
 
-    fun init(app : YAMAApplication, viewModelTeam: TeamChatViewModel) {
+    fun init(repo : YAMAApplication, viewModelTeam: TeamChatViewModel) {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
 
         messagesList.layoutManager = layoutManager
         messagesList.setHasFixedSize(true)
 
-        val adapter = ChatAdapter(app, this, viewModelTeam.chatLog)
+        val adapter = ChatAdapter(repo, this, viewModelTeam.chatLog)
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -48,14 +48,14 @@ open class ChatActivity() : AppCompatActivity()/*, DefaultLifeStatusTracker("Cha
             if (msg.isEmpty())
                 return@setOnClickListener
 
-            val sentMsg = SentMessageMD(app.repository.currentUser!!, msg.toString(), Date())
+            val sentMsg = SentMessageMD(repo.repository.currentUser!!, msg.toString(), Date())
             viewModelTeam.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
 
         viewModelTeam.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
 
-            val newAdapter = ChatAdapter(app, this, viewModelTeam.chatLog)
+            val newAdapter = ChatAdapter(repo, this, viewModelTeam.chatLog)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     layoutManager.smoothScrollToPosition(messagesList, null, newAdapter.itemCount)
@@ -103,15 +103,15 @@ class UserChatActivity : ChatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
+        val repo = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
         val viewModel = getViewModel("userChat view model"){ //TODO extract to field
-            TeamChatViewModel(app)
+            TeamChatViewModel(repo)
         }
 
         chatName.text = repo.otherUser!!.name
 
-        this.init(app, viewModel)
+        this.init(repo, viewModel)
     }
 }
 
@@ -122,14 +122,14 @@ class TeamChatActivity : ChatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val app = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
+        val repo = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
 
         val viewModel = getViewModel("teamChat view model"){ //TODO extract to field
-            TeamChatViewModel(app)
+            TeamChatViewModel(repo)
         }
 
         chatName.text = repo.team!!.name
 
-        init(app, viewModel)
+        init(repo, viewModel)
     }
 }*/

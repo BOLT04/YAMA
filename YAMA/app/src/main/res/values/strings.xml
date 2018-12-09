@@ -9,8 +9,12 @@
     <string name="keep_signed_in">Keep me signed in</string>
 
     <string name="user_profile_name">Name :</string>
-    <string name="user_profile_email" translatable="false">e-mail :</string>
-    <string name="user_profile_followers">followers :</string>
+    <string name="user_profile_email" translatable="false">E-mail :</string>
+    <string name="user_profile_followers">Followers :</string>
+    <string name="user_profile_following">Following :</string>
+
+
+
     <string name="error_network">Couldn\'t access data</string>
 
     <string name="preference_file_key">preferences</string>
@@ -35,12 +39,12 @@
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
-    <string name="userMessage_hint">Write your messageMD</string>
+    <string name="userMessage_hint">Write your message</string>
 
     <!-- Notifications -->
     <string name="teams_notification_title">Check the Teams</string>
     <string name="teams_notification_content">Teams have been downloaded</string>
     <string name="teams_channel_name">Teams updates</string>
     <string name="teams_channel_description">Channel for team\'s updates notification</string>
-    <string name="title_activity_home2">Home2Activity</string>
+    <string name="title_activity_home2">Home</string>
 </resources>

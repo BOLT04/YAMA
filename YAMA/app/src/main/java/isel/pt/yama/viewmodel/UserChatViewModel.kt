@@ -15,7 +15,7 @@ class UserChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     val team: TeamMD = app.repository.team!!
 
     val chatLog: MutableLiveData<List<MutableLiveData<MessageMD>>>
-            = app.chatBoard.getUserChat(otherUser.login)?.liveData
+            = app.chatBoard.getUserChat(otherUser.login).liveData
 
     fun sendMessage(messageMD: MessageMD){
         app.repository.sendUserMessage(otherUser.login, messageMD)

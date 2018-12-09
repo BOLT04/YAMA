@@ -9,11 +9,19 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+
+import androidx.recyclerview.widget.RecyclerView
+
 import androidx.work.*
+
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.adapter.HomeAdapter
+
+import isel.pt.yama.common.PRIVATE_PROFILE
+
 import isel.pt.yama.common.DB_UPDATE_JOB_ID
+
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.dataAccess.database.Team
@@ -50,7 +58,12 @@ class Home2Activity : AppCompatActivity() {
         val listener = object : HomeAdapter.OnTeamClickListener {
             override fun onTeamClick(team: TeamMD?) {
                 app.repository.team = team
+              /*
+
+                // repo.chatBoard.associateTeam(team?.id!!)
+
                 app.chatBoard.associateTeam(team!!)
+*/
                 startActivity(intent)
             }
         }
@@ -131,6 +144,25 @@ class Home2Activity : AppCompatActivity() {
                 }
                 else -> super.onOptionsItemSelected(item)
             }
+
+            R.id.teams -> {
+                val intent = Intent(this, TeamsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(PRIVATE_PROFILE, true)
+                startActivity(intent)
+                true
+            }
+            android.R.id.home ->{
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
 
 
     override fun onStart() {

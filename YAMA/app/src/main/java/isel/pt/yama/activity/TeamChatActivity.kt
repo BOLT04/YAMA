@@ -3,6 +3,10 @@ package isel.pt.yama.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -17,6 +21,7 @@ import isel.pt.yama.model.MessageMD
 import isel.pt.yama.model.SentMessageMD
 import isel.pt.yama.viewmodel.TeamChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.list_item_msg_receive.*
 import java.util.*
 
 
@@ -29,7 +34,6 @@ class TeamChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         val app = getYAMAApplication()
-
         repo = app.repository
 
         chatName.text = repo.team!!.name
@@ -45,7 +49,7 @@ class TeamChatActivity : AppCompatActivity() {
         messagesList.layoutManager = layoutManager
         messagesList.setHasFixedSize(true)
 
-        val adapter = ChatAdapter(app, this, viewModel.chatLog)
+        val adapter = ChatAdapter(app, this, viewModel.chatLog, true)
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -68,7 +72,7 @@ class TeamChatActivity : AppCompatActivity() {
 
         viewModel.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
 
-            val newAdapter = ChatAdapter(app, this, viewModel.chatLog)
+            val newAdapter = ChatAdapter(app, this, viewModel.chatLog, true)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     layoutManager.smoothScrollToPosition(messagesList, null, newAdapter.itemCount)

@@ -12,9 +12,12 @@ class LruBitmapCache(maxSize: Int) : LruCache<String, Bitmap>(maxSize), ImageLoa
 
     constructor() : this(getDefaultLruCacheSize())
 
-
     override fun getBitmap(url: String?): Bitmap {
-        return get(url)
+        val get = get(url)
+        if(get==null){
+
+        }//TODO how to do this...returning null???
+        return get
     }
 
     override fun putBitmap(url: String?, bitmap: Bitmap?) {
@@ -29,3 +32,6 @@ class LruBitmapCache(maxSize: Int) : LruCache<String, Bitmap>(maxSize), ImageLoa
 
 
 }
+
+
+

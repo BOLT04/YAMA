@@ -31,4 +31,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="12-08-2018 12:52" />
+
+    <ImageView
+        android:id="@+id/iconImageView"
+        android:layout_width="9dp"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dateTime"
+        app:layout_constraintEnd_toStartOf="@+id/dateTime"
+        app:layout_constraintTop_toTopOf="@+id/dateTime"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/red" />
 </androidx.constraintlayout.widget.ConstraintLayout>
