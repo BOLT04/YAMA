@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
         val app = getYAMAApplication()
 
         val viewModel = getViewModel(VIEW_MODEL_KEY){
-            LoginViewModel(app)
+            LoginViewModel(app, app.repository)
         }
 
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)

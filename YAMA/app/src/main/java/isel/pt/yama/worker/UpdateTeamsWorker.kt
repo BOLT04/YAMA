@@ -1,18 +1,12 @@
 package isel.pt.yama.worker
 
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.android.volley.VolleyError
-import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.activity.TeamsActivity
-import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
 
 class UpdateTeamsWorker(context : Context, params : WorkerParameters)
     : Worker(context, params), UpdateWorkers {
@@ -44,7 +38,7 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
             Log.v(repo.TAG, "Updating local DB with teams")
             //val teamsDto = syncFetchTeams(repo)
             //syncSaveTeamsFromDTO(repo, repo.db, teamsDto)
-            sendNotification(repo) //TODO: do we need a notification for this
+            sendNotification(repo)
             
 			Result.SUCCESS
         }

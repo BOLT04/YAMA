@@ -21,14 +21,9 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-
-
          app = getYAMAApplication()
 
         val privateProfile = intent.getBooleanExtra(PRIVATE_PROFILE, false)
-
-
-
         val repo = app.repository
 
 

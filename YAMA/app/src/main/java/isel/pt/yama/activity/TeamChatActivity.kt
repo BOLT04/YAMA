@@ -34,7 +34,7 @@ class TeamChatActivity : AppCompatActivity() {
         chatName.text = repo.team!!.name
 
         val viewModel = getViewModel("team chat view model"){
-            TeamChatViewModel(app)
+            TeamChatViewModel(app, app.repository)
         }
 
 
@@ -62,7 +62,6 @@ class TeamChatActivity : AppCompatActivity() {
             viewModel.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
-
 
 
         viewModel.chatLog.observe(this, Observer<List<MutableLiveData<Message>>> {

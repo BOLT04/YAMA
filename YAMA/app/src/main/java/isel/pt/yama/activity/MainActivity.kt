@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
 
             val viewModel = getViewModel(VIEW_MODEL_KEY){
-                LoginViewModel(app)
+                LoginViewModel(app, app.repository)
             }
 
             // Get values in shared preferences.

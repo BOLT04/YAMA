@@ -37,7 +37,7 @@ class MembersActivity : AppCompatActivity() {
 
 
         val viewModel = getViewModel(VIEW_MODEL_KEY){
-            MembersViewModel(app)
+            MembersViewModel(app, app.repository)
         }
 
         val intent = Intent(this, UserChatActivity::class.java)

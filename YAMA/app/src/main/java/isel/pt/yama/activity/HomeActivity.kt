@@ -37,7 +37,6 @@ import isel.pt.yama.worker.UpdateTeamsWorker
 import kotlinx.android.synthetic.main.activity_home2.*
 import java.util.concurrent.TimeUnit
 
-
 class HomeActivity : AppCompatActivity() {
 
     lateinit var viewModel: HomeViewModel
@@ -52,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()
         viewModel = getViewModel(VIEW_MODEL_KEY){
-            HomeViewModel(app)
+            HomeViewModel(app, app.repository)
         }
 
         viewModel.updateChats()

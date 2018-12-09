@@ -37,7 +37,7 @@ class TeamsActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()
         val viewModel = getViewModel(VIEW_MODEL_KEY){
-            TeamsViewModel(app)
+            TeamsViewModel(app, app.repository)
         }
 
         val intent = Intent(this, TeamChatActivity::class.java)

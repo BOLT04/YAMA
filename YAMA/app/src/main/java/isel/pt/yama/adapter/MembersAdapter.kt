@@ -46,6 +46,8 @@ class MembersViewHolder(val app: YAMAApplication,
                         var listener: MembersAdapter.OnMemberClickListener?=null)
     : RecyclerView.ViewHolder(view) {
 
+    val TAG = MembersViewHolder::class.simpleName
+
     private val memberAvatar: NetworkImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
     private val member : androidx.constraintlayout.widget.ConstraintLayout = view.findViewById(R.id.member_view)
@@ -54,7 +56,7 @@ class MembersViewHolder(val app: YAMAApplication,
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
         memberAvatar.setImageUrl(user?.avatar_url!!, app.imageLoader)
-        memberName.text = user.login
+        memberName.text = user.name ?: user.login
         member.setOnClickListener{listener.onMemberClick(user)}
     }
 

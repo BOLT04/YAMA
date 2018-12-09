@@ -6,10 +6,12 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
+import isel.pt.yama.repository.YAMARepository
 import isel.pt.yama.repository.model.Organization
 import isel.pt.yama.repository.model.User
 
-class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+class LoginViewModel(val app : YAMAApplication,
+                     private val repo : YAMARepository) : AndroidViewModel(app) {
 
     var textUser: String = ""
     var textOrganization: String = ""
@@ -43,13 +45,13 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     fun submitLogin() {
         // Usage of !! is guaranteed not to be null because its initialized by LoginActivity
-        app.repository.getUserDetails(textUser, textToken,{
+        repo.getUserDetails(textUser, textToken,{
             userInfo.value = it
         }, {
             defaultErrorHandler(app)
         })
 
-        app.repository.getUserOrganizations(textUser, textToken, {
+        repo.getUserOrganizations(textUser, textToken, {
             userOrganizations.value = it
         }, {
             defaultErrorHandler(app)

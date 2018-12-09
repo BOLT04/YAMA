@@ -11,37 +11,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
-import isel.pt.yama.repository.YAMARepository
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.repository.model.Message
-import kotlinx.android.synthetic.main.activity_chat.*
 import isel.pt.yama.repository.model.SentMessage
 import isel.pt.yama.viewmodel.UserChatViewModel
+import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
 
 
-
 class UserChatActivity : AppCompatActivity() {
-
-
-    lateinit var repo : YAMARepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-
         val app = getYAMAApplication()
 
-        repo = app.repository
-        val otherUser = repo.otherUser!!
+        val otherUser = app.repository.otherUser!!
         chatName.text = otherUser.name ?: otherUser.login
 
         val viewModel = getViewModel("chat view model"){
-            UserChatViewModel(app)
+            UserChatViewModel(app, app.repository)
         }
-
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
@@ -63,14 +55,10 @@ class UserChatActivity : AppCompatActivity() {
             if (msg.isEmpty())
                 return@setOnClickListener
 
-
-
             val sentMsg = SentMessage(app.repository.currentUser!!, msg.toString(), Date())
             viewModel.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
-
-
 
         viewModel.chatLog.observe(this, Observer<List<MutableLiveData<Message>>> {
 
@@ -89,7 +77,6 @@ class UserChatActivity : AppCompatActivity() {
         chatName.setOnClickListener{
             startActivity(intent)
         }
-
     }
 
 
@@ -107,5 +94,4 @@ class UserChatActivity : AppCompatActivity() {
         super.onDestroy()
         Log.d(getString(R.string.TAG), "Destroyed :: "+this.localClassName.toString())
     }
-
 }
