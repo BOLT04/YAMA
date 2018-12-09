@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.RequestFuture
 import isel.pt.yama.kotlinx.AsyncWork
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
@@ -203,6 +204,13 @@ class YAMARepository(private val app: YAMAApplication,
                 success(teams.map(mappers.teamMapper::dbToMD))
             }
         }
+    }
+
+    fun syncGetTeams(app: YAMAApplication, token: String, orgId: String): List<TeamMD> {
+        Log.v(app.TAG, "Sync getting teams from API")
+        val future: RequestFuture<List<TeamDto>> = RequestFuture.newFuture()
+        api.syncGetTeams(orgId, token, future, future)
+        return syncSaveTeamsFromDTO(app, localDb, orgId, future.get())
     }
 
     fun getSubscribedTeams(success: (List<TeamMD>) -> Unit, fail: (Exception) -> Unit) {

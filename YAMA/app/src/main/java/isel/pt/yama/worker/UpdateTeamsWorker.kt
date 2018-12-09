@@ -22,9 +22,8 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
 	override fun doWork(): Result {
         return try {
             val app = applicationContext as YAMAApplication
-            Log.v(app.TAG, "Updating local DB with teams")
-            //val teamsDto = syncFetchTeams(app)
-            //syncSaveTeamsFromDTO(app, app.db, teamsDto)
+            Log.v(app.TAG, "Worker is updating local DB with teams")
+            app.repository.syncGetTeams(app, app.repository.token, app.repository.organizationID)
             sendNotification(app) //TODO: do we need a notification for this
             Result.SUCCESS
         }
