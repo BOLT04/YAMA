@@ -99,7 +99,7 @@ class GithubApi(private val app: YAMAApplication) {
 
         val userList = mutableListOf<UserDto>()
         getAndLog("Fetching team members from Github API") {
-            getRequestOf<List<IntermediaryUserDto>>(
+            GetIntermediaryMembersRequest(
                 "$GITHUB_API_TEAMS/$teamId/members",
                 Response.Listener{
                     if(it.isEmpty())

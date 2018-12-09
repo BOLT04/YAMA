@@ -31,7 +31,7 @@ class ProfileActivity : AppCompatActivity() {
 
         if (customTitleSupported) {*/
             window.setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-                    R.layout.titlebar)
+                    R.layout.toolbar)
         //}
 
 */
@@ -63,10 +63,6 @@ class ProfileActivity : AppCompatActivity() {
 
         user = getUser(privateProfile, repo)
 
-
-        val viewModel = getViewModel(VIEW_MODEL_KEY){
-            ProfileViewModel(app, user)
-        }
 
         // The responsibility of initializing currentUser property ia on MainActivity or LoginActivity
         // So when we're here, its guaranteed to be not null

@@ -77,7 +77,7 @@ class ChatBoard(private val app: YAMAApplication) {
                                 }
 
 
-                                //if(observedDM[otherLogin] == null) { //TODO pq e que isto ja nao e necessario?? wth? este double trigger é weird af
+                                if(observedDM[otherLogin] == null) { //TODO pq e que isto ja nao e necessario?? wth? este double trigger é weird af
 
 
                                     val registration = userChatsRef
@@ -85,8 +85,8 @@ class ChatBoard(private val app: YAMAApplication) {
                                             .collection("messages")
                                             .addSnapshotListener(getListener(userChat))
 
-                              //      observedDM[otherLogin] = registration
-                                //}
+                                    observedDM[otherLogin] = registration
+                                }
                             }
                     }
                 })
