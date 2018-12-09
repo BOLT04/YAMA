@@ -10,9 +10,23 @@ import isel.pt.yama.model.TeamMD
 class HomeViewModel (val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<TeamMD>> = MutableLiveData()
+    val users: MutableLiveData<List<UserMD>> = MutableLiveData()
+
+    fun updateChats() {
+        updateTeams()
+        updateUserChats()
+    }
 
     fun updateTeams() {
         app.repository.getSubscribedTeams({
+            teams.value = it
+        }, {
+            defaultErrorHandler(app)
+        })
+    }
+
+    fun updateUserChats() {
+        app.repository.getSubscribedUserChats({
             teams.value = it
         }, {
             defaultErrorHandler(app)

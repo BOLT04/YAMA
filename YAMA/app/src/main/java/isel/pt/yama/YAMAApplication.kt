@@ -6,6 +6,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 
+import android.os.Build
+import android.util.Log
+import android.util.LruCache
+import androidx.room.Room
+import androidx.work.WorkManager
+
+
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.LruCache
@@ -19,6 +26,9 @@ import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.*
 import com.google.firebase.FirebaseApp
+
+import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
+
 
 import isel.pt.yama.dataAccess.LruBitmapCache
 
@@ -52,7 +62,6 @@ class YAMAApplication : Application() {
         Log.v("$TAG::actlog",callback?.javaClass.toString())
         Log.v("$TAG::actlog",callback?.toString())
     }
-
 
     override fun onCreate() {
         super.onCreate()

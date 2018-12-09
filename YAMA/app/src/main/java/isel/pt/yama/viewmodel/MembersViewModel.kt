@@ -10,6 +10,7 @@ import isel.pt.yama.model.UserMD
 
 class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
+
     val members: MutableLiveData<List<UserMD>> = MutableLiveData()
 
 

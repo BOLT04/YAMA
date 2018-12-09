@@ -61,7 +61,6 @@ class MembersActivity : AppCompatActivity() {
         membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
         viewModel.members.observe(this, Observer<List<UserMD>> {
-
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(app, this, viewModel, listener)
         })
@@ -75,7 +74,7 @@ class MembersActivity : AppCompatActivity() {
         val orgId = sharedPref.getString(orgIdStr, "")
         val userToken = sharedPref.getString(userTokenStr, "")
 
-        viewModel.updateMembers(userToken, orgId)
+        viewModel.updateMembers(userToken, team.id, orgId)
     }
 
     override fun onStart() {

@@ -96,6 +96,7 @@ class GithubApi(private val app: YAMAApplication) {
     }
 
     fun syncGetTeams(orgId: String, token: String, success: Response.Listener<List<TeamDto>>, fail: Response.ErrorListener) {
+
         getAndLog("syncGetTeams: Fetching teams from Github API") {
             GetTeamsRequest(
                     "$GITHUB_API_ORGS/$orgId/teams",
@@ -131,6 +132,7 @@ class GithubApi(private val app: YAMAApplication) {
             )
         }
     }
+
     fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit, fail: (VolleyError) -> Unit) {
 
         val userList = mutableListOf<UserDto>()
