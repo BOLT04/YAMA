@@ -16,5 +16,9 @@ class FirebaseDatabase(private val chatBoard : ChatBoard){
         chatBoard.getSubscribedTeams(user, success, fail)
     }
 
+    fun sendUserMessage(message: MessageDto, user: String) {
+        chatBoard.postUserMessage(message, user)
+    }
+
 
 }

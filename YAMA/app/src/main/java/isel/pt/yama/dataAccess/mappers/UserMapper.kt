@@ -13,7 +13,7 @@ class UserMapper(val repo: YAMARepository){
                     id = user.id,
                     avatar_url = user.avatarUrl,
                     name = user.name,
-                    email = user.name,
+                    email = user.email,
                     followers = user.followers,
                     following = user.following
             )
@@ -24,7 +24,7 @@ class UserMapper(val repo: YAMARepository){
                     id = user.id,
                     avatar_url = user.avatar_url,
                     name = user.name,
-                    email = user.name,
+                    email = user.email,
                     followers = user.followers,
                     following = user.following
             )
@@ -35,7 +35,7 @@ class UserMapper(val repo: YAMARepository){
                     id = user.id,
                     avatar_url = user.avatar_url,
                     name = user.name,
-                    email = user.name,
+                    email = user.email,
                     followers = user.followers,
                     following = user.following
             )
@@ -46,7 +46,7 @@ class UserMapper(val repo: YAMARepository){
                     id = user.id,
                     avatarUrl = user.avatar_url,
                     name = user.name,
-                    email = user.name,
+                    email = user.email,
                     followers = user.followers,
                     following = user.following
             )

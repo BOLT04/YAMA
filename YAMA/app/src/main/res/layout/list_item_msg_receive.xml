@@ -27,13 +27,12 @@
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
         android:baselineAlignBottom="false"
         android:contentDescription="@string/sender_avatar"
         android:scaleType="fitStart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName"
         android:src="@drawable/ic_person_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTime"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -41,9 +40,10 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTime"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="user name" />
 
     <TextView
@@ -51,11 +51,10 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:text="18-08-2012 15:54"
         android:textSize="8sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
         tools:text="18-08-2012 15:54" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

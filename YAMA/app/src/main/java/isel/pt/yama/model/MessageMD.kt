@@ -11,5 +11,5 @@ open class MessageMD(val user: UserMD,
 class ReceivedMessageMD(user : UserMD, content: String, createdAt: Date ):
         MessageMD(user, content, createdAt)
 
-class SentMessageMD(user : UserMD, content: String, createdAt: Date ):
+class SentMessageMD(user : UserMD, content: String, createdAt: Date, var sent : Boolean = false ):
         MessageMD(user, content, createdAt)

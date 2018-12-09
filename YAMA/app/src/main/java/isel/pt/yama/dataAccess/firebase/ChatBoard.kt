@@ -4,14 +4,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.runAsync
-import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.ReceivedMessageMD
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.model.*
 import java.util.*
 
 
@@ -21,22 +19,31 @@ class ChatBoard(private val app: YAMAApplication) {
     private val usersRef = db.collection("users")
     private val userChatsRef = db.collection("userChats")
 
-    // teamName -> registrations (makes it possible to unregister)
+    // teamID -> registrations (makes it possible to unregister)
     private val observedTeams = HashMap<Int, ListenerRegistration>()
 
-    // teamName -> msgId, msgDto
+    private val observedDM = HashMap<String, ListenerRegistration>()
+
+    // teamID -> msgId, msgDto
     //TODO: DOCUMENT what is this for
     // Used to observe da observar vários chats de várias teams
     //e saberes em qual é que vais meter as msgs q chegam
     var globalTeamChats : MutableMap<Int, Chat> = mutableMapOf()
+    var globalUserChats : MutableMap<String, UserChat> = mutableMapOf()
 
 
     fun start() {
         val user = app.repository.currentUser!!
 
-
-
-        usersRef.document(user.login)
+        /*val dummy = "Dummy"
+        usersRef
+                .document(user.login)
+                .collection("userChats")
+                .document(dummy)
+                .set(mutableMapOf(dummy to dummy) as Map<String, Any>)
+*/
+        usersRef
+                .document(user.login)
                 .collection("userChats")
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null) {
@@ -44,16 +51,43 @@ class ChatBoard(private val app: YAMAApplication) {
                         return@EventListener
                     }
                     runAsync {
+                        var d : DocumentChange?  =null
                         for (dc in snapshots!!.documentChanges)
-                            if (dc.type == DocumentChange.Type.ADDED) {
-                                val chatId = dc.document["chatId"]
+                            if (dc.type == DocumentChange.Type.ADDED /*&& dc.document.id!= dummy*/) {
 
-                                userChatsRef
-                                        .document(chatId.toString())
-                                        .collection("messages")
-                                        .addSnapshotListener(this::onDocumentChange)
+                                if(d==null)
+                                    d=dc
+                                else {
+                                    Log.v("MYTAG", (dc == d).toString())
+                                    Log.v("MYTAG", dc.toString())
+                                    Log.v("MYTAG", d.toString())
+                                }
+
+
+                                val otherLogin = dc.document.id
+                                val chatId = dc.document["chatId"] as String
+
+                                Log.v("DM DEBUG", "listeing to $chatId")
+
+                                var userChat = globalUserChats[otherLogin]
+
+                                if(userChat==null){
+                                    userChat = UserChat(chatId)
+                                    globalUserChats[dc.document.id]=userChat
+                                }
+
+
+                                if(observedDM[otherLogin] == null) { //TODO pq e que isto ja nao e necessario?? wth? este double trigger é weird af
+
+
+                                    val registration = userChatsRef
+                                            .document(chatId)
+                                            .collection("messages")
+                                            .addSnapshotListener(getListener(userChat))
+
+                                    observedDM[otherLogin] = registration
+                                }
                             }
-
                     }
                 })
     }
@@ -81,87 +115,70 @@ class ChatBoard(private val app: YAMAApplication) {
                     }
                 }
         }
+
     }
 
 
-    fun getTeamChat(id: Int): Chat{
-        var tc = globalTeamChats[id]
-        if(tc==null){
-            tc= Chat()
-            globalTeamChats[id] = tc
+    fun getTeamChat(teamId: Int): Chat{
+        var tc = globalTeamChats[teamId]
+        if (tc == null){
+            tc = Chat()
+            globalTeamChats[teamId] = tc
         }
 
         return tc
     }
 
 
-
-    class Chat{
-        val chatLog: MutableList<MutableLiveData<MessageMD>> = mutableListOf()
-        val liveData =  MutableLiveData<List<MutableLiveData<MessageMD>>>()
-
-        init {
-            liveData.value=chatLog
-        }
-
-        fun add(message : MessageMD): MutableLiveData<MessageMD> {
-
-            val mld = MutableLiveData<MessageMD>()
-            mld.value = message
-            chatLog.add(mld)
-
-            updateList()
-
-            return mld
-        }
-
-        fun updateList(){
-            //liveData.value=liveData.value
-            liveData.value = liveData.value
-        }
-
-        fun toList(): List<MutableLiveData<MessageMD>> =
-                chatLog.toList().sortedBy { it.value?.createdAt }
-
-    }
-
-
-
-/*
-    private var teamChats : MutableMap<Int, MutableMap<String,MessageMD>> = mutableMapOf()
-    // teamId -> msgList(=chatLog)
-    var content : MutableMap<Int, MutableLiveData<List<MutableLiveData<MessageMD>>>> = mutableMapOf()
-
-    */
-
-
-
-    fun getListener(teamChat : Chat): EventListener<QuerySnapshot> {
+    fun getListener(chat : Chat): EventListener<QuerySnapshot> {
         return EventListener<QuerySnapshot> { snapshots, e ->
             if (e != null) {
                 Log.w(app.TAG, "Listen failed.", e)
                 return@EventListener
             }
             runAsync {
+                var d : DocumentChange?  =null
                 for (dc in snapshots!!.documentChanges)
-                    if (dc.type == DocumentChange.Type.ADDED)
-                        app.repository.mappers.messageMapper.dtoToMD(dc.document.toObject(MessageDto::class.java))
-                        {
-                            val messageLD = teamChat.add(it)
-                            if (it is ReceivedMessageMD) {
-                                app.repository.getAvatarImageFromUrl(it.user.avatar_url){
-                                    _ -> messageLD.value = messageLD.value
-                                }
-                            }
+                    if (dc.type == DocumentChange.Type.ADDED) {
+
+                        if (dc != null && dc.document.metadata.hasPendingWrites()) {
+                            app.repository.msgIconResource = R.mipmap.ic_msg_not_sent
+                            Log.v("ICONS", "Local")
+                        } else {
+                            app.repository.msgIconResource = R.mipmap.ic_msg_sent
+                            Log.v("ICONS", "Server")
                         }
 
+                        if (d == null)
+                            d = dc
+                        else {
+                            Log.v("MYTAG_INNER", (dc == d).toString())
+                            Log.v("MYTAG_INNER", dc.toString())
+                            Log.v("MYTAG_INNER", d.toString())
+                        }
+
+                        app.repository.mappers.messageMapper.dtoToMD(dc.document.toObject(MessageDto::class.java))
+                        {
+                            Log.v("DM DEBUG", "message received")
+                            val messageLD = chat.add(it)
+                            if (it is SentMessageMD) {
+
+                                if (dc != null && dc.document.metadata.hasPendingWrites()) {
+                                    //Log.v("ICONS", "Local")
+                                } else {
+                                    it.sent=true
+                                    messageLD.value = messageLD.value
+                                   // Log.v("ICONS", "Server")
+                                }
+
+                            }
+                        }
+                    }
             }
         }
     }
 
 
-    // single team chat
-    //private var chat : MutableList<MessageDto> = mutableListOf()
 
     fun associateTeam(team: TeamMD) {
         val teamId = team.id
@@ -174,11 +191,38 @@ class ChatBoard(private val app: YAMAApplication) {
         Log.d(app.TAG, "associateTeam: teamId = $teamId")
         val registration = teamsRef.document(teamId.toString())
                 .collection("messages")
-                .orderBy("createdAt")
+                //.orderBy("createdAt")
                 .addSnapshotListener (getListener(teamChat))
         addToSubscribedTeams(team)
         observedTeams[teamId] = registration
     }
+
+
+    fun associateUser(otherLogin: String) {
+
+        val currentLogin = app.repository.currentUser!!.login
+        val id = Random(Date().time).nextInt().toString()
+
+        if(globalUserChats.containsKey(otherLogin)) return
+
+        val userChat = UserChat(id)
+
+        /*val registration = userChatsRef
+                .document(id)
+                .collection("messages")
+                //.orderBy("createdAt")
+                .addSnapshotListener (getListener(userChat))
+*/
+
+        //observedTeams[teamId] = registration
+
+        associateUserAux(currentLogin, otherLogin, id)
+        associateUserAux(otherLogin, currentLogin, id)
+
+        globalUserChats[otherLogin]= userChat
+    }
+
+
 
     fun post(newMessage: MessageDto, teamId: Int) {
         teamsRef.document(teamId.toString())
@@ -192,6 +236,22 @@ class ChatBoard(private val app: YAMAApplication) {
                     Log.d(app.TAG, it.toString())
                 }
     }
+
+    fun postUserMessage(newMessage: MessageDto, user: String) {
+        userChatsRef
+                .document(globalUserChats[user]!!.fileID)
+                .collection("messages")
+                .add(newMessage)
+                .addOnSuccessListener{
+                    Log.d(app.TAG, "post: MessageMD sent with success")
+                }
+                .addOnFailureListener{
+                    Log.d(app.TAG, "post: MessageMD failed to be sent")
+                    Log.d(app.TAG, it.toString())
+                }
+    }
+
+
 
     fun addToSubscribedTeams(team: TeamMD) {
         usersRef.document(app.repository.currentUser?.login!!)
@@ -225,18 +285,10 @@ class ChatBoard(private val app: YAMAApplication) {
     }
 
 
-    fun associateUser(user: UserMD) {
-        val currentLogin = app.repository.currentUser!!.login
-        val otherLogin = user.login
-        val id = Random(Date().time).nextLong()
-
-        associateUserAux(currentLogin, otherLogin, id)
-        associateUserAux(otherLogin, currentLogin, id)
-    }
 
 
 
-    fun associateUserAux(firstUser: String, secondUser: String, id: Long){
+    fun associateUserAux(firstUser: String, secondUser: String, id: String){
 
 
         val map = mutableMapOf("chatId" to id) as Map<String, Any>
@@ -254,5 +306,47 @@ class ChatBoard(private val app: YAMAApplication) {
                 }
     }
 
+    fun getUserChat(userLogin: String): UserChat {
+
+        if(globalUserChats[userLogin]==null)
+            associateUser(userLogin)
+        return globalUserChats[userLogin]!!
+    }
+}
+
+
+
+open class Chat{
+    val chatLog: MutableList<MutableLiveData<MessageMD>> = mutableListOf()
+    val liveData =  MutableLiveData<List<MutableLiveData<MessageMD>>>()
+
+    init {
+        liveData.postValue(chatLog)
+    }
+
+    fun add(message : MessageMD): MutableLiveData<MessageMD> {
+
+        val mld = MutableLiveData<MessageMD>()
+        mld.value = message
+        chatLog.add(mld)
+
+        updateList()
+
+        return mld
+    }
+
+    fun updateList(){
+        //liveData.value=liveData.value
+        liveData.value = liveData.value
+    }
+
+    fun toList(): List<MutableLiveData<MessageMD>> =
+            chatLog.toList().sortedBy { it.value?.createdAt }
 
 }
+
+
+
+class UserChat(val fileID : String) : Chat()
+
+

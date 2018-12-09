@@ -3,53 +3,38 @@ package isel.pt.yama.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
+import isel.pt.yama.YAMAApplication
 import isel.pt.yama.adapter.ChatAdapter
 import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.SentMessageMD
 import isel.pt.yama.viewmodel.TeamChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.list_item_msg_receive.*
+import isel.pt.yama.model.SentMessageMD
 import java.util.*
 
+/*
+open class ChatActivity() : AppCompatActivity()/*, DefaultLifeStatusTracker("ChatActivity") */{
 
-class TeamChatActivity : AppCompatActivity() {
+    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the currentUser who sent it!
 
     lateinit var repo : YAMARepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
-
-        val app = getYAMAApplication()
-        repo = app.repository
-
-        chatName.text = repo.team!!.name
-
-        val viewModel = getViewModel("team chat view model"){
-            TeamChatViewModel(app)
-        }
-
-
+    fun init(repo : YAMAApplication, viewModelTeam: TeamChatViewModel) {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
 
         messagesList.layoutManager = layoutManager
         messagesList.setHasFixedSize(true)
 
-        val adapter = ChatAdapter(app, this, viewModel.chatLog, true)
+        val adapter = ChatAdapter(repo, this, viewModelTeam.chatLog)
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -63,16 +48,14 @@ class TeamChatActivity : AppCompatActivity() {
             if (msg.isEmpty())
                 return@setOnClickListener
 
-            val sentMsg = SentMessageMD(app.repository.currentUser!!, msg.toString(), Date())
-            viewModel.sendMessage(sentMsg)
+            val sentMsg = SentMessageMD(repo.repository.currentUser!!, msg.toString(), Date())
+            viewModelTeam.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
 
+        viewModelTeam.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
 
-
-        viewModel.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
-
-            val newAdapter = ChatAdapter(app, this, viewModel.chatLog, true)
+            val newAdapter = ChatAdapter(repo, this, viewModelTeam.chatLog)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     layoutManager.smoothScrollToPosition(messagesList, null, newAdapter.itemCount)
@@ -87,7 +70,11 @@ class TeamChatActivity : AppCompatActivity() {
             val intent = Intent(this, MembersActivity::class.java)
             startActivity(intent)
         }
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chat)
     }
 
 
@@ -107,3 +94,42 @@ class TeamChatActivity : AppCompatActivity() {
     }
 
 }
+
+
+
+class UserChatActivity : ChatActivity() {
+    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the currentUser who sent it!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val repo = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
+
+        val viewModel = getViewModel("userChat view model"){ //TODO extract to field
+            TeamChatViewModel(repo)
+        }
+
+        chatName.text = repo.otherUser!!.name
+
+        this.init(repo, viewModel)
+    }
+}
+
+class TeamChatActivity : ChatActivity() {
+
+    //TODO: make view model for this activity that holds a list of  an object containing sent messageMD and avatar img of the currentUser who sent it!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val repo = getYAMAApplication()//TODO: is this a good solution? Should we override getApplication instead of making this extension?
+
+        val viewModel = getViewModel("teamChat view model"){ //TODO extract to field
+            TeamChatViewModel(repo)
+        }
+
+        chatName.text = repo.team!!.name
+
+        init(repo, viewModel)
+    }
+}*/

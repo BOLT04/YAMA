@@ -42,7 +42,7 @@ class TeamsActivity : AppCompatActivity() {
             TeamsViewModel(app)
         }
 
-        val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, TeamChatActivity::class.java)
 
         val listener = object : OnTeamClickListener {
             override fun onTeamClick(team: TeamMD?) {

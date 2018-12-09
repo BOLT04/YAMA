@@ -8,7 +8,7 @@ import isel.pt.yama.model.TeamMD
 import isel.pt.yama.model.UserMD
 
 
-class ChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
+class TeamChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
     val user: UserMD = app.repository.currentUser!!
     val team: TeamMD = app.repository.team!!

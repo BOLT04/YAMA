@@ -49,17 +49,18 @@ class MembersActivity : AppCompatActivity() {
 
         val listener = object : MembersAdapter.OnMemberClickListener {
             override fun onMemberClick(user: UserMD?) {
-               //TODO: implement DM
-                app.chatBoard.associateUser(user!!)
-                app.repository.otherUser = user
-                startActivity(intent)
+
+                if(app.repository.currentUser!=user){
+
+                    app.repository.otherUser = user
+                    startActivity(intent)
+                }
             }
         }
 
         membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
-        viewModel.members.observe(this, Observer<List<MutableLiveData<UserMD>>> {
-
+        viewModel.members.observe(this, Observer<List<UserMD>> {
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(app, this, viewModel, listener)
         })

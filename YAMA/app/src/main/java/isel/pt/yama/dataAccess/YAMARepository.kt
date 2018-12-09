@@ -38,13 +38,13 @@ class YAMARepository(private val app: YAMAApplication,
     val avatarCache : HashMap<String, Bitmap> = HashMap()
     val userAvatarUrlCache : HashMap<String, String> = HashMap()
     val TAG = YAMARepository::class.java.simpleName
-
+    var msgIconResource: Int = R.mipmap.ic_msg_not_sent
 
     //TODO: implement this
     private fun saveToDB(orgId: String, teams: List<TeamDto>): AsyncWork<List<TeamMD>> {
         return runAsync {
             //TODO: what is success property???
-            //if (dto.success) syncSaveTeamsFromDTO(app, teamDao, teams)
+            //if (dto.success) syncSaveTeamsFromDTO(repo, teamDao, teams)
             //else listOf()
             syncSaveTeamsFromDTO(app, localDb, orgId, teams)
         }
@@ -166,6 +166,18 @@ class YAMARepository(private val app: YAMAApplication,
             }
         }
     }
+
+    private fun getFreshUserInfo(user: String, success: (UserMD) -> Unit, fail: (VolleyError) -> Unit){
+
+        api.getUserDetailsForName(user, {
+            userAvatarUrlCache[user] = it.avatar_url
+            saveToDB(it).andThen{
+                u -> success(u)
+            }
+        }, fail)
+
+    }
+
     fun getUserOrganizations(user: String, accessToken : String, success: (List<OrganizationMD>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting organizations from DB")
@@ -208,6 +220,14 @@ class YAMARepository(private val app: YAMAApplication,
 
     fun getSubscribedTeams(success: (List<TeamMD>) -> Unit, fail: (Exception) -> Unit) {
         firebase.getSubscribedTeams(currentUser!!, success, fail)
+    }
+
+
+    fun syncGetTeamMembers(app: YAMAApplication, token: String, teamId: Int) : List<UserMD> {
+        Log.v(app.TAG, "Sync getting team members from API")
+        val future: RequestFuture<List<UserDto>> = RequestFuture.newFuture()
+        api.syncGetTeamMembers(teamId, token, future, future)
+        return syncSaveTeamMemberFromDTO(app, localDb, teamId, organizationID, future.get())
     }
 
     fun getTeamMembers(team: Int, organization: String, success: (List<UserMD>) -> Unit, fail: (VolleyError) -> Unit) {
@@ -289,24 +309,31 @@ class YAMARepository(private val app: YAMAApplication,
         firebase.sendMessage(mappers.messageMapper.mdToDto(message), team)
     }
 
+    fun sendUserMessage(otherUserLogin: String, message: MessageMD) {
+        firebase.sendUserMessage(mappers.messageMapper.mdToDto(message), otherUserLogin)
+    }
+
+    fun updateCurrentUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            currentUser!!.login
+            ,{
+            currentUser=it
+            cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    fun updateOtherUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            otherUser!!.login
+            ,{
+                otherUser=it
+                cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
 }
