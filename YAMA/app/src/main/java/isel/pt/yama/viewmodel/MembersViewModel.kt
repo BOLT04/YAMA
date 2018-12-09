@@ -10,15 +10,15 @@ import isel.pt.yama.model.UserMD
 
 class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
-    val members: MutableLiveData<List<MutableLiveData<User>>> = MutableLiveData()
+    val members: MutableLiveData<List<MutableLiveData<UserMD>>> = MutableLiveData()
 
     fun updateMembers(token: String, team: Int, organization: String) {
         app.repository.getTeamMembers(team, organization, {
             list ->
             members.value = list.map {
-                    val ld = MutableLiveData<User>()
+                    val ld = MutableLiveData<UserMD>()
                     ld.value = it
-                    app.repository.getAvatarImageFromUrl(it.avatarUrl){
+                    app.repository.getAvatarImageFromUrl(it.avatar_url){
                         b->ld.value=ld.value
                     }
                 ld

@@ -108,7 +108,7 @@ class ChatAdapter(val app: YAMAApplication,
     }
 
     override fun getItemCount(): Int {
-        Log.d(app.TAG, "getItemCount: size=" +  chatLog.value?.size)
+       // Log.d(app.TAG, "getItemCount: size=" +  chatLog.value?.size)
         return chatLog.value?.size ?: 0
     }
 

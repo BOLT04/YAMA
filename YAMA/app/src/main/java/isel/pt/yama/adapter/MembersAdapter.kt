@@ -49,33 +49,33 @@ class MembersAdapter(val app: YAMAApplication,
 
 class MembersViewHolder(val app: YAMAApplication,
                         val context: LifecycleOwner,
-                        view: View, var userLd: MutableLiveData<User>? = null)
+                        view: View, var userLd: MutableLiveData<UserMD>? = null)
     : RecyclerView.ViewHolder(view) {
 
-    val observer: Observer<User> = Observer { bindToView(it) }
+    val observer: Observer<UserMD> = Observer { bindToView(it) }
 
     private val memberAvatar: ImageView = view.findViewById(R.id.memberAvatar)
     private val memberName: TextView = view.findViewById(R.id.memberName)
 
 
-    fun associateAndBind(user: MutableLiveData<User>?){
+    fun associateAndBind(user: MutableLiveData<UserMD>?){
         this.userLd = user
         user?.observe(context, observer)
         bindToView(user?.value)
     }
 
-    fun bindToView(user: User?) {
+    fun bindToView(user: UserMD?) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
 
         memberAvatar.setImageBitmap(
-                app.repository.getAvatarImageFromUrlSync(user?.avatarUrl!!)
+                app.repository.getAvatarImageFromUrlSync(user?.avatar_url!!)
         )
 
         memberName.text = user.login
     }
 
-    fun bindToView(user: User?, listener: MembersAdapter.OnMemberClickListener) {
+    fun bindToView(user: UserMD?, listener: MembersAdapter.OnMemberClickListener) {
         bindToView(user)
         itemView.setOnClickListener { listener.onMemberClick(user) }
     }

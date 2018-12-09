@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.RequestFuture
 import isel.pt.yama.kotlinx.AsyncWork
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
@@ -16,7 +17,9 @@ import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
 import isel.pt.yama.dataAccess.mappers.Mappers
 import isel.pt.yama.dto.*
 import isel.pt.yama.model.*
+import isel.pt.yama.network.GetRequest
 import isel.pt.yama.network.GetRequestImage
+import isel.pt.yama.network.GetTeamsRequest
 
 
 // Holds all the data needed and interfaces with volley or any other data source.
@@ -56,7 +59,6 @@ class YAMARepository(private val app: YAMAApplication,
             syncSaveOrganizationsFromDTO(app, localDb, organizations)
         }
     }
-
     private fun saveToDBUSer(user : String, organizations: List<OrganizationDto>): AsyncWork<List<OrganizationMD>> {
         return saveToDB(organizations).andThen {
             runAsync { syncSaveUserOrganizationsFromDTO(app, localDb, user, organizations) }}
@@ -66,8 +68,6 @@ class YAMARepository(private val app: YAMAApplication,
                     syncSaveTeamMemberFromDTO(app, localDb, team, organization, members)
                 }
     }
-
-
 
     private fun syncSaveTeamsFromDTO(app: YAMAApplication, db: YAMADatabase, organization: String, teams: List<TeamDto>): List<TeamMD> {
         Log.v(app.TAG, "syncSaveTeamsFromDTO: Saving teams to DB")
@@ -115,7 +115,6 @@ class YAMARepository(private val app: YAMAApplication,
         db.userDAO().insertUsers(result)
         return mappers.userMapper.dtoToMD(user)
     }
-
     private fun syncSaveUserOrganizationsFromDTO(app: YAMAApplication, db: YAMADatabase, user: String, organizations: List<OrganizationDto>): List<OrganizationMD> {
         Log.v(TAG, "Saving currentUser organizations to DB")
 
@@ -147,7 +146,6 @@ class YAMARepository(private val app: YAMAApplication,
             }
         }
     }
-
     fun getUser(userLogin: String, success: (UserMD) -> Unit, fail: (VolleyError) -> Unit) { //TODO codigo repetido
 
         runAsync {
@@ -168,9 +166,6 @@ class YAMARepository(private val app: YAMAApplication,
             }
         }
     }
-
-
-
     fun getUserOrganizations(user: String, accessToken : String, success: (List<OrganizationMD>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting organizations from DB")
@@ -186,7 +181,6 @@ class YAMARepository(private val app: YAMAApplication,
             }
         }
     }
-
     fun getTeams(success: (List<TeamMD>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting teams from DB")
@@ -203,6 +197,13 @@ class YAMARepository(private val app: YAMAApplication,
                 success(teams.map(mappers.teamMapper::dbToMD))
             }
         }
+    }
+
+    fun syncGetTeams(app: YAMAApplication, token: String, orgId: String): List<TeamMD> {
+        Log.v(app.TAG, "Sync getting teams from API")
+        val future: RequestFuture<List<TeamDto>> = RequestFuture.newFuture()
+        api.syncGetTeams(orgId, token, future, future)
+        return syncSaveTeamsFromDTO(app, localDb, orgId, future.get())
     }
 
     fun getSubscribedTeams(success: (List<TeamMD>) -> Unit, fail: (Exception) -> Unit) {

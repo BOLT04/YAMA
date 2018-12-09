@@ -35,7 +35,7 @@
     <!-- Messaging -->
     <string name="sender_avatar">Avatar of the sender</string>
     <string name="receiver_avatar">Avatar of the receiver</string>
-    <string name="userMessage_hint">Write your messageMD</string>
+    <string name="userMessage_hint">Write your message</string>
 
     <!-- Notifications -->
     <string name="teams_notification_title">Check the Teams</string>

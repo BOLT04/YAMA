@@ -97,6 +97,17 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
+    fun syncGetTeams(orgId: String, token: String, success: Response.Listener<List<TeamDto>>, fail: Response.ErrorListener) {
+        getAndLog("getTeams: Fetching teams from Github API") {
+            GetTeamsRequest(
+                    "$GITHUB_API_ORGS/$orgId/teams",
+                    success,
+                    fail,
+                    buildRequestHeaders(token)
+            )
+        }
+    }
+
     fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("Fetching team members from Github API") {
             GetMembersRequest(

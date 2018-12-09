@@ -196,7 +196,8 @@ class ChatBoard(private val app: YAMAApplication) {
     fun addToSubscribedTeams(team: TeamMD) {
         usersRef.document(app.repository.currentUser?.login!!)
                 .collection("chats")
-                .add(team) // TODO: needs to be a POJO!!!
+                .document("${team.id}")
+                .set(team)
                 .addOnSuccessListener{
                     Log.d(app.TAG, "addToSubscribedTeams: success")
                 }

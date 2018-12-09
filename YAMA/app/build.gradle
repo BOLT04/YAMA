@@ -65,5 +65,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha01'
     //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
+    def nav_version = "1.0.0-alpha07"
+
+    implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
+
+    // optional - Test helpers
+    // this library depends on the Kotlin standard library
+    androidTestImplementation "android.arch.navigation:navigation-testing:$nav_version"
+
 
 }
