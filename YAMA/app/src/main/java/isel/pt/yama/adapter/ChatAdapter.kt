@@ -111,11 +111,16 @@ class ChatAdapter(val app: YAMAApplication,
 
                 ReceivedChatViewHolder(app.imageLoader, context, viewGroup)
             }
-            else
-                SentChatViewHolder(app.repository, context, LayoutInflater
-                        .from(parent.context)
-                        .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup)
+            else {
+                val viewGroup = LayoutInflater
+                    .from(parent.context)
+                    .inflate(R.layout.list_item_msg_send, parent, false) as ViewGroup
 
+                //TODO remove here for sent status implementation
+                viewGroup.findViewById<androidx.appcompat.widget.AppCompatImageView>(R.id.iconImageView).visibility = View.GONE
+
+                SentChatViewHolder(app.repository, context, viewGroup)
+            }
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
 
         holder.associateAndBind(chatLog.value?.get(position))
