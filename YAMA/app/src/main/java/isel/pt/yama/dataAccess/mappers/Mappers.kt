@@ -18,5 +18,6 @@ class Mappers( repo: YAMARepository) {
     val messageMapper = MessageMapper(repo)
     val organizationMapper = OrganizationMapper(repo)
     val teamMapper = TeamMapper(repo)
+    val userAssociationMapper = UserAssociationMapper(repo)
 
 }

@@ -8,6 +8,7 @@ import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dto.MessageDto
 import isel.pt.yama.dto.TeamDto
+import isel.pt.yama.dto.UserAssociationDto
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.model.*
 import java.util.*
@@ -64,8 +65,11 @@ class ChatBoard(private val app: YAMAApplication) {
                                 }
 
 
+                                val userAssociation = dc.document.toObject(UserAssociationDto::class.java)
+                                val chatId = userAssociation.chatId
                                 val otherLogin = dc.document.id
-                                val chatId = dc.document["chatId"] as String
+                                //val otherLogin = dc.document.id
+                                //val chatId = dc.document["chatId"] as String
 
                                 Log.v("DM DEBUG", "listeing to $chatId")
 
@@ -275,8 +279,31 @@ class ChatBoard(private val app: YAMAApplication) {
                     val map = result.toObjects(TeamDto::class.java)
                             .map(app.repository.mappers.teamMapper::dtoToMD)
 
-                   // map.forEach{teamMD -> associateTeam(teamMD)}
                     success(map)
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(app.TAG, "Error getting documents: ", exception)
+                    fail(exception)
+                }
+    }
+
+    fun getSubscribedUsers(user: UserMD, success: (List<UserAssociation>) -> Unit, fail: (Exception) -> Unit) {
+        usersRef.document(user.login)
+                .collection("userChats")
+                .get()
+                .addOnSuccessListener { result ->
+
+                    val list = mutableListOf<UserAssociation>()
+                    result.toObjects(UserAssociationDto::class.java)
+                            .forEach{
+                                dto->
+                                app.repository.mappers.userAssociationMapper.dtoToMD(dto){
+                                        list.add(it)
+                                        if(result.size()==list.size)
+                                            success(list)
+                                }
+                            }
+
                 }
                 .addOnFailureListener { exception ->
                     Log.d(app.TAG, "Error getting documents: ", exception)
@@ -291,12 +318,13 @@ class ChatBoard(private val app: YAMAApplication) {
     fun associateUserAux(firstUser: String, secondUser: String, id: String){
 
 
-        val map = mutableMapOf("chatId" to id) as Map<String, Any>
+        //val map = mutableMapOf("chatId" to id) as Map<String, Any>
+        val association = UserAssociationDto(id, secondUser)
 
         usersRef.document(firstUser)
                 .collection("userChats")
                 .document(secondUser)
-                .set(map)
+                .set(association)
                 .addOnSuccessListener {
                     Log.d(app.TAG, "addToSubscribedTeams: success")
                 }

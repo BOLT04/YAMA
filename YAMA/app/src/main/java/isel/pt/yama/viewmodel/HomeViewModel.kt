@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
 import isel.pt.yama.dataAccess.database.Team
+import isel.pt.yama.dataAccess.firebase.ChatBoard
 import isel.pt.yama.model.TeamMD
+import isel.pt.yama.model.UserAssociation
+import isel.pt.yama.model.UserMD
 
 class HomeViewModel (val app: YAMAApplication) : AndroidViewModel(app) {
 
     val teams: MutableLiveData<List<TeamMD>> = MutableLiveData()
-    val users: MutableLiveData<List<UserMD>> = MutableLiveData()
+    val users: MutableLiveData<List<UserAssociation>> = MutableLiveData()
 
     fun updateChats() {
         updateTeams()
@@ -27,7 +30,7 @@ class HomeViewModel (val app: YAMAApplication) : AndroidViewModel(app) {
 
     fun updateUserChats() {
         app.repository.getSubscribedUserChats({
-            teams.value = it
+            users.value = it
         }, {
             defaultErrorHandler(app)
         })

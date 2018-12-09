@@ -25,9 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import androidx.work.*
 
-import isel.pt.yama.R
-import isel.pt.yama.YAMAApplication
-import isel.pt.yama.adapter.HomeAdapter
 
 import isel.pt.yama.common.PRIVATE_PROFILE
 
@@ -40,6 +37,7 @@ import isel.pt.yama.dataAccess.database.Team
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
 import isel.pt.yama.model.TeamMD
+import isel.pt.yama.model.UserAssociation
 import isel.pt.yama.viewmodel.HomeViewModel
 
 import isel.pt.yama.worker.UpdatePeriodicWorker
@@ -66,10 +64,12 @@ class Home2Activity : AppCompatActivity() {
         viewModel = getViewModel(VIEW_MODEL_KEY){
             HomeViewModel(app)
         }
+        //viewModel.updateTeams()
+        viewModel.updateChats()
 
-        val intent = Intent(this, TeamChatActivity::class.java)
+        val teamIntent = Intent(this, TeamChatActivity::class.java)
 
-        val listener = object : HomeAdapter.OnTeamClickListener {
+        val teamListener = object : HomeAdapter.OnTeamClickListener {
             override fun onTeamClick(team: TeamMD?) {
                 app.repository.team = team
 
@@ -82,19 +82,34 @@ class Home2Activity : AppCompatActivity() {
                 app.chatBoard.associateTeam(team!!)
 */
 
-                strtActivity(intent)
+                startActivity(teamIntent)
+            }
+        }
+        val userIntent = Intent(this, UserChatActivity::class.java)
+        val userListener = object : HomeAdapter.OnUserAssClickListener {
+            override fun onUserAssClick(userAss: UserAssociation?) {
+                app.repository.otherUser= userAss?.user
+
+                app.chatBoard.associateUser(userAss?.user?.login!!)
+
+
+                startActivity(userIntent)
             }
         }
 
-        chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
+        chatsView.adapter = HomeAdapter(viewModel.teams, viewModel.users, this, teamListener, userListener)
+
 
         viewModel.teams.observe(this, Observer<List<TeamMD>> {
-            chatsView.adapter = HomeAdapter(viewModel.teams, this, listener)
+            chatsView.adapter = HomeAdapter(viewModel.teams, viewModel.users, this, teamListener, userListener)
+        })
+
+        viewModel.users.observe(this, Observer<List<UserAssociation>> {
+            chatsView.adapter = HomeAdapter(viewModel.teams, viewModel.users, this, teamListener, userListener)
         })
 
 
-        //viewModel.updateTeams()
-        viewModel.updateChats()
+
 
 
         scheduleDBUpdate(app)
@@ -195,5 +210,6 @@ class Home2Activity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.updateTeams()
+        viewModel.updateUserChats()
     }
 }

@@ -8,15 +8,4 @@ const val CREATED_AT = "created_at"
 
 open class MessageDto(val user: String = "",
                   val content : String = "",
-                  val createdAt: Date = Date())/*:Dto<MessageMD>{
-
-    override fun fromObj(obj: MessageMD): Dto<MessageMD> =
-            MessageDto(obj.currentUser.login, obj.content, obj.createdAt)
-
-    override fun toObj(dto: Dto<MessageMD>): MessageMD =
-            MessageMD()
-
-
-}
-
-*/
+                  val createdAt: Date = Date())

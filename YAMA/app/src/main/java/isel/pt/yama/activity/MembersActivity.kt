@@ -53,6 +53,9 @@ class MembersActivity : AppCompatActivity() {
                 if(app.repository.currentUser!=user){
 
                     app.repository.otherUser = user
+
+                    app.chatBoard.associateUser(user?.login!!)
+
                     startActivity(intent)
                 }
             }
@@ -71,10 +74,10 @@ class MembersActivity : AppCompatActivity() {
         val orgIdStr = getString(R.string.organizationId)
         val userTokenStr = getString(R.string.userToken)
 
-        val orgId = sharedPref.getString(orgIdStr, "")
-        val userToken = sharedPref.getString(userTokenStr, "")
+        val orgId = sharedPref.getString(orgIdStr, "")!!
+        val userToken = sharedPref.getString(userTokenStr, "")!!
 
-        viewModel.updateMembers(userToken, team.id, orgId)
+        viewModel.updateMembers(userToken, orgId)
     }
 
     override fun onStart() {

@@ -1,26 +1,23 @@
 package isel.pt.yama.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.get
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.RecyclerView
-import isel.pt.yama.R
-import isel.pt.yama.YAMAApplication
-import java.text.SimpleDateFormat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
+import isel.pt.yama.R
+import isel.pt.yama.YAMAApplication
 import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.model.MessageMD
 import isel.pt.yama.model.ReceivedMessageMD
 import isel.pt.yama.model.SentMessageMD
-import kotlinx.android.synthetic.main.list_item_msg_receive.*
+import java.text.SimpleDateFormat
 
 
 abstract class ChatViewHolder(val context: LifecycleOwner, view: ViewGroup,

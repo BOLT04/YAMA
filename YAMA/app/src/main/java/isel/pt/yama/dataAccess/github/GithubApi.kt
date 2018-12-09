@@ -53,7 +53,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
         getAndLog("getUserDetails: Fetching currentUser from Github API") {
-            getRequestOf<UserDto>(
+            GetRequestUser(
                     GITHUB_API_USER,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -63,7 +63,7 @@ class GithubApi(private val app: YAMAApplication) {
     }
     fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {//TODO: should we be coupled with VolleyError?
         getAndLog("Fetching currentUser from Github API") {
-            getRequestOf<UserDto>(
+            GetRequestUser(
                     "$GITHUB_API_USER_NAME/$name",
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -75,7 +75,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getUserOrganizations: Fetching currentUser organizations from Github API") {
-            getRequestOf<List<OrganizationDto>>(
+            GetRequestOrganizations(
                     GITHUB_API_USER_ORGS,
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -86,7 +86,7 @@ class GithubApi(private val app: YAMAApplication) {
 
     fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getTeams: Fetching teams from Github API") {
-            getRequestOf<List<TeamDto>>(
+            GetTeamsRequest(
                 "$GITHUB_API_ORGS/$orgId/teams",
                 Response.Listener(success),
                 Response.ErrorListener(fail),
@@ -99,10 +99,10 @@ class GithubApi(private val app: YAMAApplication) {
 
         getAndLog("syncGetTeams: Fetching teams from Github API") {
             GetTeamsRequest(
-                    "$GITHUB_API_ORGS/$orgId/teams",
-                    success,
-                    fail,
-                    buildRequestHeaders(token)
+                "$GITHUB_API_ORGS/$orgId/teams",
+                success,
+                fail,
+                buildRequestHeaders(token)
             )
         }
     }

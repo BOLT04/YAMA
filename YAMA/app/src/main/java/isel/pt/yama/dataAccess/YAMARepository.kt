@@ -336,4 +336,8 @@ class YAMARepository(private val app: YAMAApplication,
             ,{defaultErrorHandler(app, it)}
         )
     }
+
+    fun getSubscribedUserChats(success: (List<UserAssociation>) -> Unit, fail: (Exception) -> Unit) {
+        firebase.getSubscribedUsers(currentUser!!, success, fail)
+    }
 }
