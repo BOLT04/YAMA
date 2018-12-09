@@ -14,12 +14,13 @@ import isel.pt.yama.repository.dataAccess.github.GithubApi
 import isel.pt.yama.repository.dataAccess.firebase.FirebaseDatabase
 import isel.pt.yama.repository.dataAccess.mappers.Mappers
 import isel.pt.yama.repository.dataAccess.dto.*
+import isel.pt.yama.repository.dataAccess.github.IGithubApi
 import isel.pt.yama.repository.model.*
 
 
 // Holds all the data needed and interfaces with volley or any other data source.
 class YAMARepository(private val app: YAMAApplication,
-                     private val api: GithubApi,
+                     private val api: IGithubApi,
                      private val localDb: YAMADatabase,
                      private val firebase: FirebaseDatabase) {
 
@@ -203,7 +204,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun syncGetTeams(app: YAMAApplication, token: String, orgId: String): List<Team> {
         Log.v(app.TAG, "Sync getting teams from API")
         val future: RequestFuture<List<TeamDto>> = RequestFuture.newFuture()
-        api.syncGetTeams(orgId, token, future, future)
+        api.getTeamsWithToken(orgId, token, future, future)
         return syncSaveTeamsFromDTO(app, localDb, orgId, future.get())
     }
 
@@ -215,7 +216,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun syncGetTeamMembers(app: YAMAApplication, token: String, teamId: Int) : List<User> {
         Log.v(app.TAG, "Sync getting team members from API")
         val future: RequestFuture<List<UserDto>> = RequestFuture.newFuture()
-        api.syncGetTeamMembers(teamId, token, future, future)
+        api.getTeamMembersWithToken(teamId, token, future, future)
         return syncSaveTeamMemberFromDTO(app, localDb, teamId, organizationID, future.get())
     }
 
