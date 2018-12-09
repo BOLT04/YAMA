@@ -60,7 +60,7 @@ class MembersActivity : AppCompatActivity() {
 
         membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
-        viewModel.members.observe(this, Observer<List<MutableLiveData<UserMD>>> {
+        viewModel.members.observe(this, Observer<List<UserMD>> {
 
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(app, this, viewModel, listener)

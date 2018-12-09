@@ -7,7 +7,7 @@
     <string name="login_btn">Iniciar sessão</string>
     <string name="keep_signed_in">Manter-me ligado</string>
     <string name="user_profile_name">Nome :</string>
-    <string name="user_profile_followers">seguidores :</string>
+    <string name="user_profile_followers">Seguidores :</string>
     <string name="error_network">Não foi possível aceder aos dados</string>
     <string name="preference_file_key">preferências</string>
     <string name="organizationId">IdOrganização</string>

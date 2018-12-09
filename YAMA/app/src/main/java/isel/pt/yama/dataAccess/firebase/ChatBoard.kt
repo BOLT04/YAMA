@@ -115,6 +115,7 @@ class ChatBoard(private val app: YAMAApplication) {
                     }
                 }
         }
+
     }
 
 
@@ -160,16 +161,12 @@ class ChatBoard(private val app: YAMAApplication) {
                         {
                             Log.v("DM DEBUG", "message received")
                             val messageLD = chat.add(it)
-                            if (it is ReceivedMessageMD) {
-                                app.repository.getAvatarImageFromUrl(it.user.avatar_url) { _ ->
-                                    messageLD.value = messageLD.value
-                                }
-                            }
-                            else{
+                            if (it is SentMessageMD) {
+
                                 if (dc != null && dc.document.metadata.hasPendingWrites()) {
                                     //Log.v("ICONS", "Local")
                                 } else {
-                                    (it as SentMessageMD).sent=true
+                                    it.sent=true
                                     messageLD.value = messageLD.value
                                    // Log.v("ICONS", "Server")
                                 }
