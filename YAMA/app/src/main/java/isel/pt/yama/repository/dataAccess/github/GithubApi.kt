@@ -21,7 +21,7 @@ const val GITHUB_API_TEAMS = "$GITHUB_API_HOST/teams"
 const val GITHUB_API_USER_NAME = "$GITHUB_API_HOST/users"
 
 
-class GithubApi(private val app: YAMAApplication) {
+class GithubApi(private val app: YAMAApplication) : IGithubApi {
     // The responsibility to initiate the token is delegated to LoginActivity that
     // saves the token in shared preferences.
     var authHeaderMap: MutableMap<String, String>? = null
@@ -39,14 +39,8 @@ class GithubApi(private val app: YAMAApplication) {
             return field
         }
 
-    fun <T> getAndLog(msg: String, getReq: () -> Request<T>) {
-        Log.v(app.TAG, msg)
-        app.queue.add(getReq())
-    }
 
-
-
-    fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
+    override fun getUserDetails(accessToken : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getUserDetails: Fetching currentUser from Github API") {
             GetRequestUser(
                     GITHUB_API_USER,
@@ -56,7 +50,9 @@ class GithubApi(private val app: YAMAApplication) {
             )
         }
     }
-    fun getUserDetailsForName(name : String, success: (UserDto) -> Unit, fail: (VolleyError) -> Unit) {
+
+    override fun getUserDetailsForName(name : String, success: (UserDto) -> Unit,
+                                       fail: (VolleyError) -> Unit) {
         getAndLog("Fetching currentUser from Github API") {
             GetRequestUser(
                     "$GITHUB_API_USER_NAME/$name",
@@ -68,7 +64,9 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    fun getUserOrganizations(accessToken: String, success: (List<OrganizationDto>) -> Unit, fail: (VolleyError) -> Unit) {
+    override fun getUserOrganizations(accessToken: String,
+                                      success: (List<OrganizationDto>) -> Unit,
+                                      fail: (VolleyError) -> Unit) {
         getAndLog("getUserOrganizations: Fetching currentUser organizations from Github API") {
             GetRequestOrganizations(
                     GITHUB_API_USER_ORGS,
@@ -79,30 +77,30 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
+    override fun getTeams(orgId: String, success: (List<TeamDto>) -> Unit,
+                          fail: (VolleyError) -> Unit) {
+        getTeamsAux(orgId, authHeaderMap, success, fail)
+    }
+
+    override fun getTeamsWithToken(orgId: String, token: String,
+                          success: Response.Listener<List<TeamDto>>, fail: Response.ErrorListener) {
+        getTeamsAux(orgId, buildRequestHeaders(token), success::onResponse, fail::onErrorResponse)
+    }
+
+    private fun getTeamsAux(orgId: String, headers: MutableMap<String, String>?,
+                            success: (List<TeamDto>) -> Unit, fail: (VolleyError) -> Unit) {
         getAndLog("getTeams: Fetching teams from Github API") {
             GetTeamsRequest(
-                "$GITHUB_API_ORGS/$orgId/teams",
-                Response.Listener(success),
-                Response.ErrorListener(fail),
-                authHeaderMap
+                    "$GITHUB_API_ORGS/$orgId/teams",
+                    Response.Listener(success),
+                    Response.ErrorListener(fail),
+                    headers
             )
         }
     }
 
-    fun syncGetTeams(orgId: String, token: String, success: Response.Listener<List<TeamDto>>, fail: Response.ErrorListener) {
-
-        getAndLog("syncGetTeams: Fetching teams from Github API") {
-            GetTeamsRequest(
-                "$GITHUB_API_ORGS/$orgId/teams",
-                success,
-                fail,
-                buildRequestHeaders(token)
-            )
-        }
-    }
-
-    fun syncGetTeamMembers(teamId: Int, token: String, success: Response.Listener<List<UserDto>>, fail: Response.ErrorListener) {
+    override fun getTeamMembersWithToken(teamId: Int, token: String,
+                           success: Response.Listener<List<UserDto>>, fail: Response.ErrorListener) {
         val userList = mutableListOf<UserDto>()
         getAndLog("syncGetTeamMembers: Fetching team members from Github API") {
             GetIntermediaryMembersRequest(
@@ -128,7 +126,8 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit, fail: (VolleyError) -> Unit) {
+    override fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit,
+                                fail: (VolleyError) -> Unit) {
 
         val userList = mutableListOf<UserDto>()
         getAndLog("Fetching team members from Github API") {
@@ -155,9 +154,12 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
-    // Auxiliary funcions
-    fun buildRequestHeaders(accessToken: String) =
+    // Auxiliary functions
+    private fun <T> getAndLog(msg: String, getReq: () -> Request<T>) {
+        Log.v(app.TAG, msg)
+        app.queue.add(getReq())
+    }
+
+    private fun buildRequestHeaders(accessToken: String) =
             mutableMapOf(Pair("Authorization", "token $accessToken"))
-
-
 }
