@@ -21,7 +21,7 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
         return try {
             val app = applicationContext as YAMAApplication
 
-            Log.v(app.TAG, "Worker is updating local DB with teams")
+            Log.d(app.TAG, "UpdateTeamsWorker: Worker is updating local DB with teams")
             val teams = app.repository.syncGetTeams(app, app.repository.token, app.repository.organizationID)
             for (team in teams) {
                 var i = 1
@@ -30,8 +30,6 @@ class UpdateTeamsWorker(context : Context, params : WorkerParameters)
                         .putAll(teams.map { it -> "${i++}" to it.id }.toMap())
                         .build()
             }
-
-            sendNotification(app) //TODO: do we need a notification for this
             Result.SUCCESS
         } catch (error: VolleyError) {
             if (canRecover(error)) Result.RETRY else Result.FAILURE

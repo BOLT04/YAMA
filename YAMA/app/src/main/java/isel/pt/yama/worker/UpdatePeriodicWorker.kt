@@ -25,11 +25,12 @@ class UpdatePeriodicWorker(context: Context, workerParams: WorkerParameters) : W
 
         return try {
             val app = applicationContext as YAMAApplication
-            Log.v(app.TAG, "Worker is updating local DB with teams")
+            Log.d(app.TAG, "UpdatePeriodicWorker: Worker is updating local DB with teams and members")
             app.workManager
                     .beginWith(updateTeamsRequest)
                     .then(updateTeamMembersRequest)
                     .enqueue()
+            sendNotification(app)
             Result.SUCCESS
         } catch (error: VolleyError) {
             if (canRecover(error)) Result.RETRY else Result.FAILURE

@@ -14,11 +14,10 @@ class UpdateTeamMembersWorker(context : Context, params : WorkerParameters)
         return try {
             val size = inputData.getInt("0", 0)
             val app = applicationContext as YAMAApplication
-            Log.v(app.TAG, "Worker is updating local DB with teams")
+            Log.d(app.TAG, "UpdateTeamMembersWorker: Worker is updating local DB with teams")
             for (i in 1..size) {
                 app.repository.syncGetTeamMembers(app, app.repository.token, inputData.getInt("$i",0))
             }
-            sendNotification(app) //TODO: do we need a notification for this
             Result.SUCCESS
         } catch (error: VolleyError) {
             if (canRecover(error)) Result.RETRY else Result.FAILURE

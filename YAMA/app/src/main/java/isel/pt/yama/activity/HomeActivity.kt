@@ -91,40 +91,10 @@ class HomeActivity : AppCompatActivity() {
             chatsView.adapter = HomeAdapter(viewModel.teams, viewModel.users, this, teamListener, userListener)
         })
 
-
-
-
-
         scheduleDBUpdate(app)
     }
 
     private fun scheduleDBUpdate(app : YAMAApplication) {
-//TODO: what version is correct????!!!!
-
-        val updateRequest = PeriodicWorkRequestBuilder<UpdateTeamsWorker>(
-/*
-        val updateTeamsRequest = PeriodicWorkRequestBuilder<UpdateTeamsWorker>(
-*/
-                15, TimeUnit.SECONDS)
-                .setConstraints(Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.UNMETERED)
-                        .setRequiresCharging(true)
-                        .build())
-                .build()
-
-        app.workManager.enqueueUniquePeriodicWork(
-                DB_UPDATE_JOB_ID,
-                ExistingPeriodicWorkPolicy.KEEP,
-                updateRequest)
-
-
-        /*val updateTeamMembersRequest = PeriodicWorkRequestBuilder<UpdateTeamMembersWorker>(
-                15, TimeUnit.SECONDS)
-                .setConstraints(Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.UNMETERED)
-                        .setRequiresCharging(true)
-                        .build())
-                .build()*/
 
         val updateTeamAndMembersRequest = PeriodicWorkRequestBuilder<UpdatePeriodicWorker>(
                 30, TimeUnit.SECONDS)
@@ -133,12 +103,12 @@ class HomeActivity : AppCompatActivity() {
                         .setRequiresCharging(true)
                         .build())
                 .build()
-/*
+
         app.workManager
                 .enqueueUniquePeriodicWork (
                         DB_UPDATE_JOB_ID,
                         ExistingPeriodicWorkPolicy.KEEP,
-                        updateTeamAndMembersRequest)*/
+                        updateTeamAndMembersRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
