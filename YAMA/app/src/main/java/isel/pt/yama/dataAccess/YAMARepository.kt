@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.RequestFuture
 import isel.pt.yama.kotlinx.AsyncWork
 import isel.pt.yama.kotlinx.runAsync
 import isel.pt.yama.R
@@ -216,8 +217,23 @@ class YAMARepository(private val app: YAMAApplication,
         }
     }
 
+    fun syncGetTeams(app: YAMAApplication, token: String, orgId: String): List<TeamMD> {
+        Log.v(app.TAG, "Sync getting teams from API")
+        val future: RequestFuture<List<TeamDto>> = RequestFuture.newFuture()
+        api.syncGetTeams(orgId, token, future, future)
+        return syncSaveTeamsFromDTO(app, localDb, orgId, future.get())
+    }
+
     fun getSubscribedTeams(success: (List<TeamMD>) -> Unit, fail: (Exception) -> Unit) {
         firebase.getSubscribedTeams(currentUser!!, success, fail)
+    }
+
+
+    fun syncGetTeamMembers(app: YAMAApplication, token: String, teamId: Int) : List<UserMD> {
+        Log.v(app.TAG, "Sync getting team members from API")
+        val future: RequestFuture<List<UserDto>> = RequestFuture.newFuture()
+        api.syncGetTeamMembers(teamId, token, future, future)
+        return syncSaveTeamMemberFromDTO(app, localDb, teamId, organizationID, future.get())
     }
 
     fun getTeamMembers(team: Int, organization: String, success: (List<UserMD>) -> Unit, fail: (VolleyError) -> Unit) {
@@ -329,6 +345,7 @@ class YAMARepository(private val app: YAMAApplication,
             ,{defaultErrorHandler(app, it)}
         )
     }
+
 
 
 

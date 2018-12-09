@@ -1,17 +1,32 @@
 package isel.pt.yama
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Bitmap
+
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.LruCache
 import androidx.room.Room
 import com.android.volley.Cache
 import com.android.volley.Network
+
+import android.os.Build
+import android.util.Log
+import android.util.LruCache
+import androidx.room.Room
+import androidx.work.WorkManager
+
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.*
 import com.google.firebase.FirebaseApp
+
 import isel.pt.yama.dataAccess.LruBitmapCache
+
+import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
+
 import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.dataAccess.database.YAMADatabase
 import isel.pt.yama.dataAccess.firebase.ChatBoard
@@ -34,6 +49,7 @@ class YAMAApplication : Application() {
         private set
 
     lateinit var imageLoader: ImageLoader
+    lateinit var workManager: WorkManager
 
     override fun registerActivityLifecycleCallbacks(callback: ActivityLifecycleCallbacks?) {
         Log.v("$TAG::actlog",callback?.javaClass.toString())
@@ -111,5 +127,25 @@ class YAMAApplication : Application() {
         //PopulateDbAsync(wordRoomDatabase).execute()
 
         repository = YAMARepository(this, GithubApi(this), localDb, FirebaseDatabase(chatBoard))
+        workManager = WorkManager.getInstance()
+        createNotificationChannels()
+    }
+
+    private fun createNotificationChannels() {
+
+        // Create notification channel if we are running on a O+ device
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                    TEAM_NOTIFICATION_CHANNEL_ID,
+                    getString(R.string.teams_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT).apply {
+                description = getString(R.string.teams_channel_description)
+            }
+
+            val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
     }
 }
