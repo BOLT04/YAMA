@@ -3,10 +3,6 @@ package isel.pt.yama.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -14,14 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.ChatAdapter
-import isel.pt.yama.dataAccess.YAMARepository
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.SentMessageMD
+import isel.pt.yama.repository.YAMARepository
+import isel.pt.yama.repository.model.Message
+import isel.pt.yama.repository.model.SentMessage
 import isel.pt.yama.viewmodel.TeamChatViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.list_item_msg_receive.*
 import java.util.*
 
 
@@ -63,14 +58,14 @@ class TeamChatActivity : AppCompatActivity() {
             if (msg.isEmpty())
                 return@setOnClickListener
 
-            val sentMsg = SentMessageMD(app.repository.currentUser!!, msg.toString(), Date())
+            val sentMsg = SentMessage(app.repository.currentUser!!, msg.toString(), Date())
             viewModel.sendMessage(sentMsg)
             userMessageTxt.text.clear()
         }
 
 
 
-        viewModel.chatLog.observe(this, Observer<List<MutableLiveData<MessageMD>>> {
+        viewModel.chatLog.observe(this, Observer<List<MutableLiveData<Message>>> {
 
             val newAdapter = ChatAdapter(app, this, viewModel.chatLog, true)
             newAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {

@@ -4,15 +4,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.dataAccess.firebase.ChatBoard
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserAssociation
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.Team
+import isel.pt.yama.repository.model.UserAssociation
 
 class HomeViewModel (val app: YAMAApplication) : AndroidViewModel(app) {
 
-    val teams: MutableLiveData<List<TeamMD>> = MutableLiveData()
+    val teams: MutableLiveData<List<Team>> = MutableLiveData()
     val users: MutableLiveData<List<UserAssociation>> = MutableLiveData()
 
     fun updateChats() {

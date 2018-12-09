@@ -4,14 +4,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
-import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.User
 
 class MembersViewModel(val app: YAMAApplication) : AndroidViewModel(app) {
 
 
-    val members: MutableLiveData<List<UserMD>> = MutableLiveData()
+    val members: MutableLiveData<List<User>> = MutableLiveData()
 
 
     fun updateMembers(token: String, organization: String) {

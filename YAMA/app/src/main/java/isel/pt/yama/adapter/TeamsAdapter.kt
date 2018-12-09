@@ -5,8 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.model.TeamMD
+import isel.pt.yama.repository.model.Team
 
 import isel.pt.yama.viewmodel.TeamsViewModel
 
@@ -29,14 +28,14 @@ class TeamsAdapter(private val viewModel: TeamsViewModel,
     }
 
     interface OnTeamClickListener {
-        fun onTeamClick(team: TeamMD?)
+        fun onTeamClick(team: Team?)
     }
 }
 
 class TeamsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val teamNameView: TextView = view.findViewById(android.R.id.text1)
 
-    fun bindTo(team: TeamMD?, listener: TeamsAdapter.OnTeamClickListener) {
+    fun bindTo(team: Team?, listener: TeamsAdapter.OnTeamClickListener) {
         teamNameView.text = team?.name
         itemView.setOnClickListener { listener.onTeamClick(team) }
     }

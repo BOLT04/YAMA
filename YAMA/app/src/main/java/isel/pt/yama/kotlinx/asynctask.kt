@@ -29,4 +29,4 @@ class AsyncWork<T>(private val work: () -> T) {
     }
 }
 
-fun <T> runAsync(work: () -> T): AsyncWork<T> = AsyncWork(work) //TODO: why is it not necessary AsyncWork<T>
+fun <T> runAsync(work: () -> T): AsyncWork<T> = AsyncWork(work)

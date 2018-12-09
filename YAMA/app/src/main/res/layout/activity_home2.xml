@@ -5,13 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.Home2Activity">
+    tools:context=".activity.HomeActivity">
 <!--<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:repo="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.Home2Activity">-->
+    tools:context=".activity.HomeActivity">-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatsView"

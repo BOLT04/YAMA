@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">YAMA</string>
-    <string name="title_activity_home2">Home em portugues</string>
+    <string name="title_activity_home2">Conversas</string>
 
     <string name="user_id">Login do utilizador</string>
     <string name="organization_id">Organização</string>

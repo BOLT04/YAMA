@@ -4,17 +4,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.NetworkImageView
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.User
 import isel.pt.yama.viewmodel.MembersViewModel
 
 class MembersAdapter(val app: YAMAApplication,
@@ -40,7 +36,7 @@ class MembersAdapter(val app: YAMAApplication,
 
 
     interface OnMemberClickListener {
-        fun onMemberClick(user: UserMD?)
+        fun onMemberClick(user: User?)
     }
 }
 
@@ -54,7 +50,7 @@ class MembersViewHolder(val app: YAMAApplication,
     private val memberName: TextView = view.findViewById(R.id.memberName)
     private val member : androidx.constraintlayout.widget.ConstraintLayout = view.findViewById(R.id.member_view)
 
-    fun bindToView(user: UserMD?, listener: MembersAdapter.OnMemberClickListener) {
+    fun bindToView(user: User?, listener: MembersAdapter.OnMemberClickListener) {
         Log.v("YAMA DEBUG", "user?.name: " + user?.login)
 
         memberAvatar.setImageUrl(user?.avatar_url!!, app.imageLoader)

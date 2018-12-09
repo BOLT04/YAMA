@@ -13,27 +13,26 @@ import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.dataAccess.YAMARepository
-import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.ReceivedMessageMD
-import isel.pt.yama.model.SentMessageMD
+import isel.pt.yama.repository.YAMARepository
+import isel.pt.yama.repository.model.Message
+import isel.pt.yama.repository.model.ReceivedMessage
+import isel.pt.yama.repository.model.SentMessage
 import java.text.SimpleDateFormat
 
 
 abstract class ChatViewHolder(val context: LifecycleOwner, view: ViewGroup,
-                              var messageMD: MutableLiveData<MessageMD>? = null)
+                              var message: MutableLiveData<Message>? = null)
     : RecyclerView.ViewHolder(view){
 
-    val observer: Observer<MessageMD> = Observer { bindToView(it) }
-//TODO a barbara tem ideia de ter lido ou
+    val observer: Observer<Message> = Observer { bindToView(it) }
 
-    fun associateAndBind(messageMD: MutableLiveData<MessageMD>?){
-        this.messageMD=messageMD
-        messageMD?.observe(context, observer)
-        bindToView(messageMD?.value)
+    fun associateAndBind(message: MutableLiveData<Message>?){
+        this.message=message
+        message?.observe(context, observer)
+        bindToView(message?.value)
    
     }
-    abstract fun bindToView(messageMD: MessageMD?)
+    abstract fun bindToView(message: Message?)
 }
 
 class ReceivedChatViewHolder(val imageLoader: ImageLoader, context: LifecycleOwner, view: ViewGroup) : ChatViewHolder(context, view) {
@@ -42,31 +41,16 @@ class ReceivedChatViewHolder(val imageLoader: ImageLoader, context: LifecycleOwn
     private val sentMsgView: TextView = view.findViewById(R.id.message)
     private val userNameView: TextView = view.findViewById(R.id.userName)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
-/*
 
-    override fun bindTo(messageMD: MessageDto?) {
-        val msg = messageMD as ReceivedMessageMD
-        if (msg.userAvatar != null)
-            avatarImgView.setImageBitmap(msg.userAvatar)//make request Uri.parse(messageMD?.currentUser?.avatar_url))
-        // else
-        // Log.d(TAG, "avatar is null")
 
-        sentMsgView.text = messageMD.content
-        userNameView.text = messageMD.currentUser//.name ?: messageMD.currentUser.login
+    override fun bindToView(message: Message?) {
+        avatarImgView.setImageUrl(message?.user?.avatar_url!!, imageLoader)
+
+        sentMsgView.text = message.content
+        userNameView.text= message.user.name ?: message.user.login
 
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text = sdf.format(messageMD.createdAt)
-    }
-    */
-
-    override fun bindToView(messageMD: MessageMD?) {
-        avatarImgView.setImageUrl(messageMD?.user?.avatar_url!!, imageLoader)
-
-        sentMsgView.text = messageMD.content
-        userNameView.text= messageMD.user.name ?: messageMD.user.login
-
-        val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(messageMD.createdAt)
+        dateTimeView.text= sdf.format(message.createdAt)
     }
 }
 
@@ -76,16 +60,16 @@ class SentChatViewHolder(val repo: YAMARepository, context: LifecycleOwner, view
     private val iconImageView: ImageView = view.findViewById(R.id.iconImageView)
     private val dateTimeView: TextView = view.findViewById(R.id.dateTime)
 
-    override fun bindToView(messageMD: MessageMD? ) {
+    override fun bindToView(message: Message? ) {
         iconImageView.setImageResource(
-                if((messageMD as SentMessageMD).sent)
+                if((message as SentMessage).sent)
                     R.drawable.green
                 else
                     R.drawable.red
         )
-        sentMsgView.text = messageMD.content
+        sentMsgView.text = message.content
         val sdf = SimpleDateFormat.getDateTimeInstance()
-        dateTimeView.text= sdf.format(messageMD.createdAt)
+        dateTimeView.text= sdf.format(message.createdAt)
     }
 }
 
@@ -94,27 +78,14 @@ const val MESSAGE_SENT_CODE =2
 
 class ChatAdapter(val app: YAMAApplication,
                   val context: LifecycleOwner,
-                  val chatLog: MutableLiveData<List<MutableLiveData<MessageMD>>>,
+                  val chatLog: MutableLiveData<List<MutableLiveData<Message>>>,
                   val teamChat : Boolean)
     : RecyclerView.Adapter<ChatViewHolder>() {
 
     init {
-        chatLog.observe(context, Observer<List<MutableLiveData<MessageMD>>> {
-            list ->
-            //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
+        chatLog.observe(context, Observer<List<MutableLiveData<Message>>> {
             this.notifyItemInserted(chatLog.value?.size!!)
-
-            /*
-            val currentPosition =  chatLog.value?.size
-            val currentMessage = list[currentPosition!!.minus(1)].value
-            if(currentMessage is ReceivedMessageMD)
-                repo.repository.getAvatarImage(currentMessage.currentUser.avatarUrl) {
-                    currentMessage.userAvatar=it
-                    this.notifyItemChanged(currentPosition)
-                }
-                */
         })
-
     }
 
     override fun getItemCount(): Int {
@@ -123,7 +94,7 @@ class ChatAdapter(val app: YAMAApplication,
     }
 
     override fun getItemViewType(position: Int) =
-            if(chatLog.value?.get(position)?.value is ReceivedMessageMD)
+            if(chatLog.value?.get(position)?.value is ReceivedMessage)
                 MESSAGE_RECEIVED_CODE
             else
                 MESSAGE_SENT_CODE
@@ -151,7 +122,7 @@ class ChatAdapter(val app: YAMAApplication,
     }
 
     override fun onViewRecycled(holder: ChatViewHolder) {
-        holder.messageMD?.removeObserver(holder.observer) //TODO de certeza que ja tem mensagem é alterar o messageMD para livedata
+        holder.message?.removeObserver(holder.observer)
         super.onViewRecycled(holder)
     }
 }

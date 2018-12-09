@@ -1,19 +1,14 @@
 package isel.pt.yama.worker
 
 import android.app.PendingIntent
-import android.content.Context
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.Worker
-import androidx.work.WorkerParameters
 import com.android.volley.VolleyError
 import isel.pt.yama.R
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.activity.TeamsActivity
 import isel.pt.yama.common.NOTIFICATION_ID
 import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
-import isel.pt.yama.model.TeamMD
 
 
 interface UpdateWorkers {

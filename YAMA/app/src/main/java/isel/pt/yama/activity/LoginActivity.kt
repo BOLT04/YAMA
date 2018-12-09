@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-                val intent = Intent(this, Home2Activity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 app.repository.currentUser=viewModel.userInfo.value
 
                 app.chatBoard.start()

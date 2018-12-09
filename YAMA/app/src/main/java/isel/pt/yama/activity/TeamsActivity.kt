@@ -10,12 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.TeamsAdapter
 import isel.pt.yama.adapter.TeamsAdapter.OnTeamClickListener
-import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.model.TeamMD
+import isel.pt.yama.repository.model.Team
 import kotlinx.android.synthetic.main.activity_teams.*
 import isel.pt.yama.viewmodel.TeamsViewModel
 
@@ -34,7 +32,7 @@ class TeamsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teams)
 
-        teamsView.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
+        teamsView.setHasFixedSize(true)
         teamsView.layoutManager = LinearLayoutManager(this)
 
         val app = getYAMAApplication()
@@ -45,7 +43,7 @@ class TeamsActivity : AppCompatActivity() {
         val intent = Intent(this, TeamChatActivity::class.java)
 
         val listener = object : OnTeamClickListener {
-            override fun onTeamClick(team: TeamMD?) {
+            override fun onTeamClick(team: Team?) {
                 app.repository.team = team!!
                 app.chatBoard.associateTeam(team)
                 startActivity(intent)
@@ -54,18 +52,10 @@ class TeamsActivity : AppCompatActivity() {
 
         teamsView.adapter = TeamsAdapter(viewModel, listener)
 
-        viewModel.teams.observe(this, Observer<List<TeamMD>> {
+        viewModel.teams.observe(this, Observer<List<Team>> {
             teamsView.adapter = TeamsAdapter(viewModel, listener)
         })
 
-/*        val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
-        //TODO: this code is always the same, get sharedPref, setup the key string, get a value from it associated to that key
-        //TODO:so make a function for this?? extension maybe
-        val orgIdStr = getString(R.string.organizationId)
-        val userTokenStr = getString(R.string.userToken)
-
-        val orgId = sharedPref.getString(orgIdStr, "")
-        val userToken = sharedPref.getString(userTokenStr, "")*/
 
         viewModel.updateTeams()
     }

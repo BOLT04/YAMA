@@ -13,11 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".activity.Home2Activity"
+            android:name=".activity.HomeActivity"
             android:label="@string/title_activity_home2"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activity.HomeActivity" />
         <activity
             android:name=".activity.LoginActivity"
             android:noHistory="true">
@@ -26,7 +25,7 @@
         <!--><activity android:name=".activity.ChatActivity"></activity><!-->
         <activity
             android:name=".activity.TeamChatActivity"/>
-            <!-->android:label="team chat"<-->
+            <!-->android:label="teamDB chat"<-->
 
         <activity android:name=".activity.UserChatActivity"></activity>
         <activity

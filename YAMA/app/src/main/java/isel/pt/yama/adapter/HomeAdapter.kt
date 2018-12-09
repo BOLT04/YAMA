@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserAssociation
+import isel.pt.yama.repository.model.Team
+import isel.pt.yama.repository.model.UserAssociation
 
-class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
+class HomeAdapter(private val teamsLv: MutableLiveData<List<Team>>,
                   private val usersLv: MutableLiveData<List<UserAssociation>>,
                   val context: LifecycleOwner,
                   private val teamListener: OnTeamClickListener,
@@ -18,12 +18,12 @@ class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
 
     var list :MutableList<Any> = mutableListOf()
     init {
-       /* teamsLv.observe(context, Observer<List<TeamMD>> { teams ->
+       /* teamsLv.observe(context, Observer<List<Team>> { teams ->
             //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             this.notifyItemInserted(teamsLv.value?.size!!)
         })
 
-        usersLv.observe(context, Observer<List<UserMD>> { users ->
+        usersLv.observe(context, Observer<List<User>> { users ->
             //this.notifyItemChanged(chatLog.value?.size!!.minus(1))
             this.notifyItemInserted(usersLv.value?.size!!)
         })*/
@@ -47,7 +47,7 @@ class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         val curr = list.get(position)
 
-        if(curr is TeamMD)
+        if(curr is Team)
             holder.bindTo(curr, teamListener)
         else if(curr is UserAssociation)
             holder.bindTo(curr, userListener)
@@ -56,7 +56,7 @@ class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
     }
 
     interface OnTeamClickListener {
-        fun onTeamClick(team: TeamMD?)
+        fun onTeamClick(team: Team?)
     }
 
     interface OnUserAssClickListener {
@@ -67,7 +67,7 @@ class HomeAdapter(private val teamsLv: MutableLiveData<List<TeamMD>>,
 class HomeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val name: TextView = view.findViewById(android.R.id.text1)
 
-    fun bindTo(team: TeamMD?, listener: HomeAdapter.OnTeamClickListener) {
+    fun bindTo(team: Team?, listener: HomeAdapter.OnTeamClickListener) {
         name.text = team?.name
         itemView.setOnClickListener { listener.onTeamClick(team) }
     }

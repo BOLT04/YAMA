@@ -3,21 +3,21 @@ package isel.pt.yama.viewmodel
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
-import isel.pt.yama.model.MessageMD
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.Message
+import isel.pt.yama.repository.model.Team
+import isel.pt.yama.repository.model.User
 
 
 class TeamChatViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
-    val user: UserMD = app.repository.currentUser!!
-    val team: TeamMD = app.repository.team!!
+    val user: User = app.repository.currentUser!!
+    val team: Team = app.repository.team!!
 
-    val chatLog: MutableLiveData<List<MutableLiveData<MessageMD>>>
+    val chatLog: MutableLiveData<List<MutableLiveData<Message>>>
             = app.chatBoard.getTeamChat(team.id).liveData
 
-    fun sendMessage(messageMD: MessageMD){
-        app.repository.sendTeamMessage(team, messageMD)
+    fun sendMessage(message: Message){
+        app.repository.sendTeamMessage(team, message)
     }
 
 

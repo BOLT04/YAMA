@@ -6,10 +6,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import isel.pt.yama.YAMAApplication
 import isel.pt.yama.common.defaultErrorHandler
-import isel.pt.yama.dataAccess.database.Organization
-import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.model.OrganizationMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.Organization
+import isel.pt.yama.repository.model.User
 
 class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
 
@@ -17,8 +15,8 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
     var textOrganization: String = ""
     var textToken: String = ""
 
-    val userInfo: MutableLiveData<UserMD> = MutableLiveData()
-    private val userOrganizations: MutableLiveData<List<OrganizationMD>> = MutableLiveData()
+    val userInfo: MutableLiveData<User> = MutableLiveData()
+    private val userOrganizations: MutableLiveData<List<Organization>> = MutableLiveData()
 
     val loginIsOk: LiveData<Boolean> = tryLogin()
 
@@ -63,7 +61,7 @@ class LoginViewModel(val app : YAMAApplication) : AndroidViewModel(app) {
             checkLoginInfo(a, b)
         }
 
-    private fun checkLoginInfo(usr : UserMD, orgs: List<OrganizationMD>) =
+    private fun checkLoginInfo(usr : User, orgs: List<Organization>) =
         if (usr.login == textUser) {
             val organization = orgs.firstOrNull {
                 it.login == textOrganization

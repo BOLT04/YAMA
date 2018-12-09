@@ -5,21 +5,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import isel.pt.yama.R
 import isel.pt.yama.adapter.MembersAdapter
 import isel.pt.yama.common.SP_NAME
 import isel.pt.yama.common.VIEW_MODEL_KEY
-import isel.pt.yama.dataAccess.database.Team
-import isel.pt.yama.dto.TeamDto
 import isel.pt.yama.kotlinx.getViewModel
 import isel.pt.yama.kotlinx.getYAMAApplication
-import isel.pt.yama.dataAccess.database.User
-import isel.pt.yama.model.TeamMD
-import isel.pt.yama.model.UserMD
+import isel.pt.yama.repository.model.Team
+import isel.pt.yama.repository.model.User
 import isel.pt.yama.viewmodel.MembersViewModel
 import kotlinx.android.synthetic.main.activity_members.*
 
@@ -32,12 +27,12 @@ class MembersActivity : AppCompatActivity() {
 
         val app = getYAMAApplication()
 
-        val team: TeamMD = app.repository.team!!
+        val team: Team = app.repository.team!!
 
         textViewTeamName.text = team.name
         textViewTeamDescription.text = team.description
 
-        membersView.setHasFixedSize(true) // TODO: why do we use this and what does it do? Deeper understanding
+        membersView.setHasFixedSize(true)
         membersView.layoutManager = LinearLayoutManager(this)
 
 
@@ -48,7 +43,7 @@ class MembersActivity : AppCompatActivity() {
         val intent = Intent(this, UserChatActivity::class.java)
 
         val listener = object : MembersAdapter.OnMemberClickListener {
-            override fun onMemberClick(user: UserMD?) {
+            override fun onMemberClick(user: User?) {
 
                 if(app.repository.currentUser!=user){
 
@@ -63,14 +58,13 @@ class MembersActivity : AppCompatActivity() {
 
         membersView.adapter = MembersAdapter(app, this, viewModel, listener)
 
-        viewModel.members.observe(this, Observer<List<UserMD>> {
+        viewModel.members.observe(this, Observer<List<User>> {
             Log.v("YAMA DEBUG", "viewModel.members.size: " + viewModel.members.value?.size)
             membersView.adapter = MembersAdapter(app, this, viewModel, listener)
         })
 
         val sharedPref = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
-        //TODO: this code is always the same, get sharedPref, setup the key string, get a value from it associated to that key
-        //TODO:so make a function for this?? extension maybe
+
         val orgIdStr = getString(R.string.organizationId)
         val userTokenStr = getString(R.string.userToken)
 

@@ -20,7 +20,7 @@
         app:layout_constraintStart_toEndOf="@+id/userAvatar"
         app:layout_constraintTop_toBottomOf="@+id/userName"
         tools:background="@android:color/holo_blue_light"
-        tools:text="messageMD" />
+        tools:text="message" />
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/userAvatar"
@@ -44,7 +44,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="user name" />
+        tools:text="userDB name" />
 
     <TextView
         android:id="@+id/dateTime"

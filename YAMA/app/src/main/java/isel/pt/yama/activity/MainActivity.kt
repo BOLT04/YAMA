@@ -33,10 +33,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         } else {
 
-            val app = getYAMAApplication()// TODO: is this a good solution? Should we override getApplication instead of making this extension?
+            val app = getYAMAApplication()
 
 
-            //TODO: Can we do this, use another activity's view model
             val viewModel = getViewModel(VIEW_MODEL_KEY){
                 LoginViewModel(app)
             }
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             val loginObserver = Observer<Boolean> { loginIsOk ->
                 if (loginIsOk) {
 
-                    val intent = Intent(this, Home2Activity::class.java)
+                    val intent = Intent(this, HomeActivity::class.java)
                     app.repository.currentUser=viewModel.userInfo.value
                     app.chatBoard.start()
 

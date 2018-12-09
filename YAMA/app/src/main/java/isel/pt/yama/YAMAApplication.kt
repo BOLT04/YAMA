@@ -24,21 +24,18 @@ import com.google.firebase.FirebaseApp
 import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
 
 
-import isel.pt.yama.dataAccess.LruBitmapCache
+
 
 import isel.pt.yama.common.TEAM_NOTIFICATION_CHANNEL_ID
 
-import isel.pt.yama.dataAccess.YAMARepository
-import isel.pt.yama.dataAccess.database.YAMADatabase
-import isel.pt.yama.dataAccess.firebase.ChatBoard
-import isel.pt.yama.dataAccess.github.GithubApi
-import isel.pt.yama.dataAccess.firebase.FirebaseDatabase
+import isel.pt.yama.repository.dataAccess.database.YAMADatabase
+import isel.pt.yama.repository.dataAccess.firebase.ChatBoard
+import isel.pt.yama.repository.dataAccess.github.GithubApi
+import isel.pt.yama.repository.dataAccess.firebase.FirebaseDatabase
 import com.android.volley.toolbox.ImageLoader
 
 import android.provider.MediaStore.Images.Media.getBitmap
-
-
-
+import isel.pt.yama.repository.YAMARepository
 
 
 class YAMAApplication : Application() {
