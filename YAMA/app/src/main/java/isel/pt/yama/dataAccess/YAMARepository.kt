@@ -217,6 +217,14 @@ class YAMARepository(private val app: YAMAApplication,
         firebase.getSubscribedTeams(currentUser!!, success, fail)
     }
 
+
+    fun syncGetTeamMembers(app: YAMAApplication, token: String, teamId: Int) : List<UserMD> {
+        Log.v(app.TAG, "Sync getting team members from API")
+        val future: RequestFuture<List<UserDto>> = RequestFuture.newFuture()
+        api.syncGetTeamMembers(teamId, token, future, future)
+        return syncSaveTeamMemberFromDTO(app, localDb, teamId, organizationID, future.get())
+    }
+
     fun getTeamMembers(team: Int, organization: String, success: (List<UserMD>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
             Log.v(TAG, "Getting team members from DB")
@@ -299,6 +307,7 @@ class YAMARepository(private val app: YAMAApplication,
     fun sendUserMessage(otherUserLogin: String, message: MessageMD) {
         firebase.sendUserMessage(mappers.messageMapper.mdToDto(message), otherUserLogin)
     }
+
 
 
 }

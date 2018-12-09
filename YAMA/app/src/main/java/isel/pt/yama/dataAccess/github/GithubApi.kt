@@ -97,8 +97,29 @@ class GithubApi(private val app: YAMAApplication) {
         }
     }
 
+    fun syncGetTeams(orgId: String, token: String, success: Response.Listener<List<TeamDto>>, fail: Response.ErrorListener) {
+        getAndLog("syncGetTeams: Fetching teams from Github API") {
+            GetTeamsRequest(
+                    "$GITHUB_API_ORGS/$orgId/teams",
+                    success,
+                    fail,
+                    buildRequestHeaders(token)
+            )
+        }
+    }
+
+    fun syncGetTeamMembers(teamId: Int, token: String, success: Response.Listener<List<UserDto>>, fail: Response.ErrorListener) {
+        getAndLog("syncGetTeamMembers: Fetching team members from Github API") {
+            GetMembersRequest(
+                    "$GITHUB_API_TEAMS/$teamId/members",
+                    success,
+                    fail,
+                    buildRequestHeaders(token)
+            )
+        }
+    }
     fun getTeamMembers(teamId: Int, success: (List<UserDto>) -> Unit, fail: (VolleyError) -> Unit) {
-        getAndLog("Fetching team members from Github API") {
+        getAndLog("getTeamMembers: Fetching team members from Github API") {
             GetMembersRequest(
                 "$GITHUB_API_TEAMS/$teamId/members",
                 Response.Listener(success),
@@ -111,4 +132,6 @@ class GithubApi(private val app: YAMAApplication) {
     // Auxiliary funcions
     fun buildRequestHeaders(accessToken: String) =
             mutableMapOf(Pair("Authorization", "token $accessToken"))
+
+
 }
