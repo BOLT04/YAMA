@@ -29,13 +29,12 @@ class GetIntermediaryMembersRequest(url: String, success: Response.Listener<List
     }
 }
 
-//TESTTTTT
 /*
 class GetMembersIntermediaryRequest(url: String,
                                     success: Response.Listener<List<IntermediaryUserDto>>,
                                     error: Response.ErrorListener,
                                     headers: MutableMap<String, String>?)
 
-    : GetRequest<List<IntermediaryUserDto>>(url, success, error, headers)
+    : GetRequest<List<IntermediaryUserDto>>(List<IntermediaryUserDto>::class.java, url, success, error, headers)
 
 */

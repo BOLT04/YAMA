@@ -170,6 +170,17 @@ class YAMARepository(private val app: YAMAApplication,
     }
 
 
+    private fun getFreshUserInfo(user: String, success: (UserMD) -> Unit, fail: (VolleyError) -> Unit){
+
+        api.getUserDetailsForName(user, {
+            userAvatarUrlCache[user] = it.avatar_url
+            saveToDB(it).andThen{
+                u -> success(u)
+            }
+        }, fail)
+
+    }
+
 
     fun getUserOrganizations(user: String, accessToken : String, success: (List<OrganizationMD>) -> Unit, fail: (VolleyError) -> Unit) {
         runAsync {
@@ -291,6 +302,34 @@ class YAMARepository(private val app: YAMAApplication,
     fun sendUserMessage(otherUserLogin: String, message: MessageMD) {
         firebase.sendUserMessage(mappers.messageMapper.mdToDto(message), otherUserLogin)
     }
+
+
+
+
+    fun updateCurrentUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            currentUser!!.login
+            ,{
+            currentUser=it
+            cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
+
+
+
+    fun updateOtherUser( cb : (UserMD)->Unit) {
+        getFreshUserInfo(
+            otherUser!!.login
+            ,{
+                otherUser=it
+                cb(it)
+            }
+            ,{defaultErrorHandler(app, it)}
+        )
+    }
+
 
 
 }

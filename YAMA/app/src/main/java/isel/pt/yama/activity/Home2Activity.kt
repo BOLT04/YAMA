@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import isel.pt.yama.R
 import isel.pt.yama.adapter.HomeAdapter
 import isel.pt.yama.common.PRIVATE_PROFILE

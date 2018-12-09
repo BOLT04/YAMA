@@ -17,7 +17,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 /**
  * logger parameter is called after the jackson mapper as finished reading the value.
  */
-abstract class GetRequest<T>(url: String, success: Response.Listener<T>, error: Response.ErrorListener,
+abstract class GetRequest<T>(private val type : Class<T>, url: String, success: Response.Listener<T>, error: Response.ErrorListener,
                              private val headers: MutableMap<String, String>?,
                              private val logger: (() -> Unit)? = null)
     : JsonRequest<T>(Request.Method.GET, url, "", success, error) {
@@ -33,7 +33,7 @@ abstract class GetRequest<T>(url: String, success: Response.Listener<T>, error: 
 
         //val type = mapper.typeFactory.constructParametricType(T::class.java)
 
-        val resDto = mapper.readValue(String(response.data), object : TypeReference<T>(){} ) as T
+        val resDto = mapper.readValue(String(response.data), type ) as T
 
         logger?.invoke()
 
