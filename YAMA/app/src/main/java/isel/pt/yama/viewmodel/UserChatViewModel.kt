@@ -7,7 +7,7 @@ import isel.pt.yama.repository.YAMARepository
 import isel.pt.yama.repository.model.Message
 import isel.pt.yama.repository.model.User
 
-class UserChatViewModel(val app : YAMAApplication,
+class UserChatViewModel(app : YAMAApplication,
                         private val repo : YAMARepository) : AndroidViewModel(app) {
 
     val user: User = app.repository.currentUser!!
