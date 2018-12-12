@@ -96,7 +96,7 @@ class HomeActivity : AppCompatActivity() {
     private fun scheduleDBUpdate(app : YAMAApplication) {
 
         val updateTeamAndMembersRequest = PeriodicWorkRequestBuilder<UpdatePeriodicWorker>(
-                30, TimeUnit.SECONDS)
+                1, TimeUnit.DAYS)
                 .setConstraints(Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.UNMETERED)
                         .setRequiresCharging(true)

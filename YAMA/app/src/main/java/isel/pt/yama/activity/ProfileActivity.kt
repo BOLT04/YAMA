@@ -25,7 +25,7 @@ class ProfileActivity : AppCompatActivity() {
         val repo = app.repository
 
         val user = getUser(privateProfile, repo)
-        displayUser(user, app)
+        displayUser(user)
 
         refresh_button.setOnClickListener{
             if (privateProfile)
@@ -36,7 +36,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUser(user: User) {
-        displayUser(user, app)
+        displayUser(user)
     }
 
     /**
@@ -49,7 +49,7 @@ class ProfileActivity : AppCompatActivity() {
         else
             repo.otherUser!!
 
-    private fun displayUser(user: User, app: YAMAApplication) {
+    private fun displayUser(user: User) {
         user_profile_login.text = user.login
         user_profile_name.text = user.name
         user_profile_email.text = user.email

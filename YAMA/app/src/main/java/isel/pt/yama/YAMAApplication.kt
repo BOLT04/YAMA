@@ -51,7 +51,6 @@ class YAMAApplication : Application() {
 
         queue.start()
 
-
         imageLoader= ImageLoader(queue,
                 object : ImageLoader.ImageCache {
                     private val localCache = LruCache<String, Bitmap>(20)
