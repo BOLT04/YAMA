@@ -14,7 +14,8 @@ import isel.pt.yama.repository.model.*
 import java.util.*
 
 
-class ChatBoard(private val app: YAMAApplication) {
+class ChatBoard(
+        private val app: YAMAApplication) {
     val db = FirebaseFirestore.getInstance()
     private val teamsRef = db.collection("teams")
     private val usersRef = db.collection("users")
